@@ -151,12 +151,11 @@ model PageContent {
   id        String   @id @default(cuid())
   page      String
   section   String
-  key       String
-  value     String   @db.LongText
+  content   String   @db.LongText
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([page, section, key])
+  @@unique([page, section])
   @@map("page_contents")
 }
 
