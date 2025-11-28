@@ -31,13 +31,13 @@ const iconOptions = [
 ]
 
 const defaultContent: WhyUsContent = {
-  sectionTitle: 'Why Choose MARSH?',
-  sectionSubtitle: 'We bring expertise, reliability, and results to every partnership',
+  sectionTitle: 'Why Choose Reinforcement Group?',
+  sectionSubtitle: 'We bring expertise, reliability, and innovation to every project',
   items: [
-    { id: '1', title: 'Industry Expertise', description: 'Over a decade of experience serving diverse industries', icon: 'Award' },
+    { id: '1', title: 'Technical Excellence', description: 'Expert team with deep knowledge in automation, IT, and architecture', icon: 'Award' },
     { id: '2', title: 'Tailored Solutions', description: 'Customized strategies that fit your unique business needs', icon: 'Target' },
-    { id: '3', title: 'Proven Results', description: 'Track record of delivering measurable outcomes', icon: 'TrendingUp' },
-    { id: '4', title: 'Dedicated Support', description: '24/7 support and dedicated account management', icon: 'Headphones' },
+    { id: '3', title: 'Proven Results', description: 'Track record of delivering measurable outcomes across industries', icon: 'TrendingUp' },
+    { id: '4', title: 'Dedicated Support', description: 'Ongoing support and maintenance for all our solutions', icon: 'Headphones' },
     { id: '5', title: 'Cost Effective', description: 'Competitive pricing without compromising quality', icon: 'ThumbsUp' },
   ]
 }
@@ -199,7 +199,7 @@ export default function WhyUsSectionEditor() {
                 <Input
                   value={content.sectionTitle}
                   onChange={(e) => handleChange('sectionTitle', e.target.value)}
-                  placeholder="Why Choose MARSH?"
+                  placeholder="Why Choose Reinforcement Group?"
                 />
               </div>
 

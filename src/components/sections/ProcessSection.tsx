@@ -3,37 +3,36 @@
 import { motion } from 'framer-motion'
 import { Section, SectionHeader } from '@/components/ui/Section'
 import { 
-  Search, 
-  FileText, 
+  MessageSquare, 
+  FileSearch, 
   Cog, 
-  TrendingUp,
-  ArrowRight
+  CheckCircle
 } from 'lucide-react'
 
 const steps = [
   {
     number: '01',
-    title: 'Discovery & Needs Analysis',
-    description: 'We begin by understanding your unique needs, goals, and challenges through in-depth consultation and data-driven analysis.',
-    icon: Search
+    title: 'Consultation & Analysis',
+    description: 'We begin by understanding your requirements, conducting site visits if needed, and analyzing your project needs.',
+    icon: MessageSquare
   },
   {
     number: '02',
-    title: 'Strategic Planning & Solution Design',
-    description: 'Based on insights, we design tailored strategies to align with your business objectives and deliver measurable results.',
-    icon: FileText
+    title: 'Design & Planning',
+    description: 'Our expert team creates detailed designs, technical specifications, and project plans tailored to your needs.',
+    icon: FileSearch
   },
   {
     number: '03',
-    title: 'Implementation & Support',
-    description: 'Our experts work alongside your team to implement solutions seamlessly, ensuring smooth transitions and sustainable growth.',
+    title: 'Implementation',
+    description: 'We execute the project with precision, following industry best practices and maintaining quality standards.',
     icon: Cog
   },
   {
     number: '04',
-    title: 'Continuous Optimization',
-    description: 'We monitor progress, analyze outcomes, and make necessary adjustments to maximize long-term success.',
-    icon: TrendingUp
+    title: 'Delivery & Support',
+    description: 'Project handover with documentation, training, and ongoing maintenance and support services.',
+    icon: CheckCircle
   }
 ]
 
@@ -41,8 +40,8 @@ export function ProcessSection() {
   return (
     <Section background="gray" id="process">
       <SectionHeader
-        title="How We Work"
-        subtitle="Our Process: Collaborative, Strategic, Impactful"
+        title="Our Working Process"
+        subtitle="From concept to completion, we deliver excellence"
       />
 
       <div className="relative">
@@ -80,20 +79,13 @@ export function ProcessSection() {
                 </div>
 
                 {/* Content */}
-                <h3 className="text-lg font-semibold text-gray-900 text-center mb-3">
+                <h3 className="text-lg font-bold text-gray-900 text-center mb-3">
                   {step.title}
                 </h3>
                 <p className="text-sm text-gray-600 text-center leading-relaxed">
                   {step.description}
                 </p>
               </div>
-
-              {/* Arrow (hidden on last item and mobile) */}
-              {index < steps.length - 1 && (
-                <div className="hidden lg:flex absolute top-24 -right-4 z-20">
-                  <ArrowRight className="w-8 h-8 text-blue-400" />
-                </div>
-              )}
             </motion.div>
           ))}
         </motion.div>

@@ -26,20 +26,20 @@ export function HeroSection() {
           >
             <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
               <span className="w-2 h-2 bg-blue-600 rounded-full mr-2 animate-pulse" />
-              HR | BPO | IT | Managed Services
+              Automation | Architecture | IT Solutions
             </div>
             
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
               Welcome to{' '}
-              <span className="text-blue-600">MARSH</span>
+              <span className="text-blue-600">Reinforcement</span>
               <br />
-              Services & Outsourcing
+              Group
             </h1>
 
             <p className="text-xl text-gray-600 max-w-xl leading-relaxed">
-              Empowering Your Business Through Tailored Solutions. We specialize in 
-              HR, Staffing, Managed IT Services, Salesforce, Payroll, Training, 
-              Remote Talent, and BPO.
+              Your Vision, Our Expertise. We specialize in 
+              Electrical & Automation, Architectural Design, and 
+              IT Solutions including Web, Mobile, AI/ML, and Cloud Services.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
@@ -59,16 +59,16 @@ export function HeroSection() {
             {/* Stats */}
             <div className="grid grid-cols-3 gap-8 pt-8 border-t border-gray-200">
               <div>
-                <div className="text-3xl font-bold text-blue-600">12+</div>
+                <div className="text-3xl font-bold text-blue-600">6+</div>
                 <div className="text-sm text-gray-500">Years Experience</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-blue-600">90%</div>
-                <div className="text-sm text-gray-500">Client Retention</div>
+                <div className="text-3xl font-bold text-blue-600">100+</div>
+                <div className="text-sm text-gray-500">Projects Done</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-blue-600">20+</div>
-                <div className="text-sm text-gray-500">Industries Served</div>
+                <div className="text-3xl font-bold text-blue-600">50+</div>
+                <div className="text-sm text-gray-500">Happy Clients</div>
               </div>
             </div>
           </motion.div>
@@ -83,8 +83,8 @@ export function HeroSection() {
             <div className="relative aspect-square">
               <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-700 rounded-3xl transform rotate-3" />
               <Image
-                src="/images/profile/1.jpg"
-                alt="Professional team"
+                src="/images/automation/1.png"
+                alt="Automation Solutions"
                 fill
                 className="object-cover rounded-3xl shadow-2xl transform -rotate-3 hover:rotate-0 transition-transform duration-500"
                 priority

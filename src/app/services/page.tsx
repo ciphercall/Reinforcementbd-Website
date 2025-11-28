@@ -1,332 +1,305 @@
 import { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { Section, SectionHeader } from '@/components/ui/Section'
 import { Card, CardContent } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { CTASection } from '@/components/sections/CTASection'
 import { 
-  Users, 
-  TrendingUp, 
-  Briefcase, 
-  GraduationCap, 
-  Laptop, 
-  Calculator,
-  Building,
+  Zap,
+  Settings,
   Wrench,
-  MonitorCheck,
-  FileText,
-  CreditCard,
-  Warehouse,
+  Factory,
+  Battery,
+  GraduationCap,
+  Building2,
+  Lightbulb,
+  Droplet,
+  Flame,
+  Box,
+  Globe,
+  Smartphone,
+  Cloud,
+  Code,
   Shield,
-  Video,
-  Headphones,
+  Brain,
+  Link as LinkIcon,
+  Wifi,
   ArrowRight
 } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Our Services',
-  description: 'Explore our comprehensive range of services including Managed Staffing, HR Outsourcing, IT Services, Corporate Training, and more.',
+  description: 'Explore our comprehensive range of services in Electrical & Automation, Architectural Design, and IT Solutions.',
 }
 
-const services = [
+const automationServices = [
   {
-    title: 'Managed Staffing Service',
-    slug: 'managed-staffing',
-    description: 'Comprehensive staffing solutions including Expert, Professional, and Maestro Level personnel with 24/7 support.',
-    icon: Users,
-    details: [
-      'People Outsourcing (Expert, Professional, Maestro Level)',
-      'On-Demand Support',
-      '24/7 Help Desk Service',
-      'Laptop & Desktop Support',
-      'IT Asset Management',
-      'Network Support, LAN & Wi-Fi'
-    ]
+    title: 'Electrical & Automation Equipment Supply',
+    description: 'Complete supply of electrical and automation equipment for industrial and commercial projects.',
+    icon: Zap,
+    details: ['Industrial automation components', 'Electrical switchgear and panels', 'PLC and SCADA systems', 'Sensors and instrumentation']
   },
   {
-    title: 'Sales Force Outsourcing',
-    slug: 'sales-force',
-    description: 'End-to-end sales management including lead generation, market expansion, and CRM management.',
-    icon: TrendingUp,
-    details: [
-      'Sales & Market Expansion',
-      'Cost Efficiency & Faster Time-to-Market',
-      'Expertise & Specialization',
-      'Sales Support & Customer Relationship Management',
-      'Scalability & Flexibility',
-      'Data Analytics & Reporting'
-    ]
+    title: 'Electrical Erection & Commissioning',
+    description: 'Professional installation and commissioning of electrical systems and equipment.',
+    icon: Settings,
+    details: ['High and low voltage installations', 'Substation setup', 'Cable laying and termination', 'Testing and commissioning']
   },
   {
-    title: 'HR Outsourcing Service',
-    slug: 'hr-outsourcing',
-    description: 'Complete HR solutions from talent acquisition to payroll management and corporate training.',
-    icon: Briefcase,
-    details: [
-      'Executive Search',
-      'Talent Acquisition',
-      'Head Hunting',
-      'Payroll Services',
-      'HRIS',
-      'Corporate Trainings'
-    ]
-  },
-  {
-    title: 'Executive Support Services',
-    slug: 'executive-support',
-    description: 'High-level administrative and strategic support for business operations.',
-    icon: Building,
-    details: [
-      'Administrative Service',
-      'Technical Services',
-      'Development, Analysis, and Execution of Strategic Direction',
-      'Accounting Services'
-    ]
-  },
-  {
-    title: 'Programmer & Development Team',
-    slug: 'development',
-    description: 'Expert software development and IT support services for your business needs.',
-    icon: Laptop,
-    details: [
-      'Internal Management Systems',
-      'Mobile Apps',
-      'PWAs',
-      'Support and Maintenance',
-      'Business Analysis',
-      'Project Management',
-      'Software Testing'
-    ]
-  },
-  {
-    title: 'Corporate Training',
-    slug: 'corporate-training',
-    description: 'Comprehensive training programs to enhance employee skills and productivity.',
-    icon: GraduationCap,
-    details: [
-      'Technical Training',
-      'Soft Skills Training',
-      'Leadership & Management Training',
-      'Sales & Customer Service Training',
-      'Basic Communication Training',
-      'Office Norms & Etiquette Training'
-    ]
-  },
-  {
-    title: 'IT Procurement Service',
-    slug: 'it-procurement',
-    description: 'Strategic IT procurement solutions for efficient technology acquisition.',
-    icon: MonitorCheck,
-    details: [
-      'IT Product Acquisition',
-      'Vendor Management',
-      'Cost Optimization',
-      'Technology Assessment'
-    ]
-  },
-  {
-    title: 'Managed Payroll Service',
-    slug: 'payroll',
-    description: 'Precision payroll management with compliance and cost optimization.',
-    icon: Calculator,
-    details: [
-      'Complete Payroll Processing',
-      'Tax Compliance',
-      'Benefits Administration',
-      'Expense Management'
-    ]
-  },
-  {
-    title: 'CCTV Maintenance & Support',
-    slug: 'cctv-maintenance',
-    description: 'Comprehensive surveillance maintenance for reliable security systems.',
-    icon: Video,
-    details: [
-      'Regular Inspection & Maintenance',
-      'Cleaning & Upkeep',
-      'Functionality Checks',
-      'Software Updates & Configuration',
-      'Minor Repairs & Component Replacement',
-      'Technical Support & Troubleshooting'
-    ]
-  },
-  {
-    title: 'IT & Accounts Audit',
-    slug: 'it-audit',
-    description: 'Professional audit services for IT systems and financial accounts.',
-    icon: Shield,
-    details: [
-      'IT Infrastructure Audit',
-      'Security Assessment',
-      'Compliance Review',
-      'Financial Audit Support'
-    ]
-  },
-  {
-    title: 'Virtual Office Solution',
-    slug: 'virtual-office',
-    description: 'Professional business presence without physical infrastructure.',
-    icon: Warehouse,
-    details: [
-      'Professional Business Address',
-      'Centralized Services',
-      'Flexibility & Credibility',
-      'Operational Efficiency'
-    ]
-  },
-  {
-    title: 'Managed ERP Solution',
-    slug: 'erp',
-    description: 'Integrated ERP systems for seamless business process management.',
-    icon: FileText,
-    details: [
-      'Business Process Integration',
-      'Seamless Data Flow',
-      'Centralized Transaction Data',
-      'Data Integrity Management'
-    ]
-  },
-  {
-    title: 'Credit Control Service',
-    slug: 'credit-control',
-    description: 'Expert credit management for healthy cash flow.',
-    icon: CreditCard,
-    details: [
-      'Variable Payment Management',
-      'Cost Effective Solutions',
-      'Consistent Recruiters',
-      'Technology-Driven Approach'
-    ]
-  },
-  {
-    title: 'General Procurement Service',
-    slug: 'general-procurement',
-    description: 'Complete procurement solutions for daily business operations.',
+    title: 'Electronics Devices Repair',
+    description: 'Expert repair services for industrial electronics and automation devices.',
     icon: Wrench,
-    details: [
-      'Goods Acquisition',
-      'Services Procurement',
-      'Vendor Relations',
-      'Operational Support'
-    ]
+    details: ['Industrial drives and inverters', 'PLC modules and controllers', 'HMI and touch panels', 'Power supplies and UPS']
   },
   {
-    title: 'Technology Training',
-    slug: 'technology-training',
-    description: 'Technical training programs for professional development.',
-    icon: Headphones,
-    details: [
-      'Application Training',
-      'Product Implementation',
-      'Service Maintenance',
-      'Technical Certification'
-    ]
+    title: 'Factory Automation',
+    description: 'Complete factory automation solutions for improved productivity and efficiency.',
+    icon: Factory,
+    details: ['Production line automation', 'Robotic integration', 'Process control systems', 'Quality control automation']
   },
   {
-    title: 'Workshop',
-    slug: 'workshop',
-    description: 'Engaging workshops with expert facilitators in technology-driven environments.',
-    icon: Building,
-    details: [
-      'Expert-Led Sessions',
-      'Technology-Driven Environment',
-      'Flexible Duration',
-      'Interactive Learning'
-    ]
-  }
+    title: 'Energy Management',
+    description: 'Smart energy solutions for cost reduction and sustainability.',
+    icon: Battery,
+    details: ['Energy audit and analysis', 'Power factor correction', 'Solar integration', 'Energy monitoring dashboards']
+  },
+  {
+    title: 'Professional Training',
+    description: 'Technical training programs for automation and electrical professionals.',
+    icon: GraduationCap,
+    details: ['PLC programming courses', 'Electrical safety training', 'Automation workshops', 'Corporate training']
+  },
+]
+
+const architectServices = [
+  {
+    title: 'Architectural Design',
+    description: 'Creative and functional architectural designs for all building types.',
+    icon: Building2,
+    details: ['Residential building design', 'Commercial complex design', 'Industrial facility design', 'Interior design']
+  },
+  {
+    title: 'Electrical Design',
+    description: 'Complete electrical system design for buildings and facilities.',
+    icon: Lightbulb,
+    details: ['Power distribution design', 'Lighting design', 'Grounding systems', 'Smart building integration']
+  },
+  {
+    title: 'Plumbing & Sanitary',
+    description: 'Professional plumbing and sanitary system design and installation.',
+    icon: Droplet,
+    details: ['Water supply system design', 'Drainage and sewerage', 'Rainwater harvesting', 'Water treatment systems']
+  },
+  {
+    title: 'Fire Fighting System',
+    description: 'Comprehensive fire protection and safety system design.',
+    icon: Flame,
+    details: ['Fire detection systems', 'Sprinkler system design', 'Fire hydrant systems', 'Emergency evacuation planning']
+  },
+  {
+    title: '3D Modeling & Visualization',
+    description: 'Realistic 3D models and visualizations for architectural projects.',
+    icon: Box,
+    details: ['3D architectural modeling', 'Photorealistic rendering', 'Virtual walkthroughs', 'BIM modeling']
+  },
+]
+
+const itServices = [
+  {
+    title: 'Web Development',
+    description: 'Modern, responsive websites and web applications.',
+    icon: Globe,
+    details: ['Corporate websites', 'E-commerce platforms', 'Web applications', 'Content management systems']
+  },
+  {
+    title: 'Mobile App Development',
+    description: 'Native and cross-platform mobile applications.',
+    icon: Smartphone,
+    details: ['iOS applications', 'Android applications', 'Cross-platform apps', 'Enterprise mobile solutions']
+  },
+  {
+    title: 'Cloud Services',
+    description: 'Scalable cloud infrastructure and hosting solutions.',
+    icon: Cloud,
+    details: ['Cloud migration', 'Infrastructure as a Service', 'Cloud hosting', 'Backup and disaster recovery']
+  },
+  {
+    title: 'Software Development',
+    description: 'Custom software solutions for business automation.',
+    icon: Code,
+    details: ['Enterprise applications', 'ERP and CRM systems', 'Business process automation', 'API development']
+  },
+  {
+    title: 'Cyber Security',
+    description: 'Comprehensive security solutions to protect your digital assets.',
+    icon: Shield,
+    details: ['Security assessment', 'Penetration testing', 'Security monitoring', 'Incident response']
+  },
+  {
+    title: 'AI & Machine Learning',
+    description: 'Intelligent solutions powered by artificial intelligence.',
+    icon: Brain,
+    details: ['Predictive analytics', 'Computer vision', 'Natural language processing', 'Recommendation systems']
+  },
+  {
+    title: 'Blockchain Solutions',
+    description: 'Decentralized applications and blockchain integration.',
+    icon: LinkIcon,
+    details: ['Smart contract development', 'DApp development', 'Token development', 'Supply chain blockchain']
+  },
+  {
+    title: 'IoT Solutions',
+    description: 'Connected devices and Internet of Things implementations.',
+    icon: Wifi,
+    details: ['Industrial IoT', 'Smart home automation', 'Asset tracking', 'Remote monitoring']
+  },
 ]
 
 export default function ServicesPage() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 bg-gradient-to-br from-blue-600 to-blue-800 text-white">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 right-20 w-72 h-72 bg-white rounded-full blur-3xl" />
-          <div className="absolute bottom-20 left-20 w-96 h-96 bg-white rounded-full blur-3xl" />
-        </div>
-        <div className="container mx-auto px-4 relative z-10">
+      <section className="relative pt-32 pb-20 bg-gradient-to-br from-gray-50 to-blue-50">
+        <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center space-y-6">
-            <h1 className="text-4xl md:text-5xl font-bold leading-tight">
-              Our Core Services
+            <span className="text-blue-600 font-semibold text-sm uppercase tracking-wider">
+              Our Services
+            </span>
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
+              Comprehensive Solutions Across Three Divisions
             </h1>
-            <p className="text-xl text-blue-100">
-              Comprehensive business solutions tailored to meet your unique needs
+            <p className="text-xl text-gray-600">
+              From electrical automation to architectural design to cutting-edge IT solutions,
+              we deliver excellence in every project.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Services Grid */}
-      <Section background="gray">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {services.map((service) => (
-            <Card key={service.slug} className="h-full group">
-              <CardContent className="p-6 flex flex-col h-full">
-                <div className="w-14 h-14 rounded-xl bg-blue-100 flex items-center justify-center mb-4 group-hover:bg-blue-600 transition-colors">
-                  <service.icon className="w-7 h-7 text-blue-600 group-hover:text-white transition-colors" />
+      {/* Automation Division */}
+      <Section background="white" id="automation">
+        <div className="flex items-center gap-4 mb-8">
+          <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center">
+            <Zap className="w-8 h-8 text-white" />
+          </div>
+          <div>
+            <h2 className="text-3xl font-bold text-gray-900">Reinforcement Automation</h2>
+            <p className="text-gray-600">Electrical & Automation Solutions</p>
+          </div>
+        </div>
+        
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {automationServices.map((service) => (
+            <Card key={service.title} className="hover:shadow-lg transition-shadow">
+              <CardContent className="p-6">
+                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
+                  <service.icon className="w-6 h-6 text-blue-600" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                  {service.title}
-                </h3>
-                <p className="text-sm text-gray-600 mb-4 flex-grow">
-                  {service.description}
-                </p>
-                <ul className="text-xs text-gray-500 space-y-1 mb-4">
-                  {service.details.slice(0, 3).map((detail, i) => (
-                    <li key={i} className="flex items-start">
-                      <span className="w-1.5 h-1.5 rounded-full bg-blue-400 mr-2 mt-1.5 flex-shrink-0" />
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">{service.title}</h3>
+                <p className="text-sm text-gray-600 mb-4">{service.description}</p>
+                <ul className="space-y-2">
+                  {service.details.map((detail) => (
+                    <li key={detail} className="flex items-center text-sm text-gray-600">
+                      <span className="w-1.5 h-1.5 bg-blue-600 rounded-full mr-2" />
                       {detail}
                     </li>
                   ))}
-                  {service.details.length > 3 && (
-                    <li className="text-blue-600">+{service.details.length - 3} more</li>
-                  )}
                 </ul>
-                <Link href={`/services/${service.slug}`}>
-                  <Button variant="ghost" size="sm" className="w-full group/btn">
-                    Learn More
-                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
-                  </Button>
-                </Link>
               </CardContent>
             </Card>
           ))}
         </div>
       </Section>
 
-      {/* Sales Force Outsourcing Detail Section */}
-      <Section background="white">
-        <div className="max-w-4xl mx-auto">
-          <SectionHeader
-            title="Sales Force Outsourcing (SFO)"
-            subtitle="Strategic and cost-effective alternative to in-house sales teams"
-          />
-          <div className="bg-gray-50 rounded-2xl p-8 space-y-6">
-            <p className="text-gray-600 leading-relaxed">
-              MARSH offers specialized Sales Force Outsourcing (SFO) solutions for both financial 
-              and non-financial organizations, providing a strategic and cost-effective alternative 
-              to building and managing an in-house sales team. Our services are designed to streamline 
-              your sales operations, enhance market reach, and accelerate revenue growth.
-            </p>
-            <div className="grid sm:grid-cols-2 gap-4">
-              {[
-                'Sales Execution & Deal Closure',
-                'Seamless Market Expansion',
-                'Significant Cost Savings',
-                'Industry-Specific Expertise',
-                'Rapid Team Deployment',
-                'Customer Engagement & CRM',
-                'Scalable & Flexible Models',
-                'Comprehensive Analytics'
-              ].map((item) => (
-                <div key={item} className="flex items-center space-x-3">
-                  <div className="w-2 h-2 rounded-full bg-blue-600" />
-                  <span className="text-gray-700">{item}</span>
-                </div>
-              ))}
-            </div>
+      {/* Architect Division */}
+      <Section background="gray" id="architect">
+        <div className="flex items-center gap-4 mb-8">
+          <div className="w-16 h-16 bg-emerald-600 rounded-2xl flex items-center justify-center">
+            <Building2 className="w-8 h-8 text-white" />
           </div>
+          <div>
+            <h2 className="text-3xl font-bold text-gray-900">Reinforcement Architect View</h2>
+            <p className="text-gray-600">Architectural Design & Engineering</p>
+          </div>
+        </div>
+        
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {architectServices.map((service) => (
+            <Card key={service.title} className="hover:shadow-lg transition-shadow">
+              <CardContent className="p-6">
+                <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center mb-4">
+                  <service.icon className="w-6 h-6 text-emerald-600" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">{service.title}</h3>
+                <p className="text-sm text-gray-600 mb-4">{service.description}</p>
+                <ul className="space-y-2">
+                  {service.details.map((detail) => (
+                    <li key={detail} className="flex items-center text-sm text-gray-600">
+                      <span className="w-1.5 h-1.5 bg-emerald-600 rounded-full mr-2" />
+                      {detail}
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </Section>
+
+      {/* IT Division */}
+      <Section background="white" id="it">
+        <div className="flex items-center gap-4 mb-8">
+          <div className="w-16 h-16 bg-purple-600 rounded-2xl flex items-center justify-center">
+            <Code className="w-8 h-8 text-white" />
+          </div>
+          <div>
+            <h2 className="text-3xl font-bold text-gray-900">Reinforcement IT Zone</h2>
+            <p className="text-gray-600">Technology & Digital Solutions</p>
+          </div>
+        </div>
+        
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {itServices.map((service) => (
+            <Card key={service.title} className="hover:shadow-lg transition-shadow">
+              <CardContent className="p-6">
+                <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
+                  <service.icon className="w-6 h-6 text-purple-600" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">{service.title}</h3>
+                <p className="text-sm text-gray-600 mb-4">{service.description}</p>
+                <ul className="space-y-2">
+                  {service.details.map((detail) => (
+                    <li key={detail} className="flex items-center text-sm text-gray-600">
+                      <span className="w-1.5 h-1.5 bg-purple-600 rounded-full mr-2" />
+                      {detail}
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </Section>
+
+      {/* Image Gallery */}
+      <Section background="gray">
+        <SectionHeader
+          title="Our Work"
+          subtitle="A glimpse of our projects and installations"
+        />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
+            <div key={num} className="relative aspect-square rounded-xl overflow-hidden group">
+              <Image
+                src={`/images/automation/${num}.png`}
+                alt={`Project ${num}`}
+                fill
+                className="object-cover group-hover:scale-110 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors" />
+            </div>
+          ))}
         </div>
       </Section>
 

@@ -11,12 +11,12 @@ import {
 
 const footerLinks = {
   services: [
-    { name: 'Managed Staffing', href: '/services/managed-staffing' },
-    { name: 'Sales Force Outsourcing', href: '/services/sales-force' },
-    { name: 'HR Outsourcing', href: '/services/hr-outsourcing' },
-    { name: 'IT Services', href: '/services/it-services' },
-    { name: 'Corporate Training', href: '/services/corporate-training' },
-    { name: 'Payroll Services', href: '/services/payroll' },
+    { name: 'Automation Solutions', href: '/services#automation' },
+    { name: 'Electrical Equipment', href: '/services/electrical-automation-supply' },
+    { name: 'Architectural Design', href: '/services/architectural-design' },
+    { name: 'Web Development', href: '/services/web-development' },
+    { name: 'Mobile Apps', href: '/services/mobile-app-development' },
+    { name: 'AI & ML', href: '/services/ai-ml' },
   ],
   company: [
     { name: 'About Us', href: '/about' },
@@ -32,10 +32,10 @@ const footerLinks = {
 }
 
 const contactInfo = {
-  address: 'House 30, Road 20, Block K, Banani, Dhaka 1213',
-  phone: '+880 1310 88 66 00',
-  email: 'info@marshgroupbd.com',
-  website: 'www.marshgroupbd.com'
+  address: '5th floor, ka-81/4B, Kha-Para, Khilkhet, Dhaka-1229',
+  phone: '+88 013 26 24 95 85',
+  email: 'info@ragrpbd.com',
+  website: 'www.ragrpbd.com'
 }
 
 export function Footer() {
@@ -49,15 +49,15 @@ export function Footer() {
             <Link href="/" className="inline-block">
               <Image
                 src="/images/logos/rg blue and gray full logo.jpg"
-                alt="MARSH Services"
+                alt="Reinforcement Group"
                 width={160}
                 height={45}
                 className="h-11 w-auto rounded"
               />
             </Link>
             <p className="text-sm leading-relaxed">
-              MARSH Services and Outsourcing is a global talent and business solutions provider, 
-              empowering businesses to scale efficiently.
+              Reinforcement Group is a professional Electrical & Automation, Architectural Design, 
+              and IT Solutions provider, transforming businesses since 2018.
             </p>
             <div className="flex space-x-4">
               <a 
@@ -154,7 +154,7 @@ export function Footer() {
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-sm">
-              © {new Date().getFullYear()} MARSH Services & Outsourcing. All rights reserved.
+              © {new Date().getFullYear()} Reinforcement Group. All rights reserved.
             </p>
             <div className="flex space-x-6">
               {footerLinks.legal.map((link) => (

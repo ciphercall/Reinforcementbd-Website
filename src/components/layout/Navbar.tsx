@@ -14,12 +14,9 @@ const navigation = [
     name: 'Services', 
     href: '/services',
     children: [
-      { name: 'Managed Staffing', href: '/services/managed-staffing' },
-      { name: 'Sales Force Outsourcing', href: '/services/sales-force' },
-      { name: 'HR Outsourcing', href: '/services/hr-outsourcing' },
-      { name: 'IT Services', href: '/services/it-services' },
-      { name: 'Corporate Training', href: '/services/corporate-training' },
-      { name: 'Payroll Services', href: '/services/payroll' },
+      { name: 'Automation', href: '/services#automation' },
+      { name: 'Architect View', href: '/services#architect' },
+      { name: 'IT Zone', href: '/services#it' },
     ]
   },
   { name: 'Industries', href: '/industries' },
@@ -55,7 +52,7 @@ export function Navbar() {
           <Link href="/" className="flex items-center space-x-3">
             <Image
               src="/images/logos/rg blue and gray full logo.jpg"
-              alt="MARSH Services"
+              alt="Reinforcement Group"
               width={180}
               height={50}
               className="h-12 w-auto rounded"

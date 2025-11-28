@@ -24,18 +24,18 @@ interface HeroContent {
 }
 
 const defaultContent: HeroContent = {
-  headline: 'Empowering Your Business Through Tailored Solutions',
-  subheadline: 'HR | BPO | IT | Managed Services',
-  tagline: 'MARSH Services & Outsourcing delivers comprehensive business solutions that drive growth, efficiency, and success for enterprises across Bangladesh and beyond.',
+  headline: 'Empowering Your Business Through Technology & Innovation',
+  subheadline: 'Automation | Architecture | IT Solutions',
+  tagline: 'Reinforcement Group delivers comprehensive automation, architectural, and IT solutions that drive growth, efficiency, and success for enterprises across Bangladesh.',
   primaryButtonText: 'Explore Our Services',
   primaryButtonLink: '/services',
   secondaryButtonText: 'Contact Us',
   secondaryButtonLink: '/contact',
   backgroundImage: '/images/hero-bg.jpg',
   stats: [
-    { label: 'Years Experience', value: '10+' },
-    { label: 'Clients Served', value: '500+' },
-    { label: 'Team Members', value: '100+' },
+    { label: 'Years Experience', value: '7+' },
+    { label: 'Clients Served', value: '100+' },
+    { label: 'Team Members', value: '20+' },
     { label: 'Industries', value: '12+' },
   ]
 }

@@ -3,68 +3,68 @@
 import { motion } from 'framer-motion'
 import { Section } from '@/components/ui/Section'
 import { 
-  ThumbsUp, 
   Zap, 
   Building2, 
-  Brain,
-  RefreshCw,
-  Puzzle,
+  Code,
   Settings,
-  Users,
+  Cpu,
+  Factory,
+  Lightbulb,
   Shield,
   Award,
-  Clock,
-  TrendingUp
+  Users,
+  Globe,
+  Wrench
 } from 'lucide-react'
 
 const features = [
   {
-    title: 'Consistently High Client Satisfaction',
-    icon: ThumbsUp
-  },
-  {
-    title: 'Tech-Enabled Delivery for Seamless Experience',
+    title: 'Electrical & Automation Excellence',
     icon: Zap
   },
   {
-    title: 'Trusted Across 20+ Diverse Industries',
+    title: 'Complete Factory Automation Solutions',
+    icon: Factory
+  },
+  {
+    title: 'Innovative Architectural Designs',
     icon: Building2
   },
   {
-    title: 'Broad Domain Expertise Across Key Functions',
-    icon: Brain
+    title: '3D Modeling & Visualization',
+    icon: Lightbulb
   },
   {
-    title: '90% Client Retention Through Repeat Engagement',
-    icon: RefreshCw
+    title: 'Modern Web & Mobile Development',
+    icon: Globe
   },
   {
-    title: 'End-to-End Staffing & Consulting Solutions',
-    icon: Puzzle
+    title: 'AI & Machine Learning Solutions',
+    icon: Cpu
   },
   {
-    title: 'Optimized Payroll & Expense Management',
-    icon: Settings
-  },
-  {
-    title: 'Extensive Active & Passive Talent Database',
+    title: 'Expert Engineering Team',
     icon: Users
   },
   {
-    title: 'Proactive & Effective Risk Mitigation',
+    title: 'Quality Assurance Guaranteed',
     icon: Shield
   },
   {
-    title: 'Preferred Talent Partner for Leading Brands',
+    title: 'Maintenance & Support Services',
+    icon: Wrench
+  },
+  {
+    title: 'End-to-End Project Delivery',
+    icon: Settings
+  },
+  {
+    title: 'Industry Leading Expertise',
     icon: Award
   },
   {
-    title: 'Free Up Internal Teams for Strategic Initiatives',
-    icon: Clock
-  },
-  {
-    title: 'Empowering End-Users with Enhanced Capability',
-    icon: TrendingUp
+    title: 'Custom Software Development',
+    icon: Code
   }
 ]
 
@@ -88,10 +88,10 @@ export function FeaturesSection() {
     <Section background="gradient" id="features">
       <div className="text-center mb-12 md:mb-16">
         <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-          Showcase of MARSH Services & Outsourcing
+          Reinforcement Group Capabilities
         </h2>
         <p className="text-lg text-blue-100 max-w-2xl mx-auto">
-          What sets us apart in delivering exceptional business solutions
+          Comprehensive solutions across automation, architecture, and technology
         </p>
       </div>
 
@@ -99,22 +99,22 @@ export function FeaturesSection() {
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-50px" }}
-        className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+        viewport={{ once: true }}
+        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6"
       >
         {features.map((feature) => (
           <motion.div
             key={feature.title}
             variants={itemVariants}
-            className="bg-white/10 backdrop-blur-sm rounded-xl p-5 hover:bg-white/20 transition-colors group"
+            className="bg-white/10 backdrop-blur-sm rounded-xl p-5 hover:bg-white/20 transition-all duration-300 group"
           >
-            <div className="flex items-start space-x-4">
-              <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0 group-hover:bg-white/30 transition-colors">
-                <feature.icon className="w-5 h-5 text-white" />
+            <div className="flex flex-col items-center text-center space-y-3">
+              <div className="w-12 h-12 rounded-lg bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition-colors">
+                <feature.icon className="w-6 h-6 text-white" />
               </div>
-              <p className="text-white text-sm font-medium leading-snug">
+              <h3 className="text-sm font-medium text-white leading-tight">
                 {feature.title}
-              </p>
+              </h3>
             </div>
           </motion.div>
         ))}

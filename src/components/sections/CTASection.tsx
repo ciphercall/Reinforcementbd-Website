@@ -18,17 +18,18 @@ export function CTASection() {
           className="space-y-8"
         >
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
-            Let's Work Together...
+            Let's Build Something Great Together
           </h2>
           
           <p className="text-xl text-blue-100 max-w-2xl mx-auto">
-            Unlock Talent. Streamline Operations. Accelerate Growth.
+            Your Vision, Our Expertise
           </p>
 
           <p className="text-blue-100 max-w-3xl mx-auto leading-relaxed">
-            At MARSH Services, we go beyond traditional staffing and managed services. 
-            We partner with businesses to deliver talent, drive efficiency, reduce risk, 
-            and enable growth—backed by global reach, industry expertise, and personalized support.
+            At Reinforcement Group, we combine electrical engineering excellence, 
+            architectural innovation, and cutting-edge IT solutions to transform 
+            your business. Partner with us for comprehensive solutions that drive 
+            success.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
@@ -39,11 +40,11 @@ export function CTASection() {
                 className="bg-white text-blue-600 hover:bg-blue-50 group"
               >
                 <Calendar className="mr-2 h-5 w-5" />
-                Schedule a Discovery Call
+                Get Started Today
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
-            <a href="tel:+8801310886600">
+            <a href="tel:+8801326249585">
               <Button 
                 variant="outline" 
                 size="xl"
@@ -59,15 +60,15 @@ export function CTASection() {
           <div className="grid sm:grid-cols-3 gap-6 pt-12 border-t border-white/20">
             <div className="flex items-center justify-center space-x-3 text-white">
               <MapPin className="h-5 w-5 text-blue-200" />
-              <span className="text-sm">Banani, Dhaka 1213</span>
+              <span className="text-sm">Khilkhet, Dhaka-1229</span>
             </div>
             <div className="flex items-center justify-center space-x-3 text-white">
               <Phone className="h-5 w-5 text-blue-200" />
-              <span className="text-sm">+880 1310 88 66 00</span>
+              <span className="text-sm">+88 013 26 24 95 85</span>
             </div>
             <div className="flex items-center justify-center space-x-3 text-white">
               <Mail className="h-5 w-5 text-blue-200" />
-              <span className="text-sm">info@marshgroupbd.com</span>
+              <span className="text-sm">info@ragrpbd.com</span>
             </div>
           </div>
         </motion.div>

@@ -37,7 +37,10 @@ import {
   Quote,
   Factory,
   Users2,
-  Newspaper
+  Newspaper,
+  Images,
+  Wrench,
+  AlertTriangle
 } from 'lucide-react'
 
 // Comprehensive menu structure with page sections
@@ -127,6 +130,8 @@ const navigation = [
   },
   { name: 'Contact Messages', href: '/admin/messages', icon: Mail },
   { name: 'Media Library', href: '/admin/media', icon: ImageIcon },
+  { name: 'Partner Logos Carousel', href: '/admin/carousel', icon: Images },
+  { name: 'Maintenance Mode', href: '/admin/maintenance', icon: Wrench },
   { name: 'Site Settings', href: '/admin/settings', icon: Settings },
 ]
 
@@ -178,7 +183,7 @@ export function AdminSidebar({ children }: AdminSidebarProps) {
               <Sparkles className="w-6 h-6 text-white" />
             </div>
             <div>
-              <p className="font-bold text-white">MARSH Admin</p>
+              <p className="font-bold text-white">Reinforcement Admin</p>
               <p className="text-xs text-slate-400">Content Management</p>
             </div>
           </Link>

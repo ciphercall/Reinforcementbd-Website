@@ -48,7 +48,7 @@ export default function AdminLoginPage() {
           <div className="text-center">
             <Image
               src="/images/logos/rg blue and gray full logo.jpg"
-              alt="MARSH Services"
+              alt="Reinforcement Group"
               width={180}
               height={50}
               className="h-12 w-auto mx-auto rounded"
@@ -71,7 +71,7 @@ export default function AdminLoginPage() {
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
               <Input
                 type="email"
-                placeholder="admin@marshgroupbd.com"
+                placeholder="admin@ragrpbd.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="pl-10"

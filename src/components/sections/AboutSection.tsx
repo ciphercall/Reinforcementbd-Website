@@ -21,8 +21,8 @@ export function AboutSection() {
         >
           <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
             <Image
-              src="/images/profile/3.jpg"
-              alt="About MARSH Services"
+              src="/images/automation/2.png"
+              alt="About Reinforcement Group"
               fill
               className="object-cover"
             />
@@ -36,7 +36,7 @@ export function AboutSection() {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="absolute -bottom-6 -right-6 bg-blue-600 text-white p-8 rounded-2xl shadow-xl"
           >
-            <div className="text-4xl font-bold">12+</div>
+            <div className="text-4xl font-bold">6+</div>
             <div className="text-blue-100">Years of Experience</div>
           </motion.div>
         </motion.div>
@@ -54,15 +54,15 @@ export function AboutSection() {
               About Us
             </span>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mt-2">
-              Your Trusted Partner for Strategic Growth
+              Your Trusted Partner for Industrial Excellence
             </h2>
           </div>
 
           <p className="text-gray-600 text-lg leading-relaxed">
-            MARSH Services and Outsourcing is a global talent and business solutions 
-            provider specializing in recruitment, managed services, payroll, IT services 
-            and remote staffing. We empower businesses to scale efficiently by delivering 
-            tailored support, expert talent, and seamless operational execution.
+            Reinforcement Group started its journey in 2018 as "Reinforcement Automation" 
+            and has grown to become a diversified company with three specialized divisions: 
+            Automation, Architect View, and IT Zone. We empower businesses with innovative 
+            solutions in electrical & automation, architectural design, and technology services.
           </p>
 
           {/* Mission & Vision */}
@@ -73,8 +73,8 @@ export function AboutSection() {
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Our Mission</h3>
               <p className="text-sm text-gray-600">
-                To empower our clients through exceptional managed support, driven by 
-                the expertise, dedication, and innovation of our world-class team.
+                To provide innovative and reliable electrical, automation, architectural, 
+                and IT solutions that exceed client expectations with highest quality.
               </p>
             </div>
             <div className="p-6 bg-gray-50 rounded-xl">
@@ -83,8 +83,8 @@ export function AboutSection() {
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Our Vision</h3>
               <p className="text-sm text-gray-600">
-                To build a seamless, nationwide business ecosystem that fuels growth, 
-                sparks innovation, and delivers transformative impact across every industry.
+                To be the leading integrated solutions provider in Bangladesh, 
+                recognized for excellence, innovation, and customer satisfaction.
               </p>
             </div>
           </div>

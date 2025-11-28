@@ -1,8 +1,8 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Admin - MARSH Services',
-  description: 'Admin panel for MARSH Services website',
+  title: 'Admin - Reinforcement Group',
+  description: 'Admin panel for Reinforcement Group website',
   robots: {
     index: false,
     follow: false

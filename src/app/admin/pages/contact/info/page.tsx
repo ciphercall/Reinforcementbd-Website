@@ -40,28 +40,28 @@ export default function ContactInfoEditor() {
   const [saving, setSaving] = useState(false)
   const [content, setContent] = useState<ContactInfoContent>({
     address: {
-      line1: 'House 123, Road 12',
-      line2: 'Block C, Banani',
-      city: 'Dhaka 1213',
+      line1: '5th floor, ka-81/4B, Kha-Para',
+      line2: 'Khilkhet',
+      city: 'Dhaka 1229',
       country: 'Bangladesh'
     },
     phone: {
-      primary: '+880 1XXX-XXXXXX',
-      secondary: '+880 2-XXXXXXX'
+      primary: '+88 013 26 24 95 85',
+      secondary: '+88 017 XX XXX XXX'
     },
     email: {
-      primary: 'info@marshgroupbd.com',
-      support: 'support@marshgroupbd.com'
+      primary: 'info@ragrpbd.com',
+      support: 'support@ragrpbd.com'
     },
     map: {
       embedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3...',
-      latitude: '23.7934',
-      longitude: '90.4043'
+      latitude: '23.8321',
+      longitude: '90.4199'
     },
     social: {
-      facebook: 'https://facebook.com/marshgroupbd',
-      linkedin: 'https://linkedin.com/company/marshgroupbd',
-      twitter: 'https://twitter.com/marshgroupbd'
+      facebook: 'https://facebook.com/reinforcementgroup',
+      linkedin: 'https://linkedin.com/company/reinforcementgroup',
+      twitter: 'https://twitter.com/reinforcementbd'
     }
   })
 

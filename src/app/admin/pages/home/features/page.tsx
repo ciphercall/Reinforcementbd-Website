@@ -31,7 +31,7 @@ const iconOptions = [
 ]
 
 const defaultContent: FeaturesContent = {
-  sectionTitle: 'Why Choose MARSH?',
+  sectionTitle: 'Why Choose Reinforcement Group?',
   sectionSubtitle: 'We deliver exceptional value through our comprehensive service offerings',
   features: [
     { id: '1', title: 'Expert Team', description: 'Highly skilled professionals with years of industry experience', icon: 'Users' },
@@ -198,7 +198,7 @@ export default function FeaturesSectionEditor() {
                 <Input
                   value={content.sectionTitle}
                   onChange={(e) => handleChange('sectionTitle', e.target.value)}
-                  placeholder="Why Choose MARSH?"
+                  placeholder="Why Choose Reinforcement Group?"
                 />
               </div>
 

@@ -14,32 +14,33 @@ const contactInfo = [
   {
     icon: MapPin,
     title: 'Visit Us',
-    details: ['Sheltech Barnali, House 30, Road 20,', 'Block K, Banani, Dhaka 1213']
+    details: ['5th floor, ka-81/4B, Kha-Para,', 'Khilkhet, Dhaka-1229, Bangladesh']
   },
   {
     icon: Phone,
     title: 'Call Us',
-    details: ['+880 1310 88 66 00']
+    details: ['+88 013 26 24 95 85']
   },
   {
     icon: Mail,
     title: 'Email Us',
-    details: ['info@marshgroupbd.com']
+    details: ['info@ragrpbd.com']
   },
   {
     icon: Clock,
     title: 'Working Hours',
-    details: ['Sunday - Thursday: 9:00 AM - 6:00 PM']
+    details: ['Saturday - Thursday: 9:00 AM - 6:00 PM']
   }
 ]
 
 const services = [
-  'Managed Staffing Service',
-  'Sales Force Outsourcing',
-  'HR Outsourcing Service',
-  'Corporate Training',
-  'IT Services & Procurement',
-  'Managed Payroll Service',
+  'Electrical & Automation',
+  'Factory Automation',
+  'Architectural Design',
+  '3D Modeling & Visualization',
+  'Web Development',
+  'Mobile App Development',
+  'AI & Machine Learning',
   'Other'
 ]
 
@@ -94,8 +95,8 @@ export default function ContactPage() {
               Let's Work Together
             </h1>
             <p className="text-xl text-gray-600">
-              Ready to build your dream team or optimize your operations? 
-              Let's explore how MARSH can bring lasting value to your business.
+              Ready to start your project or have questions about our services? 
+              Let's explore how Reinforcement Group can help transform your vision into reality.
             </p>
           </div>
         </div>

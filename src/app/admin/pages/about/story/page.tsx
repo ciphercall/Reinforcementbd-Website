@@ -22,18 +22,18 @@ export default function AboutStoryEditor() {
   const [saving, setSaving] = useState(false)
   const [content, setContent] = useState<StoryContent>({
     title: 'Our Story',
-    description: 'MARSH Services & Outsourcing has been a trusted partner for businesses across Bangladesh.',
+    description: 'Reinforcement Group has been a trusted partner for businesses across Bangladesh since 2018.',
     paragraphs: [
-      'Founded with a vision to transform how businesses operate, MARSH has grown to become a leading provider of comprehensive business solutions.',
-      'Our journey began with a simple mission: to help businesses focus on what they do best while we handle the rest.'
+      'Founded with a vision to provide comprehensive automation, IT, and architectural solutions, Reinforcement Group has grown to become a leading provider of integrated business solutions.',
+      'Our journey began with industrial automation and has expanded to encompass IT solutions and architectural services through our three specialized divisions.'
     ],
     image: '/images/about-story.jpg',
-    imageAlt: 'MARSH office and team',
+    imageAlt: 'Reinforcement Group office and team',
     stats: [
-      { label: 'Years Experience', value: '10+' },
-      { label: 'Happy Clients', value: '500+' },
-      { label: 'Projects Delivered', value: '1000+' },
-      { label: 'Team Members', value: '100+' }
+      { label: 'Years Experience', value: '7+' },
+      { label: 'Happy Clients', value: '100+' },
+      { label: 'Projects Delivered', value: '200+' },
+      { label: 'Team Members', value: '20+' }
     ]
   })
 

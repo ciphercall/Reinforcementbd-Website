@@ -7,24 +7,24 @@ import { Globe, Award, Handshake, ExternalLink } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Our Partners',
-  description: 'Explore MARSH Services strategic partnerships with global organizations like Next Global and KI Training & Assessing.',
+  description: 'Explore Reinforcement Group strategic partnerships with technology and industry leaders.',
 }
 
 const partners = [
   {
-    name: 'Next Global',
-    location: 'Perth, Australia',
-    logo: '/images/partners/next-global.png',
-    description: 'Next Global is an international recruitment, relocation, and advisory agency based in Perth. They specialize in sourcing global talent for Australian businesses, managing visa and migration support, and delivering end-to-end relocation services—from accommodation and transport to banking and cultural orientation.',
-    partnership: 'MARSH Services is partnering with Next Global to expand our reach in global talent acquisition and relocation support. Through this collaboration, MARSH provides recruitment expertise and managed services, while Next Global delivers migration, relocation logistics, and advisory capabilities—together offering a seamless international staffing solution for clients across Australia and beyond.',
+    name: 'Siemens Bangladesh',
+    location: 'Dhaka, Bangladesh',
+    logo: '/images/partners/siemens.png',
+    description: 'Siemens is a global technology powerhouse that has stood for engineering excellence, innovation, quality, reliability and internationality. Siemens provides automation solutions, drives, motors, and industrial software for various industries.',
+    partnership: 'Reinforcement Group partners with Siemens Bangladesh to provide cutting-edge PLC programming, SCADA systems, and industrial automation solutions. Through this collaboration, we deliver Siemens S7 series programming expertise and integrate their automation products into comprehensive solutions for manufacturing and industrial clients.',
     website: '#'
   },
   {
-    name: 'KI Training & Assessing',
-    location: 'Belmont, Perth, Australia',
-    logo: '/images/partners/ki-training.png',
-    description: 'Based in Belmont, Perth, KI Training & Assessing (RTO 52593) delivers nationally accredited, high-risk work training and vocational certifications tailored for the mining, civil, and industrial sectors. Established in 2013, they provide flexible training—including mobile plant operation, safety licensing, and site-based courses—through experienced trainers and industry-grade facilities.',
-    partnership: 'MARSH Services is teaming up with KI to offer clients a powerful blend of corporate training and vocational certification. We bring together our HR outsourcing and managed services expertise with KI\'s industry-recognized technical training. This collaboration ensures end-to-end workforce development—from onboarding to upskilling certified professionals—especially for organizations in mining, civil, and industrial domains.',
+    name: 'Schneider Electric',
+    location: 'Dhaka, Bangladesh',
+    logo: '/images/partners/schneider.png',
+    description: 'Schneider Electric is the global specialist in energy management and automation. With operations in more than 100 countries, Schneider offers integrated solutions across multiple market segments including energy, infrastructure, industrial processes, building automation and data centers.',
+    partnership: 'Reinforcement Group collaborates with Schneider Electric to implement advanced building automation systems, energy management solutions, and industrial control systems. We leverage Schneider\'s Modicon PLC series and EcoStruxure platform to deliver smart building and industrial automation projects.',
     website: '#'
   }
 ]

@@ -1,4 +1,4 @@
-// Prisma schema for MARSH Services & Outsourcing Website
+// Prisma schema for Reinforcement Group Website
 // Supports both MySQL (local development) and Vercel Postgres/PlanetScale (production)
 
 generator client {

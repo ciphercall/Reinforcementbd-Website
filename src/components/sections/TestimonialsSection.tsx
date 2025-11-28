@@ -7,21 +7,21 @@ import { Quote, Star } from 'lucide-react'
 
 const testimonials = [
   {
-    content: "We booked MARSH for a few training sessions, and the results were great. Our team is now more confident and better equipped for day-to-day tasks.",
-    client: "Healthport Bangladesh Ltd",
-    service: "For Corporate Training",
+    content: "We engaged Reinforcement Group for industrial automation, and the results exceeded expectations. Our production efficiency improved dramatically with their PLC solutions.",
+    client: "Bengal Plastics Ltd",
+    service: "For Industrial Automation",
     rating: 5
   },
   {
-    content: "MARSH helped us hire the right people quickly without the usual hassle. Their team understood exactly what we needed and delivered beyond our expectations.",
-    client: "Newline Clothings PLC",
-    service: "For Staffing & Recruitment",
+    content: "Reinforcement Group delivered exceptional IT solutions for our network infrastructure. Their team understood exactly what we needed and delivered beyond our expectations.",
+    client: "Dhaka IT Solutions",
+    service: "For IT Infrastructure",
     rating: 5
   },
   {
-    content: "Outsourcing our sales team to MARSH was a smart move. They helped us expand into new markets fast and with real results.",
-    client: "A.K. Oxygen Ltd.",
-    service: "For Sales Force Outsourcing",
+    content: "The architectural designs from Reinforcement's Architect View division transformed our office space. Their attention to detail and modern approach was impressive.",
+    client: "Greenland Properties Ltd.",
+    service: "For Architecture Services",
     rating: 5
   }
 ]

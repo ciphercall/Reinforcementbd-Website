@@ -19,8 +19,8 @@ export default function AboutHeaderEditor() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [content, setContent] = useState<HeaderContent>({
-    title: 'About MARSH',
-    subtitle: 'Empowering businesses across Bangladesh with comprehensive outsourcing solutions, cutting-edge technology, and human capital management.',
+    title: 'About Reinforcement Group',
+    subtitle: 'Empowering businesses across Bangladesh with comprehensive automation, IT solutions, and architectural services since 2018.',
     breadcrumbLabel: 'About Us',
     backgroundImage: '/images/about-hero.jpg'
   })

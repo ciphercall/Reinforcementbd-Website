@@ -100,7 +100,7 @@ export default async function AdminDashboard() {
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Getting Started</h2>
             <div className="space-y-4">
               <p className="text-gray-600">
-                Welcome to the MARSH Services admin panel. From here you can:
+                Welcome to the Reinforcement Group admin panel. From here you can:
               </p>
               <ul className="space-y-2 text-gray-600">
                 <li className="flex items-center space-x-2">

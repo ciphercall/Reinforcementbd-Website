@@ -1,4 +1,4 @@
-// Type definitions for MARSH Services Website
+// Type definitions for Reinforcement Group Website
 
 export interface Service {
   id: string

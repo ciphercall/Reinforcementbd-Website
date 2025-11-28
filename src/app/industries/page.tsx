@@ -19,69 +19,69 @@ import {
 
 export const metadata: Metadata = {
   title: 'Industries We Serve',
-  description: 'MARSH Services provides tailored solutions across 20+ diverse industries including Banking, FMCG, ICT, RMG, Pharmaceuticals, and more.',
+  description: 'Reinforcement Group provides automation, IT, and architectural solutions across diverse industries including Manufacturing, Textiles, Pharmaceuticals, Real Estate, and more.',
 }
 
 const industries = [
   { 
-    name: 'Banks & Financial Institutions', 
-    icon: Building2,
-    description: 'Comprehensive staffing and managed services for banking, insurance, and financial services sectors.'
-  },
-  { 
-    name: 'Foreign Aid Projects', 
-    icon: Plane,
-    description: 'Expert support for international development organizations and aid projects.'
-  },
-  { 
-    name: 'Hospitality', 
-    icon: Hotel,
-    description: 'Staffing and training solutions for hotels, restaurants, and tourism businesses.'
-  },
-  { 
-    name: 'RMG & Textiles', 
+    name: 'Manufacturing & Industrial', 
     icon: Factory,
-    description: 'HR, payroll, and operational support for the garment and textile manufacturing sector.'
+    description: 'PLC programming, SCADA systems, and industrial automation for manufacturing plants and factories.'
   },
   { 
-    name: "FMCG's", 
-    icon: ShoppingBag,
-    description: 'Sales force and distribution support for fast-moving consumer goods companies.'
-  },
-  { 
-    name: 'ICT', 
-    icon: Laptop,
-    description: 'Technical staffing and IT managed services for technology companies.'
-  },
-  { 
-    name: 'Non-Governmental Organizations', 
-    icon: Heart,
-    description: 'Specialized support for NGOs and non-profit organizations.'
+    name: 'Textiles & RMG', 
+    icon: Factory,
+    description: 'Automation solutions for garment manufacturing, textile processing, and quality control systems.'
   },
   { 
     name: 'Pharmaceuticals', 
     icon: Pill,
-    description: 'Sales force outsourcing and compliance support for pharmaceutical companies.'
+    description: 'Process automation, clean room control systems, and regulatory compliance solutions for pharma industry.'
   },
   { 
-    name: "SME's & Startups", 
-    icon: Rocket,
-    description: 'Flexible and scalable solutions for growing businesses and startups.'
+    name: 'Real Estate & Construction', 
+    icon: Building2,
+    description: 'Architectural design, building automation, and smart building solutions for property developers.'
   },
   { 
-    name: 'Foreign Affairs & Affiliated Offices', 
-    icon: Globe,
-    description: 'Support services for diplomatic missions and international organizations.'
+    name: 'Hotels & Hospitality', 
+    icon: Hotel,
+    description: 'Building management systems, HVAC automation, and interior design for hotels and resorts.'
   },
   { 
-    name: 'Hospitals & Healthcare', 
+    name: 'Information Technology', 
+    icon: Laptop,
+    description: 'IT infrastructure, networking solutions, software development, and system integration services.'
+  },
+  { 
+    name: 'Healthcare & Hospitals', 
     icon: Stethoscope,
-    description: 'Healthcare staffing and administrative support for medical facilities.'
+    description: 'Medical facility automation, hospital management systems, and healthcare IT solutions.'
   },
   { 
-    name: 'Education', 
+    name: 'Education Institutions', 
     icon: GraduationCap,
-    description: 'Training, staffing, and administrative services for educational institutions.'
+    description: 'Smart classroom solutions, campus automation, and educational software development.'
+  },
+  { 
+    name: 'Banks & Financial', 
+    icon: Building2,
+    description: 'IT security solutions, network infrastructure, and automation for banking operations.'
+  },
+  { 
+    name: 'Energy & Power', 
+    icon: Rocket,
+    description: 'Power plant automation, energy management systems, and renewable energy solutions.'
+  },
+  { 
+    name: 'Food & Beverage', 
+    icon: ShoppingBag,
+    description: 'Process automation, packaging systems, and quality control for food processing industries.'
+  },
+  { 
+    name: 'Government & Public Sector', 
+    icon: Globe,
+    description: 'E-governance solutions, IT infrastructure, and public building automation projects.'
   }
 ]
 
@@ -142,16 +142,16 @@ export default function IndustriesPage() {
           </p>
           <div className="grid sm:grid-cols-3 gap-8 pt-8">
             <div className="p-6 bg-gray-50 rounded-xl">
-              <div className="text-3xl font-bold text-blue-600 mb-2">20+</div>
+              <div className="text-3xl font-bold text-blue-600 mb-2">12+</div>
               <p className="text-gray-600">Industries Served</p>
             </div>
             <div className="p-6 bg-gray-50 rounded-xl">
-              <div className="text-3xl font-bold text-blue-600 mb-2">12+</div>
+              <div className="text-3xl font-bold text-blue-600 mb-2">7+</div>
               <p className="text-gray-600">Years Experience</p>
             </div>
             <div className="p-6 bg-gray-50 rounded-xl">
-              <div className="text-3xl font-bold text-blue-600 mb-2">90%</div>
-              <p className="text-gray-600">Client Retention</p>
+              <div className="text-3xl font-bold text-blue-600 mb-2">100+</div>
+              <p className="text-gray-600">Projects Completed</p>
             </div>
           </div>
         </div>
