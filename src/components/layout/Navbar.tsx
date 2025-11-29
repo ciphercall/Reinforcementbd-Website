@@ -14,9 +14,9 @@ const navigation = [
     name: 'Services', 
     href: '/services',
     children: [
-      { name: 'Automation', href: '/services#automation' },
-      { name: 'Architect View', href: '/services#architect' },
-      { name: 'IT Zone', href: '/services#it' },
+      { name: 'Automation', href: '/services/automation' },
+      { name: 'Architect View', href: '/services/architect-view' },
+      { name: 'IT Zone', href: '/services/it-zone' },
     ]
   },
   { name: 'Industries', href: '/industries' },

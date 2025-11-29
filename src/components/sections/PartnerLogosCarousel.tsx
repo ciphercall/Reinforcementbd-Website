@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 
@@ -27,38 +27,69 @@ export function PartnerLogosCarousel({
   className = ''
 }: PartnerLogosCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
+  const animationRef = useRef<number | null>(null)
+  const positionRef = useRef(0)
+  const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
+    setIsMounted(true)
+    return () => setIsMounted(false)
+  }, [])
+
+  const startAnimation = useCallback(() => {
     const scrollElement = scrollRef.current
     if (!scrollElement) return
 
-    let animationId: number
-    let position = 0
+    // Wait a bit to ensure all images have their dimensions
     const scrollWidth = scrollElement.scrollWidth / 2
+
+    if (scrollWidth <= 0) {
+      // If scrollWidth is 0, try again shortly
+      setTimeout(startAnimation, 100)
+      return
+    }
 
     const animate = () => {
       if (direction === 'left') {
-        position -= speed / 60
-        if (Math.abs(position) >= scrollWidth) {
-          position = 0
+        positionRef.current -= speed / 60
+        if (Math.abs(positionRef.current) >= scrollWidth) {
+          positionRef.current = 0
         }
       } else {
-        position += speed / 60
-        if (position >= scrollWidth) {
-          position = 0
+        positionRef.current += speed / 60
+        if (positionRef.current >= scrollWidth) {
+          positionRef.current = 0
         }
       }
-      scrollElement.style.transform = `translateX(${position}px)`
-      animationId = requestAnimationFrame(animate)
+      scrollElement.style.transform = `translateX(${positionRef.current}px)`
+      animationRef.current = requestAnimationFrame(animate)
     }
 
-    animationId = requestAnimationFrame(animate)
-
-    return () => cancelAnimationFrame(animationId)
+    animationRef.current = requestAnimationFrame(animate)
   }, [speed, direction])
+
+  useEffect(() => {
+    if (!isMounted) return
+
+    // Small delay to ensure DOM is fully rendered
+    const timeoutId = setTimeout(() => {
+      startAnimation()
+    }, 100)
+
+    return () => {
+      clearTimeout(timeoutId)
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current)
+      }
+    }
+  }, [isMounted, startAnimation])
 
   // Duplicate logos for seamless infinite scroll
   const duplicatedLogos = [...logos, ...logos]
+
+  if (!isMounted) {
+    return null // Don't render on server
+  }
 
   return (
     <section className={`py-16 bg-gray-50 overflow-hidden ${className}`}>
