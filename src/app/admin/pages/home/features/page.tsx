@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
 import { ArrowLeft, Save, Eye, Plus, Trash2, GripVertical } from 'lucide-react'
+import { coercePageContent } from '@/lib/utils/pageContent'
 
 interface Feature {
   id: string
@@ -62,7 +63,7 @@ export default function FeaturesSectionEditor() {
       if (response.ok) {
         const data = await response.json()
         if (data.content) {
-          setContent(JSON.parse(data.content))
+          setContent(coercePageContent<FeaturesContent>(data.content, defaultContent))
         }
       }
     } catch {
@@ -134,7 +135,7 @@ export default function FeaturesSectionEditor() {
         body: JSON.stringify({
           section: 'features',
           page: 'home',
-          content: JSON.stringify(content)
+          content
         })
       })
 

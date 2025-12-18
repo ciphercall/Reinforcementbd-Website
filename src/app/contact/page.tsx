@@ -92,11 +92,11 @@ export default function ContactPage() {
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center space-y-6">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
-              Let's Work Together
+              Let&apos;s Work Together
             </h1>
             <p className="text-xl text-gray-600">
               Ready to start your project or have questions about our services? 
-              Let's explore how Reinforcement Group can help transform your vision into reality.
+              Let&apos;s explore how Reinforcement Group can help transform your vision into reality.
             </p>
           </div>
         </div>
@@ -130,7 +130,7 @@ export default function ContactPage() {
           <div>
             <h2 className="text-3xl font-bold text-gray-900 mb-2">Send Us a Message</h2>
             <p className="text-gray-600 mb-8">
-              Fill out the form below and we'll get back to you within 24 hours.
+              Fill out the form below and we&apos;ll get back to you within 24 hours.
             </p>
 
             {submitted ? (
@@ -141,7 +141,7 @@ export default function ContactPage() {
                   </div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">Message Sent!</h3>
                   <p className="text-gray-600">
-                    Thank you for reaching out. We'll be in touch soon.
+                    Thank you for reaching out. We&apos;ll be in touch soon.
                   </p>
                 </CardContent>
               </Card>
@@ -181,7 +181,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Service You're Interested In
+                    Service You&apos;re Interested In
                   </label>
                   <select
                     className="flex h-10 w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -222,7 +222,7 @@ export default function ContactPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                 <div className="absolute bottom-4 left-6 text-white">
                   <h3 className="text-xl font-semibold">Schedule a Discovery Call</h3>
-                  <p className="text-sm text-white/80">Let's discuss your needs</p>
+                  <p className="text-sm text-white/80">Let&apos;s discuss your needs</p>
                 </div>
               </div>
               <CardContent className="p-6 space-y-4">

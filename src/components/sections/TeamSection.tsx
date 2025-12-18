@@ -7,54 +7,85 @@ import { Section, SectionHeader } from '@/components/ui/Section'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Linkedin, Mail } from 'lucide-react'
+import { coercePageContent } from '@/lib/utils/pageContent'
 
-const team = [
-  {
-    name: 'Engr. Md. Shariful Islam',
-    position: 'Director',
-    bio: 'Founder and Director of Reinforcement Group with extensive experience in electrical engineering and automation. Leading the company vision since 2018.',
-    image: '/images/team/shariful.jpg',
-    linkedin: '#',
-    email: 'shariful@ragrpbd.com'
-  },
-  {
-    name: 'Engr. Gazi Monir-Uz-Zaman',
-    position: 'Director',
-    bio: 'Co-Director bringing strategic leadership and technical expertise to drive company growth and innovation in all three divisions.',
-    image: '/images/team/monir.jpg',
-    linkedin: '#',
-    email: 'gazi@ragrpbd.com'
-  },
-  {
-    name: 'Ar. Miss. Sultana',
-    position: 'Head of Design',
-    bio: 'Leading the Reinforcement Architect View division with creative architectural designs and innovative visualization solutions.',
-    image: '/images/team/sultana.jpg',
-    linkedin: '#',
-    email: 'sultana@ragrpbd.com'
-  },
-  {
-    name: 'Engr. Md. Sarful Hasan',
-    position: 'Chief Advisor',
-    bio: 'Providing strategic guidance and technical advisory services with years of industry experience in automation and electrical systems.',
-    image: '/images/team/sarful.jpg',
-    linkedin: '#',
-    email: 'sarful@ragrpbd.com'
-  }
-]
+interface TeamMemberPreview {
+  id: string
+  name: string
+  position: string
+  bio: string
+  image: string
+  linkedin: string
+  email: string
+}
 
-export function TeamSection() {
+interface TeamPreviewContent {
+  sectionTitle: string
+  sectionSubtitle: string
+  members: TeamMemberPreview[]
+  bottomButtonText: string
+  bottomButtonLink: string
+}
+
+const defaultContent: TeamPreviewContent = {
+  sectionTitle: 'Meet Our Team',
+  sectionSubtitle: 'Expert Engineers Driving Excellence',
+  members: [
+    {
+      id: '1',
+      name: 'Engr. Md. Shariful Islam',
+      position: 'Director',
+      bio: 'Founder and Director of Reinforcement Group with extensive experience in electrical engineering and automation. Leading the company vision since 2018.',
+      image: '/images/team/shariful.jpg',
+      linkedin: '#',
+      email: 'shariful@ragrpbd.com'
+    },
+    {
+      id: '2',
+      name: 'Engr. Gazi Monir-Uz-Zaman',
+      position: 'Director',
+      bio: 'Co-Director bringing strategic leadership and technical expertise to drive company growth and innovation in all three divisions.',
+      image: '/images/team/monir.jpg',
+      linkedin: '#',
+      email: 'gazi@ragrpbd.com'
+    },
+    {
+      id: '3',
+      name: 'Ar. Miss. Sultana',
+      position: 'Head of Design',
+      bio: 'Leading the Reinforcement Architect View division with creative architectural designs and innovative visualization solutions.',
+      image: '/images/team/sultana.jpg',
+      linkedin: '#',
+      email: 'sultana@ragrpbd.com'
+    },
+    {
+      id: '4',
+      name: 'Engr. Md. Sarful Hasan',
+      position: 'Chief Advisor',
+      bio: 'Providing strategic guidance and technical advisory services with years of industry experience in automation and electrical systems.',
+      image: '/images/team/sarful.jpg',
+      linkedin: '#',
+      email: 'sarful@ragrpbd.com'
+    }
+  ],
+  bottomButtonText: 'View Full Team',
+  bottomButtonLink: '/about#team'
+}
+
+export function TeamSection({ content }: { content?: unknown }) {
+  const c = coercePageContent<TeamPreviewContent>(content, defaultContent)
+
   return (
     <Section background="gray" id="team">
       <SectionHeader
-        title="Meet Our Team"
-        subtitle="Expert Engineers Driving Excellence"
+        title={c.sectionTitle}
+        subtitle={c.sectionSubtitle}
       />
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {team.map((member, index) => (
+        {c.members.map((member, index) => (
           <motion.div
-            key={member.name}
+            key={member.id}
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -106,9 +137,9 @@ export function TeamSection() {
       </div>
 
       <div className="text-center mt-12">
-        <Link href="/about#team">
+        <Link href={c.bottomButtonLink || '/about#team'}>
           <Button variant="outline" size="lg">
-            View Full Team
+            {c.bottomButtonText}
           </Button>
         </Link>
       </div>

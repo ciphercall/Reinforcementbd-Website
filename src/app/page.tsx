@@ -10,22 +10,39 @@ import { TeamSection } from '@/components/sections/TeamSection'
 import { ClientsSection } from '@/components/sections/ClientsSection'
 import { AllPartnersCarousel } from '@/components/sections/PartnerLogosCarousel'
 import { CTASection } from '@/components/sections/CTASection'
+import { getPageContents } from '@/lib/pageContent'
 
-export default function HomePage() {
+const HOME_SECTIONS = [
+  'hero',
+  'features',
+  'about-preview',
+  'services-preview',
+  'process',
+  'why-us',
+  'industries-preview',
+  'testimonials-preview',
+  'team-preview',
+  'clients',
+  'cta'
+] as const
+
+export default async function HomePage() {
+  const cms = await getPageContents('home', [...HOME_SECTIONS])
+
   return (
     <>
-      <HeroSection />
-      <FeaturesSection />
-      <AboutSection />
-      <ServicesSection />
-      <ProcessSection />
-      <WhyReinforcementSection />
-      <IndustriesSection />
-      <TestimonialsSection />
-      <TeamSection />
-      <ClientsSection />
+      <HeroSection content={cms['hero']} />
+      <FeaturesSection content={cms['features']} />
+      <AboutSection content={cms['about-preview']} />
+      <ServicesSection content={cms['services-preview']} />
+      <ProcessSection content={cms['process']} />
+      <WhyReinforcementSection content={cms['why-us']} />
+      <IndustriesSection content={cms['industries-preview']} />
+      <TestimonialsSection content={cms['testimonials-preview']} />
+      <TeamSection content={cms['team-preview']} />
+      <ClientsSection content={cms['clients']} />
       <AllPartnersCarousel />
-      <CTASection />
+      <CTASection content={cms['cta']} />
     </>
   )
 }

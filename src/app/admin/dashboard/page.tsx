@@ -43,18 +43,29 @@ export default async function AdminDashboard() {
     { title: 'Unread Messages', value: stats.messages, icon: Mail, color: 'red' },
   ]
 
+  const statColorClasses: Record<string, { bg: string; fg: string }> = {
+    blue: { bg: 'bg-blue-100', fg: 'text-blue-600' },
+    green: { bg: 'bg-green-100', fg: 'text-green-600' },
+    purple: { bg: 'bg-purple-100', fg: 'text-purple-600' },
+    red: { bg: 'bg-red-100', fg: 'text-red-600' },
+  }
+
   return (
     <AdminSidebar>
       <div className="space-y-8">
         {/* Header */}
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600">Welcome back! Here's an overview of your website.</p>
+          <p className="text-gray-600">Welcome back! Here&apos;s an overview of your website.</p>
         </div>
 
         {/* Stats Grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {statCards.map((stat) => (
+            (() => {
+              const colors = statColorClasses[stat.color] ?? statColorClasses.blue
+              const Icon = stat.icon
+              return (
             <Card key={stat.title}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
@@ -62,12 +73,14 @@ export default async function AdminDashboard() {
                     <p className="text-sm text-gray-600">{stat.title}</p>
                     <p className="text-3xl font-bold text-gray-900 mt-1">{stat.value}</p>
                   </div>
-                  <div className={`w-12 h-12 rounded-full bg-${stat.color}-100 flex items-center justify-center`}>
-                    <stat.icon className={`w-6 h-6 text-${stat.color}-600`} />
+                  <div className={`w-12 h-12 rounded-full ${colors.bg} flex items-center justify-center`}>
+                    <Icon className={`w-6 h-6 ${colors.fg}`} />
                   </div>
                 </div>
               </CardContent>
             </Card>
+              )
+            })()
           ))}
         </div>
 

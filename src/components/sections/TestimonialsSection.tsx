@@ -4,40 +4,67 @@ import { motion } from 'framer-motion'
 import { Section, SectionHeader } from '@/components/ui/Section'
 import { Card, CardContent } from '@/components/ui/Card'
 import { Quote, Star } from 'lucide-react'
+import { coercePageContent } from '@/lib/utils/pageContent'
 
-const testimonials = [
-  {
-    content: "We engaged Reinforcement Group for industrial automation, and the results exceeded expectations. Our production efficiency improved dramatically with their PLC solutions.",
-    client: "Bengal Plastics Ltd",
-    service: "For Industrial Automation",
-    rating: 5
-  },
-  {
-    content: "Reinforcement Group delivered exceptional IT solutions for our network infrastructure. Their team understood exactly what we needed and delivered beyond our expectations.",
-    client: "Dhaka IT Solutions",
-    service: "For IT Infrastructure",
-    rating: 5
-  },
-  {
-    content: "The architectural designs from Reinforcement's Architect View division transformed our office space. Their attention to detail and modern approach was impressive.",
-    client: "Greenland Properties Ltd.",
-    service: "For Architecture Services",
-    rating: 5
-  }
-]
+interface TestimonialItem {
+  id: string
+  content: string
+  client: string
+  service: string
+  rating: number
+}
 
-export function TestimonialsSection() {
+interface TestimonialsPreviewContent {
+  sectionTitle: string
+  sectionSubtitle: string
+  testimonials: TestimonialItem[]
+}
+
+const defaultContent: TestimonialsPreviewContent = {
+  sectionTitle: 'What Our Clients Say',
+  sectionSubtitle: 'Trusted by Businesses Across Industries',
+  testimonials: [
+    {
+      id: '1',
+      content:
+        'We engaged Reinforcement Group for industrial automation, and the results exceeded expectations. Our production efficiency improved dramatically with their PLC solutions.',
+      client: 'Bengal Plastics Ltd',
+      service: 'For Industrial Automation',
+      rating: 5
+    },
+    {
+      id: '2',
+      content:
+        'Reinforcement Group delivered exceptional IT solutions for our network infrastructure. Their team understood exactly what we needed and delivered beyond our expectations.',
+      client: 'Dhaka IT Solutions',
+      service: 'For IT Infrastructure',
+      rating: 5
+    },
+    {
+      id: '3',
+      content:
+        "The architectural designs from Reinforcement's Architect View division transformed our office space. Their attention to detail and modern approach was impressive.",
+      client: 'Greenland Properties Ltd.',
+      service: 'For Architecture Services',
+      rating: 5
+    }
+  ]
+}
+
+export function TestimonialsSection({ content }: { content?: unknown }) {
+  const c = coercePageContent<TestimonialsPreviewContent>(content, defaultContent)
+
   return (
     <Section background="gray" id="testimonials">
       <SectionHeader
-        title="What Our Clients Say"
-        subtitle="Trusted by Businesses Across Industries"
+        title={c.sectionTitle}
+        subtitle={c.sectionSubtitle}
       />
 
       <div className="grid md:grid-cols-3 gap-8">
-        {testimonials.map((testimonial, index) => (
+        {c.testimonials.map((testimonial, index) => (
           <motion.div
-            key={index}
+            key={testimonial.id}
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

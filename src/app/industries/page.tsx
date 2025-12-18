@@ -138,7 +138,7 @@ export default function IndustriesPage() {
             Every industry has unique challenges, regulations, and requirements. 
             Our team brings deep domain expertise across sectors, ensuring that 
             the solutions we deliver are not just effective, but precisely aligned 
-            with your industry's specific needs.
+            with your industry&apos;s specific needs.
           </p>
           <div className="grid sm:grid-cols-3 gap-8 pt-8">
             <div className="p-6 bg-gray-50 rounded-xl">

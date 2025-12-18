@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
 import { ArrowLeft, Save, Eye, Image as ImageIcon, Plus, Trash2 } from 'lucide-react'
+import { coercePageContent } from '@/lib/utils/pageContent'
 
 interface HeroContent {
   headline: string
@@ -57,11 +58,11 @@ export default function HeroSectionEditor() {
 
   const fetchContent = async () => {
     try {
-      const response = await fetch('/api/page-content?section=hero')
+      const response = await fetch('/api/page-content?section=hero&page=home')
       if (response.ok) {
         const data = await response.json()
         if (data.content) {
-          setContent(JSON.parse(data.content))
+          setContent(coercePageContent<HeroContent>(data.content, defaultContent))
         }
       }
     } catch {
@@ -128,7 +129,7 @@ export default function HeroSectionEditor() {
         body: JSON.stringify({
           section: 'hero',
           page: 'home',
-          content: JSON.stringify(content)
+          content
         })
       })
 

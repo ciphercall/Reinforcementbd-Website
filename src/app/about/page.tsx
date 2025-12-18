@@ -124,7 +124,7 @@ export default function AboutPage() {
                 Your Vision, Our Expertise
               </h1>
               <p className="text-xl text-gray-600 leading-relaxed">
-                Reinforcement Group started its journey in 2018 as "Reinforcement Automation" 
+                Reinforcement Group started its journey in 2018 as &quot;Reinforcement Automation&quot; 
                 and has grown to become a diversified company with three specialized divisions.
               </p>
               <p className="text-gray-600 leading-relaxed">

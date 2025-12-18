@@ -36,7 +36,7 @@ export function PartnerLogosCarousel({
     return () => setIsMounted(false)
   }, [])
 
-  const startAnimation = useCallback(() => {
+  const startAnimation = useCallback(function startAnimationImpl() {
     const scrollElement = scrollRef.current
     if (!scrollElement) return
 
@@ -45,7 +45,7 @@ export function PartnerLogosCarousel({
 
     if (scrollWidth <= 0) {
       // If scrollWidth is 0, try again shortly
-      setTimeout(startAnimation, 100)
+      setTimeout(startAnimationImpl, 100)
       return
     }
 

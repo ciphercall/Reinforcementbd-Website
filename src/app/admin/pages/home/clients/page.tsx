@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
 import { ArrowLeft, Save, Eye, Plus, Trash2, Image as ImageIcon } from 'lucide-react'
+import { coercePageContent } from '@/lib/utils/pageContent'
 
 interface Client {
   id: string
@@ -59,7 +60,7 @@ export default function ClientsSectionEditor() {
       if (response.ok) {
         const data = await response.json()
         if (data.content) {
-          setContent(JSON.parse(data.content))
+          setContent(coercePageContent<ClientsContent>(data.content, defaultContent))
         }
       }
     } catch {
@@ -131,7 +132,7 @@ export default function ClientsSectionEditor() {
         body: JSON.stringify({
           section: 'clients',
           page: 'home',
-          content: JSON.stringify(content)
+          content
         })
       })
 

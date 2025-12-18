@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
 import { ArrowLeft, Save, Eye } from 'lucide-react'
+import { coercePageContent } from '@/lib/utils/pageContent'
 
 interface CTAContent {
   headline: string
@@ -52,7 +53,7 @@ export default function CTASectionEditor() {
       if (response.ok) {
         const data = await response.json()
         if (data.content) {
-          setContent(JSON.parse(data.content))
+          setContent(coercePageContent<CTAContent>(data.content, defaultContent))
         }
       }
     } catch {
@@ -95,7 +96,7 @@ export default function CTASectionEditor() {
         body: JSON.stringify({
           section: 'cta',
           page: 'home',
-          content: JSON.stringify(content)
+          content
         })
       })
 
@@ -115,6 +116,9 @@ export default function CTASectionEditor() {
     { value: 'green', label: 'Green', class: 'bg-green-600' },
     { value: 'gray', label: 'Gray', class: 'bg-gray-800' },
   ]
+
+  const previewBgClass =
+    colorOptions.find((c) => c.value === content.backgroundColor)?.class ?? 'bg-blue-600'
 
   return (
     <AdminSidebar>
@@ -266,7 +270,7 @@ export default function CTASectionEditor() {
           <Card>
             <CardContent className="p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Preview</h2>
-              <div className={`p-8 rounded-lg bg-${content.backgroundColor}-600 text-white text-center`}>
+              <div className={`p-8 rounded-lg ${previewBgClass} text-white text-center`}>
                 <h3 className="text-2xl font-bold mb-2">{content.headline}</h3>
                 <p className="text-white/80 mb-6 max-w-xl mx-auto">{content.description}</p>
                 <div className="flex justify-center gap-4">

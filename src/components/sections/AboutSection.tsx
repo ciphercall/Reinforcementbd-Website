@@ -6,8 +6,42 @@ import Link from 'next/link'
 import { Section, SectionHeader } from '@/components/ui/Section'
 import { Button } from '@/components/ui/Button'
 import { Target, Eye, ArrowRight } from 'lucide-react'
+import { coercePageContent } from '@/lib/utils/pageContent'
 
-export function AboutSection() {
+interface AboutContent {
+  eyebrow: string
+  title: string
+  description: string
+  image: string
+  yearsExperience: string
+  missionTitle: string
+  missionDescription: string
+  visionTitle: string
+  visionDescription: string
+  buttonText: string
+  buttonLink: string
+}
+
+const defaultContent: AboutContent = {
+  eyebrow: 'About Us',
+  title: 'Your Trusted Partner for Industrial Excellence',
+  description:
+    'Reinforcement Group started its journey in 2018 as "Reinforcement Automation" and has grown to become a diversified company with three specialized divisions: Automation, Architect View, and IT Zone. We empower businesses with innovative solutions in electrical & automation, architectural design, and technology services.',
+  image: '/images/automation/2.png',
+  yearsExperience: '6+',
+  missionTitle: 'Our Mission',
+  missionDescription:
+    'To provide innovative and reliable electrical, automation, architectural, and IT solutions that exceed client expectations with highest quality.',
+  visionTitle: 'Our Vision',
+  visionDescription:
+    'To be the leading integrated solutions provider in Bangladesh, recognized for excellence, innovation, and customer satisfaction.',
+  buttonText: 'Learn More About Us',
+  buttonLink: '/about'
+}
+
+export function AboutSection({ content }: { content?: unknown }) {
+  const c = coercePageContent<AboutContent>(content, defaultContent)
+
   return (
     <Section background="white" id="about">
       <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -21,7 +55,7 @@ export function AboutSection() {
         >
           <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
             <Image
-              src="/images/automation/2.png"
+              src={c.image}
               alt="About Reinforcement Group"
               fill
               className="object-cover"
@@ -36,7 +70,7 @@ export function AboutSection() {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="absolute -bottom-6 -right-6 bg-blue-600 text-white p-8 rounded-2xl shadow-xl"
           >
-            <div className="text-4xl font-bold">6+</div>
+            <div className="text-4xl font-bold">{c.yearsExperience}</div>
             <div className="text-blue-100">Years of Experience</div>
           </motion.div>
         </motion.div>
@@ -51,18 +85,15 @@ export function AboutSection() {
         >
           <div>
             <span className="text-blue-600 font-semibold text-sm uppercase tracking-wider">
-              About Us
+              {c.eyebrow}
             </span>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mt-2">
-              Your Trusted Partner for Industrial Excellence
+              {c.title}
             </h2>
           </div>
 
           <p className="text-gray-600 text-lg leading-relaxed">
-            Reinforcement Group started its journey in 2018 as "Reinforcement Automation" 
-            and has grown to become a diversified company with three specialized divisions: 
-            Automation, Architect View, and IT Zone. We empower businesses with innovative 
-            solutions in electrical & automation, architectural design, and technology services.
+            {c.description}
           </p>
 
           {/* Mission & Vision */}
@@ -71,27 +102,25 @@ export function AboutSection() {
               <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mb-4">
                 <Target className="w-6 h-6 text-white" />
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Our Mission</h3>
+              <h3 className="font-semibold text-gray-900 mb-2">{c.missionTitle}</h3>
               <p className="text-sm text-gray-600">
-                To provide innovative and reliable electrical, automation, architectural, 
-                and IT solutions that exceed client expectations with highest quality.
+                {c.missionDescription}
               </p>
             </div>
             <div className="p-6 bg-gray-50 rounded-xl">
               <div className="w-12 h-12 bg-gray-900 rounded-lg flex items-center justify-center mb-4">
                 <Eye className="w-6 h-6 text-white" />
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Our Vision</h3>
+              <h3 className="font-semibold text-gray-900 mb-2">{c.visionTitle}</h3>
               <p className="text-sm text-gray-600">
-                To be the leading integrated solutions provider in Bangladesh, 
-                recognized for excellence, innovation, and customer satisfaction.
+                {c.visionDescription}
               </p>
             </div>
           </div>
 
-          <Link href="/about">
+          <Link href={c.buttonLink}>
             <Button variant="primary" size="lg" className="group">
-              Learn More About Us
+              {c.buttonText}
               <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
             </Button>
           </Link>

@@ -8,40 +8,66 @@ import {
   Cog, 
   CheckCircle
 } from 'lucide-react'
+import { coercePageContent } from '@/lib/utils/pageContent'
 
-const steps = [
-  {
-    number: '01',
-    title: 'Consultation & Analysis',
-    description: 'We begin by understanding your requirements, conducting site visits if needed, and analyzing your project needs.',
-    icon: MessageSquare
-  },
-  {
-    number: '02',
-    title: 'Design & Planning',
-    description: 'Our expert team creates detailed designs, technical specifications, and project plans tailored to your needs.',
-    icon: FileSearch
-  },
-  {
-    number: '03',
-    title: 'Implementation',
-    description: 'We execute the project with precision, following industry best practices and maintaining quality standards.',
-    icon: Cog
-  },
-  {
-    number: '04',
-    title: 'Delivery & Support',
-    description: 'Project handover with documentation, training, and ongoing maintenance and support services.',
-    icon: CheckCircle
-  }
-]
+interface ProcessStep {
+  id: string
+  number: string
+  title: string
+  description: string
+}
 
-export function ProcessSection() {
+interface ProcessContent {
+  sectionTitle: string
+  sectionSubtitle: string
+  steps: ProcessStep[]
+}
+
+const defaultContent: ProcessContent = {
+  sectionTitle: 'Our Working Process',
+  sectionSubtitle: 'From concept to completion, we deliver excellence',
+  steps: [
+    {
+      id: '1',
+      number: '01',
+      title: 'Consultation & Analysis',
+      description:
+        'We begin by understanding your requirements, conducting site visits if needed, and analyzing your project needs.'
+    },
+    {
+      id: '2',
+      number: '02',
+      title: 'Design & Planning',
+      description:
+        'Our expert team creates detailed designs, technical specifications, and project plans tailored to your needs.'
+    },
+    {
+      id: '3',
+      number: '03',
+      title: 'Implementation',
+      description:
+        'We execute the project with precision, following industry best practices and maintaining quality standards.'
+    },
+    {
+      id: '4',
+      number: '04',
+      title: 'Delivery & Support',
+      description:
+        'Project handover with documentation, training, and ongoing maintenance and support services.'
+    }
+  ]
+}
+
+const stepIcons = [MessageSquare, FileSearch, Cog, CheckCircle]
+
+export function ProcessSection({ content }: { content?: unknown }) {
+  const c = coercePageContent<ProcessContent>(content, defaultContent)
+
   return (
     <Section background="gray" id="process">
       <SectionHeader
-        title="Our Working Process"
-        subtitle="From concept to completion, we deliver excellence"
+        title={c.sectionTitle}
+        subtitle={c.sectionSubtitle}
       />
 
       <div className="relative">
@@ -57,9 +83,11 @@ export function ProcessSection() {
           transition={{ duration: 0.6 }}
           className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8"
         >
-          {steps.map((step, index) => (
+          {c.steps.map((step, index) => {
+            const Icon = stepIcons[index % stepIcons.length]
+            return (
             <motion.div
-              key={step.number}
+              key={step.id}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -70,7 +98,7 @@ export function ProcessSection() {
               <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow relative z-10">
                 {/* Icon */}
                 <div className="w-16 h-16 rounded-full bg-blue-600 flex items-center justify-center mb-6 mx-auto">
-                  <step.icon className="w-8 h-8 text-white" />
+                  <Icon className="w-8 h-8 text-white" />
                 </div>
 
                 {/* Step Number */}
@@ -87,7 +115,7 @@ export function ProcessSection() {
                 </p>
               </div>
             </motion.div>
-          ))}
+          )})}
         </motion.div>
       </div>
     </Section>

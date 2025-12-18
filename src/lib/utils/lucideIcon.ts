@@ -1,0 +1,73 @@
+import type { LucideIcon } from 'lucide-react'
+import {
+  Award,
+  BarChart,
+  Briefcase,
+  Building2,
+  CheckCircle,
+  Clock,
+  Code,
+  Factory,
+  Globe,
+  GraduationCap,
+  Headphones,
+  Heart,
+  Hotel,
+  Laptop,
+  Layers,
+  Lock,
+  Mail,
+  Phone,
+  PieChart,
+  Pill,
+  Plane,
+  Rocket,
+  Settings,
+  Shield,
+  ShoppingBag,
+  Star,
+  Target,
+  ThumbsUp,
+  TrendingUp,
+  Users,
+  Zap
+} from 'lucide-react'
+
+const ICONS: Record<string, LucideIcon> = {
+  Award,
+  BarChart,
+  Briefcase,
+  Building2,
+  CheckCircle,
+  Clock,
+  Code,
+  Factory,
+  Globe,
+  GraduationCap,
+  Headphones,
+  Heart,
+  Hotel,
+  Laptop,
+  Layers,
+  Lock,
+  Mail,
+  Phone,
+  PieChart,
+  Pill,
+  Plane,
+  Rocket,
+  Settings,
+  Shield,
+  ShoppingBag,
+  Star,
+  Target,
+  ThumbsUp,
+  TrendingUp,
+  Users,
+  Zap
+}
+
+export function resolveLucideIcon(name?: string, fallback: LucideIcon = Star): LucideIcon {
+  if (name && ICONS[name]) return ICONS[name]
+  return fallback
+}

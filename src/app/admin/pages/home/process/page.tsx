@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
 import { ArrowLeft, Save, Eye, Plus, Trash2 } from 'lucide-react'
+import { coercePageContent } from '@/lib/utils/pageContent'
 
 interface ProcessStep {
   id: string
@@ -56,7 +57,7 @@ export default function ProcessSectionEditor() {
       if (response.ok) {
         const data = await response.json()
         if (data.content) {
-          setContent(JSON.parse(data.content))
+          setContent(coercePageContent<ProcessContent>(data.content, defaultContent))
         }
       }
     } catch {
@@ -129,7 +130,7 @@ export default function ProcessSectionEditor() {
         body: JSON.stringify({
           section: 'process',
           page: 'home',
-          content: JSON.stringify(content)
+          content
         })
       })
 
@@ -156,7 +157,7 @@ export default function ProcessSectionEditor() {
             </Link>
             <div>
               <h1 className="text-2xl font-bold text-gray-900">Process Steps</h1>
-              <p className="text-gray-600">Edit the "How We Work" section</p>
+              <p className="text-gray-600">Edit the &quot;How We Work&quot; section</p>
             </div>
           </div>
           <Link href="/#process" target="_blank">

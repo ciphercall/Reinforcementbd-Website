@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
 import { ArrowLeft, Save, Eye, Plus, Trash2 } from 'lucide-react'
+import { coercePageContent } from '@/lib/utils/pageContent'
 
 interface WhyUsItem {
   id: string
@@ -63,7 +64,7 @@ export default function WhyUsSectionEditor() {
       if (response.ok) {
         const data = await response.json()
         if (data.content) {
-          setContent(JSON.parse(data.content))
+          setContent(coercePageContent<WhyUsContent>(data.content, defaultContent))
         }
       }
     } catch {
@@ -135,7 +136,7 @@ export default function WhyUsSectionEditor() {
         body: JSON.stringify({
           section: 'why-us',
           page: 'home',
-          content: JSON.stringify(content)
+          content
         })
       })
 

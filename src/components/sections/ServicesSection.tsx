@@ -2,67 +2,87 @@
 
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import { 
-  Zap, 
-  Building2, 
-  Code,
-  Settings,
-  Wrench,
-  Factory,
-  Lightbulb,
-  Globe,
-  Smartphone,
-  Cloud
-} from 'lucide-react'
+import { Zap, Building2, Code, Star } from 'lucide-react'
 import { Section, SectionHeader } from '@/components/ui/Section'
 import { Card, CardContent } from '@/components/ui/Card'
 import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
+import { coercePageContent } from '@/lib/utils/pageContent'
+import { resolveLucideIcon } from '@/lib/utils/lucideIcon'
 
-const divisions = [
-  {
-    title: 'Reinforcement Automation',
-    description: 'Complete electrical and automation solutions for industrial and commercial projects.',
-    icon: Zap,
-    image: '/images/automation/1.png',
-    services: [
-      'Electrical & Automation Equipment Supply',
-      'Electrical Erection & Commissioning',
-      'Factory Automation',
-      'Energy Management',
-    ],
-    href: '/services#automation',
-    color: 'from-blue-500 to-blue-700'
-  },
-  {
-    title: 'Reinforcement Architect View',
-    description: 'Creative architectural designs and professional engineering services.',
-    icon: Building2,
-    image: '/images/automation/2.png',
-    services: [
-      'Architectural Design',
-      'Electrical Design',
-      'Plumbing & Sanitary',
-      '3D Modeling & Visualization',
-    ],
-    href: '/services#architect',
-    color: 'from-emerald-500 to-emerald-700'
-  },
-  {
-    title: 'Reinforcement IT Zone',
-    description: 'Cutting-edge technology solutions for digital transformation.',
-    icon: Code,
-    image: '/images/it/I33.jfif',
-    services: [
-      'Web Development',
-      'Mobile App Development',
-      'AI & Machine Learning',
-      'Cloud Services',
-    ],
-    href: '/services#it',
-    color: 'from-purple-500 to-purple-700'
-  }
-]
+interface ServicePreviewItem {
+  id: string
+  title: string
+  description: string
+  image: string
+  services: string[]
+  href: string
+  icon?: string
+  color?: string
+}
+
+interface ServicesPreviewContent {
+  sectionTitle: string
+  sectionSubtitle: string
+  items: ServicePreviewItem[]
+  bottomButtonText: string
+  bottomButtonLink: string
+}
+
+const defaultContent: ServicesPreviewContent = {
+  sectionTitle: 'Our Divisions',
+  sectionSubtitle: 'Three pillars of excellence delivering comprehensive solutions',
+  items: [
+    {
+      id: '1',
+      title: 'Reinforcement Automation',
+      description: 'Complete electrical and automation solutions for industrial and commercial projects.',
+      image: '/images/automation/1.png',
+      services: [
+        'Electrical & Automation Equipment Supply',
+        'Electrical Erection & Commissioning',
+        'Factory Automation',
+        'Energy Management'
+      ],
+      href: '/services#automation',
+      icon: 'Zap',
+      color: 'blue'
+    },
+    {
+      id: '2',
+      title: 'Reinforcement Architect View',
+      description: 'Creative architectural designs and professional engineering services.',
+      image: '/images/automation/2.png',
+      services: [
+        'Architectural Design',
+        'Electrical Design',
+        'Plumbing & Sanitary',
+        '3D Modeling & Visualization'
+      ],
+      href: '/services#architect',
+      icon: 'Building2',
+      color: 'emerald'
+    },
+    {
+      id: '3',
+      title: 'Reinforcement IT Zone',
+      description: 'Cutting-edge technology solutions for digital transformation.',
+      image: '/images/it/I33.jfif',
+      services: ['Web Development', 'Mobile App Development', 'AI & Machine Learning', 'Cloud Services'],
+      href: '/services#it',
+      icon: 'Code',
+      color: 'purple'
+    }
+  ],
+  bottomButtonText: 'View All Services',
+  bottomButtonLink: '/services'
+}
+
+const colorToGradient: Record<string, string> = {
+  blue: 'from-blue-500 to-blue-700',
+  emerald: 'from-emerald-500 to-emerald-700',
+  purple: 'from-purple-500 to-purple-700'
+}
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -79,12 +99,14 @@ const itemVariants = {
   visible: { opacity: 1, y: 0 }
 }
 
-export function ServicesSection() {
+export function ServicesSection({ content }: { content?: unknown }) {
+  const c = coercePageContent<ServicesPreviewContent>(content, defaultContent)
+
   return (
     <Section background="gray" id="services">
       <SectionHeader
-        title="Our Divisions"
-        subtitle="Three pillars of excellence delivering comprehensive solutions"
+        title={c.sectionTitle}
+        subtitle={c.sectionSubtitle}
       />
 
       <motion.div
@@ -94,8 +116,12 @@ export function ServicesSection() {
         viewport={{ once: true }}
         className="grid md:grid-cols-3 gap-8"
       >
-        {divisions.map((division) => (
-          <motion.div key={division.title} variants={itemVariants}>
+        {c.items.map((division) => {
+          const Icon = resolveLucideIcon(division.icon, Star)
+          const gradient = colorToGradient[division.color ?? ''] ?? colorToGradient.blue
+
+          return (
+          <motion.div key={division.id} variants={itemVariants}>
             <Card className="h-full overflow-hidden hover:shadow-xl transition-all duration-300 group">
               {/* Image */}
               <div className="relative h-48 overflow-hidden">
@@ -105,10 +131,10 @@ export function ServicesSection() {
                   fill
                   className="object-cover group-hover:scale-110 transition-transform duration-500"
                 />
-                <div className={`absolute inset-0 bg-gradient-to-br ${division.color} opacity-60`} />
+                <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-60`} />
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
-                    <division.icon className="w-8 h-8 text-white" />
+                    <Icon className="w-8 h-8 text-white" />
                   </div>
                 </div>
               </div>
@@ -131,7 +157,7 @@ export function ServicesSection() {
                   ))}
                 </ul>
 
-                <Link href={division.href}>
+                <Link href={division.href || '/services'}>
                   <Button variant="outline" size="sm" className="w-full group-hover:bg-blue-600 group-hover:text-white transition-colors">
                     Learn More
                   </Button>
@@ -139,7 +165,7 @@ export function ServicesSection() {
               </CardContent>
             </Card>
           </motion.div>
-        ))}
+        )})}
       </motion.div>
 
       {/* View All Services */}
@@ -150,9 +176,9 @@ export function ServicesSection() {
         transition={{ delay: 0.4 }}
         className="text-center mt-12"
       >
-        <Link href="/services">
+        <Link href={c.bottomButtonLink || '/services'}>
           <Button variant="primary" size="lg">
-            View All Services
+            {c.bottomButtonText}
           </Button>
         </Link>
       </motion.div>
