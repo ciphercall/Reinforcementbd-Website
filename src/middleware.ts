@@ -12,6 +12,8 @@ export async function middleware(request: NextRequest) {
     '/api',
     '/_next',
     '/images',
+    '/uploads',
+    '/documents',
     '/favicon.ico',
   ]
 

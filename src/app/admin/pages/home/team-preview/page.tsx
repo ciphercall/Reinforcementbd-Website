@@ -18,6 +18,7 @@ interface TeamMemberPreview {
   position: string
   bio: string
   image: string
+  showImage?: boolean
   linkedin: string
   email: string
 }
@@ -25,6 +26,7 @@ interface TeamMemberPreview {
 interface TeamPreviewContent {
   sectionTitle: string
   sectionSubtitle: string
+  visibleCount?: number
   members: TeamMemberPreview[]
   bottomButtonText: string
   bottomButtonLink: string
@@ -33,6 +35,7 @@ interface TeamPreviewContent {
 const defaultContent: TeamPreviewContent = {
   sectionTitle: 'Meet Our Team',
   sectionSubtitle: 'Expert Engineers Driving Excellence',
+  visibleCount: 4,
   members: [
     {
       id: '1',
@@ -40,6 +43,7 @@ const defaultContent: TeamPreviewContent = {
       position: 'Director',
       bio: 'Founder and Director of Reinforcement Group with extensive experience in electrical engineering and automation. Leading the company vision since 2018.',
       image: '/images/team/shariful.jpg',
+      showImage: true,
       linkedin: '#',
       email: 'shariful@ragrpbd.com'
     },
@@ -49,6 +53,7 @@ const defaultContent: TeamPreviewContent = {
       position: 'Director',
       bio: 'Co-Director bringing strategic leadership and technical expertise to drive company growth and innovation in all three divisions.',
       image: '/images/team/monir.jpg',
+      showImage: true,
       linkedin: '#',
       email: 'gazi@ragrpbd.com'
     },
@@ -58,6 +63,7 @@ const defaultContent: TeamPreviewContent = {
       position: 'Head of Design',
       bio: 'Leading the Reinforcement Architect View division with creative architectural designs and innovative visualization solutions.',
       image: '/images/team/sultana.jpg',
+      showImage: true,
       linkedin: '#',
       email: 'sultana@ragrpbd.com'
     },
@@ -67,6 +73,7 @@ const defaultContent: TeamPreviewContent = {
       position: 'Chief Advisor',
       bio: 'Providing strategic guidance and technical advisory services with years of industry experience in automation and electrical systems.',
       image: '/images/team/sarful.jpg',
+      showImage: true,
       linkedin: '#',
       email: 'sarful@ragrpbd.com'
     }
@@ -130,7 +137,19 @@ export default function TeamPreviewEditor() {
       if (response.ok) {
         const data = await response.json()
         if (data.content) {
-          setContent(coercePageContent<TeamPreviewContent>(data.content, defaultContent))
+          const coerced = coercePageContent<TeamPreviewContent>(data.content, defaultContent)
+          setContent({
+            ...defaultContent,
+            ...coerced,
+            visibleCount:
+              Number.isFinite(coerced.visibleCount as number)
+                ? (coerced.visibleCount as number)
+                : defaultContent.visibleCount,
+            members: (coerced.members ?? defaultContent.members).map((m) => ({
+              ...m,
+              showImage: m.showImage !== false,
+            })),
+          })
         }
       }
     } catch {
@@ -179,6 +198,7 @@ export default function TeamPreviewEditor() {
           position: 'Role',
           bio: 'Bio',
           image: '',
+          showImage: true,
           linkedin: '#',
           email: ''
         }
@@ -263,6 +283,20 @@ export default function TeamPreviewEditor() {
                   rows={2}
                 />
               </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">How many members to show on homepage</label>
+                <Input
+                  type="number"
+                  min={0}
+                  value={content.visibleCount ?? 0}
+                  onChange={(e) => {
+                    const n = Number.parseInt(e.target.value || '0', 10)
+                    setContent((prev) => ({ ...prev, visibleCount: Number.isFinite(n) ? n : 0 }))
+                    setSuccess('')
+                  }}
+                />
+                <p className="text-xs text-gray-500 mt-1">Set to 0 to show all members.</p>
+              </div>
             </CardContent>
           </Card>
 
@@ -281,6 +315,23 @@ export default function TeamPreviewEditor() {
                   <div key={m.id} className="p-4 bg-gray-50 rounded-lg border">
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1 space-y-3">
+                        <div className="flex items-center justify-between">
+                          <label className="block text-sm text-gray-600">Show image</label>
+                          <input
+                            type="checkbox"
+                            className="h-4 w-4"
+                            checked={m.showImage !== false}
+                            onChange={(e) => {
+                              setContent((prev) => ({
+                                ...prev,
+                                members: prev.members.map((x) =>
+                                  x.id === m.id ? { ...x, showImage: e.target.checked } : x
+                                ),
+                              }))
+                              setSuccess('')
+                            }}
+                          />
+                        </div>
                         <div className="grid md:grid-cols-2 gap-4">
                           <div>
                             <label className="block text-sm text-gray-600 mb-1">Name</label>

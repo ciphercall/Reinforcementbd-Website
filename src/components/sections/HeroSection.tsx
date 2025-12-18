@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { Button } from '@/components/ui/Button'
 import { ArrowRight } from 'lucide-react'
 import { coercePageContent } from '@/lib/utils/pageContent'
@@ -59,11 +59,36 @@ export function HeroSection({ content }: { content?: unknown }) {
   const [activeIndex, setActiveIndex] = useState(0)
   const next = () => setActiveIndex((i) => (i + 1) % images.length)
   const prev = () => setActiveIndex((i) => (i - 1 + images.length) % images.length)
+  const wheelLockRef = useRef(false)
 
   const variants = {
-    left: { x: -120, rotate: -12, scale: 0.9, opacity: 0.85, zIndex: 1 },
-    center: { x: 0, rotate: -3, scale: 1, opacity: 1, zIndex: 3 },
-    right: { x: 120, rotate: 6, scale: 0.9, opacity: 0.85, zIndex: 1 },
+    left: {
+      x: -190,
+      y: 28,
+      rotate: -18,
+      scale: 0.92,
+      opacity: 0.38,
+      filter: 'blur(1.5px)',
+      zIndex: 1,
+    },
+    center: {
+      x: 0,
+      y: 0,
+      rotate: -3,
+      scale: 1,
+      opacity: 1,
+      filter: 'blur(0px)',
+      zIndex: 3,
+    },
+    right: {
+      x: 190,
+      y: 36,
+      rotate: 14,
+      scale: 0.92,
+      opacity: 0.38,
+      filter: 'blur(1.5px)',
+      zIndex: 1,
+    },
   } as const
 
   return (
@@ -130,11 +155,27 @@ export function HeroSection({ content }: { content?: unknown }) {
           >
             <motion.div
               className="relative aspect-square"
+              style={{ perspective: 1200 }}
               drag="x"
               dragConstraints={{ left: 0, right: 0 }}
               onDragEnd={(_, info) => {
                 if (info.offset.x < -60) next()
                 if (info.offset.x > 60) prev()
+              }}
+              onWheel={(e) => {
+                // Allow trackpad/mouse wheel navigation like your screenshot expectation.
+                // Throttle so it doesn't spin too fast.
+                if (wheelLockRef.current) return
+                const primaryDelta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY
+                if (Math.abs(primaryDelta) < 8) return
+
+                wheelLockRef.current = true
+                if (primaryDelta > 0) next()
+                else prev()
+
+                window.setTimeout(() => {
+                  wheelLockRef.current = false
+                }, 350)
               }}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-700 rounded-3xl transform rotate-3" />
@@ -148,14 +189,18 @@ export function HeroSection({ content }: { content?: unknown }) {
 
                   return (
                     <motion.div
-                      key={`${src}-${position}-${index}`}
+                      key={`${position}`}
                       className="absolute inset-0"
                       animate={position}
                       variants={variants}
-                      transition={{ type: 'spring', stiffness: 260, damping: 30 }}
+                      transition={{ type: 'spring', stiffness: 220, damping: 28 }}
                       style={{ transformOrigin: 'center center' }}
+                      onClick={() => {
+                        if (slotOffset === -1) prev()
+                        if (slotOffset === 1) next()
+                      }}
                     >
-                      <div className="relative w-full h-full">
+                      <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/30 bg-white/10">
                         <Image
                           src={src}
                           alt="Hero showcase"
@@ -163,6 +208,10 @@ export function HeroSection({ content }: { content?: unknown }) {
                           className="object-cover rounded-3xl shadow-2xl"
                           priority
                         />
+                        {/* subtle glass overlay on side cards */}
+                        {position !== 'center' && (
+                          <div className="absolute inset-0 bg-white/40" />
+                        )}
                       </div>
                     </motion.div>
                   )

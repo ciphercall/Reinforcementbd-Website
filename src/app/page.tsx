@@ -12,6 +12,8 @@ import { AllPartnersCarousel } from '@/components/sections/PartnerLogosCarousel'
 import { CTASection } from '@/components/sections/CTASection'
 import { getPageContents } from '@/lib/pageContent'
 
+export const dynamic = 'force-dynamic'
+
 const HOME_SECTIONS = [
   'hero',
   'features',

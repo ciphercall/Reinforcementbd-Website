@@ -30,10 +30,18 @@ export function PartnerLogosCarousel({
   const animationRef = useRef<number | null>(null)
   const positionRef = useRef(0)
   const [isMounted, setIsMounted] = useState(false)
+  const isPausedRef = useRef(false)
 
   useEffect(() => {
     setIsMounted(true)
     return () => setIsMounted(false)
+  }, [])
+
+  const stopAnimation = useCallback(() => {
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current)
+      animationRef.current = null
+    }
   }, [])
 
   const startAnimation = useCallback(function startAnimationImpl() {
@@ -50,6 +58,10 @@ export function PartnerLogosCarousel({
     }
 
     const animate = () => {
+      if (isPausedRef.current) {
+        stopAnimation()
+        return
+      }
       if (direction === 'left') {
         positionRef.current -= speed / 60
         if (Math.abs(positionRef.current) >= scrollWidth) {
@@ -66,7 +78,7 @@ export function PartnerLogosCarousel({
     }
 
     animationRef.current = requestAnimationFrame(animate)
-  }, [speed, direction])
+  }, [speed, direction, stopAnimation])
 
   useEffect(() => {
     if (!isMounted) return
@@ -78,11 +90,9 @@ export function PartnerLogosCarousel({
 
     return () => {
       clearTimeout(timeoutId)
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current)
-      }
+      stopAnimation()
     }
-  }, [isMounted, startAnimation])
+  }, [isMounted, startAnimation, stopAnimation])
 
   // Duplicate logos for seamless infinite scroll
   const duplicatedLogos = [...logos, ...logos]
@@ -92,7 +102,17 @@ export function PartnerLogosCarousel({
   }
 
   return (
-    <section className={`py-16 bg-gray-50 overflow-hidden ${className}`}>
+    <section
+      className={`py-16 bg-gray-50 overflow-hidden ${className}`}
+      onMouseEnter={() => {
+        isPausedRef.current = true
+        stopAnimation()
+      }}
+      onMouseLeave={() => {
+        isPausedRef.current = false
+        startAnimation()
+      }}
+    >
       <div className="container mx-auto px-4 mb-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -123,9 +143,9 @@ export function PartnerLogosCarousel({
           {duplicatedLogos.map((logo, index) => (
             <div
               key={`${logo.src}-${index}`}
-              className="flex-shrink-0 bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow duration-300"
+              className="relative z-0 flex-shrink-0 bg-white rounded-xl shadow-sm p-6 transition-all duration-300 hover:shadow-lg hover:scale-110 hover:z-10"
             >
-              <div className="relative w-32 h-20 grayscale hover:grayscale-0 transition-all duration-300">
+              <div className="relative w-32 h-20 overflow-hidden">
                 <Image
                   src={logo.src}
                   alt={logo.alt}
