@@ -82,8 +82,43 @@ export default function TeamPreviewEditor() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [content, setContent] = useState<TeamPreviewContent>(defaultContent)
+  const [uploadingMemberId, setUploadingMemberId] = useState<string | null>(null)
   const [success, setSuccess] = useState('')
   const [error, setError] = useState('')
+
+  const uploadImage = async (file: File) => {
+    const fd = new FormData()
+    fd.append('file', file)
+
+    const res = await fetch('/api/media', {
+      method: 'POST',
+      body: fd,
+    })
+
+    if (!res.ok) throw new Error('Upload failed')
+    const media = await res.json()
+    return media.path as string
+  }
+
+  const handleMemberImageUpload = async (memberId: string, file?: File | null) => {
+    if (!file) return
+    setUploadingMemberId(memberId)
+    setError('')
+    setSuccess('')
+
+    try {
+      const uploadedPath = await uploadImage(file)
+      setContent((prev) => ({
+        ...prev,
+        members: prev.members.map((m) => (m.id === memberId ? { ...m, image: uploadedPath } : m)),
+      }))
+      setSuccess('Image uploaded')
+    } catch {
+      setError('Failed to upload image')
+    } finally {
+      setUploadingMemberId(null)
+    }
+  }
 
   useEffect(() => {
     if (status === 'authenticated') fetchContent()
@@ -263,7 +298,30 @@ export default function TeamPreviewEditor() {
                         <div className="grid md:grid-cols-3 gap-4">
                           <div>
                             <label className="block text-sm text-gray-600 mb-1">Image</label>
-                            <Input value={m.image} onChange={(e) => handleMemberChange(m.id, 'image', e.target.value)} placeholder="/images/team/..." />
+                            <div className="space-y-2">
+                              <Input value={m.image} onChange={(e) => handleMemberChange(m.id, 'image', e.target.value)} placeholder="/images/team/... or /uploads/..." />
+                              <div className="flex gap-2">
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  className="hidden"
+                                  id={`team-preview-image-upload-${m.id}`}
+                                  onChange={(e) => handleMemberImageUpload(m.id, e.target.files?.[0])}
+                                />
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  size="sm"
+                                  disabled={uploadingMemberId === m.id}
+                                  onClick={() => {
+                                    const input = document.getElementById(`team-preview-image-upload-${m.id}`) as HTMLInputElement | null
+                                    input?.click()
+                                  }}
+                                >
+                                  {uploadingMemberId === m.id ? 'Uploading...' : 'Upload'}
+                                </Button>
+                              </div>
+                            </div>
                           </div>
                           <div>
                             <label className="block text-sm text-gray-600 mb-1">LinkedIn URL</label>

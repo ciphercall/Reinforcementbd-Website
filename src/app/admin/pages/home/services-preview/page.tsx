@@ -95,8 +95,43 @@ export default function ServicesPreviewEditor() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [content, setContent] = useState<ServicesPreviewContent>(defaultContent)
+  const [uploadingItemId, setUploadingItemId] = useState<string | null>(null)
   const [success, setSuccess] = useState('')
   const [error, setError] = useState('')
+
+  const uploadImage = async (file: File) => {
+    const fd = new FormData()
+    fd.append('file', file)
+
+    const res = await fetch('/api/media', {
+      method: 'POST',
+      body: fd,
+    })
+
+    if (!res.ok) throw new Error('Upload failed')
+    const media = await res.json()
+    return media.path as string
+  }
+
+  const handleDivisionImageUpload = async (itemId: string, file?: File | null) => {
+    if (!file) return
+    setUploadingItemId(itemId)
+    setError('')
+    setSuccess('')
+
+    try {
+      const uploadedPath = await uploadImage(file)
+      setContent((prev) => ({
+        ...prev,
+        items: prev.items.map((it) => (it.id === itemId ? { ...it, image: uploadedPath } : it)),
+      }))
+      setSuccess('Image uploaded')
+    } catch {
+      setError('Failed to upload image')
+    } finally {
+      setUploadingItemId(null)
+    }
+  }
 
   useEffect(() => {
     if (status === 'authenticated') fetchContent()
@@ -320,7 +355,30 @@ export default function ServicesPreviewEditor() {
                         <div className="grid md:grid-cols-3 gap-4">
                           <div>
                             <label className="block text-sm text-gray-600 mb-1">Image</label>
-                            <Input value={item.image} onChange={(e) => handleItemChange(item.id, 'image', e.target.value)} placeholder="/images/..." />
+                            <div className="space-y-2">
+                              <Input value={item.image} onChange={(e) => handleItemChange(item.id, 'image', e.target.value)} placeholder="/images/... or /uploads/..." />
+                              <div className="flex gap-2">
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  className="hidden"
+                                  id={`services-preview-image-upload-${item.id}`}
+                                  onChange={(e) => handleDivisionImageUpload(item.id, e.target.files?.[0])}
+                                />
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  size="sm"
+                                  disabled={uploadingItemId === item.id}
+                                  onClick={() => {
+                                    const input = document.getElementById(`services-preview-image-upload-${item.id}`) as HTMLInputElement | null
+                                    input?.click()
+                                  }}
+                                >
+                                  {uploadingItemId === item.id ? 'Uploading...' : 'Upload'}
+                                </Button>
+                              </div>
+                            </div>
                           </div>
                           <div>
                             <label className="block text-sm text-gray-600 mb-1">Icon</label>

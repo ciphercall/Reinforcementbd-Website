@@ -1,3 +1,4 @@
+
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -21,6 +22,7 @@ interface HeroContent {
   secondaryButtonText: string
   secondaryButtonLink: string
   backgroundImage: string
+  images?: string[]
   stats: { label: string; value: string }[]
 }
 
@@ -33,6 +35,7 @@ const defaultContent: HeroContent = {
   secondaryButtonText: 'Contact Us',
   secondaryButtonLink: '/contact',
   backgroundImage: '/images/hero-bg.jpg',
+  images: ['/images/hero-bg.jpg', '/images/automation/1.png', '/images/automation/2.png'],
   stats: [
     { label: 'Years Experience', value: '7+' },
     { label: 'Clients Served', value: '100+' },
@@ -47,8 +50,16 @@ export default function HeroSectionEditor() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [content, setContent] = useState<HeroContent>(defaultContent)
+  const [uploadingIndex, setUploadingIndex] = useState<number | null>(null)
   const [success, setSuccess] = useState('')
   const [error, setError] = useState('')
+
+  const normalizeImages = (raw?: string[]) => {
+    const base = Array.isArray(raw) ? raw.filter(Boolean) : []
+    const normalized = base.slice(0, 3)
+    while (normalized.length < 3) normalized.push('')
+    return normalized
+  }
 
   useEffect(() => {
     if (status === 'authenticated') {
@@ -62,7 +73,19 @@ export default function HeroSectionEditor() {
       if (response.ok) {
         const data = await response.json()
         if (data.content) {
-          setContent(coercePageContent<HeroContent>(data.content, defaultContent))
+          const loaded = coercePageContent<HeroContent>(data.content, defaultContent)
+          const images = normalizeImages(
+            Array.isArray(loaded.images)
+              ? loaded.images
+              : loaded.backgroundImage
+                ? [loaded.backgroundImage]
+                : defaultContent.images
+          )
+          setContent({
+            ...loaded,
+            images,
+            backgroundImage: images[0] || loaded.backgroundImage || defaultContent.backgroundImage,
+          })
         }
       }
     } catch {
@@ -116,6 +139,46 @@ export default function HeroSectionEditor() {
     }))
   }
 
+  const uploadImage = async (file: File) => {
+    const fd = new FormData()
+    fd.append('file', file)
+
+    const res = await fetch('/api/media', {
+      method: 'POST',
+      body: fd,
+    })
+
+    if (!res.ok) throw new Error('Upload failed')
+    const media = await res.json()
+    return media.path as string
+  }
+
+  const handleUploadAtIndex = async (index: number, file?: File | null) => {
+    if (!file) return
+
+    setUploadingIndex(index)
+    setError('')
+    setSuccess('')
+
+    try {
+      const uploadedPath = await uploadImage(file)
+      setContent((prev) => {
+        const images = normalizeImages(prev.images)
+        images[index] = uploadedPath
+        return {
+          ...prev,
+          images,
+          backgroundImage: images[0] || prev.backgroundImage,
+        }
+      })
+      setSuccess('Image uploaded')
+    } catch {
+      setError('Failed to upload image')
+    } finally {
+      setUploadingIndex(null)
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSaving(true)
@@ -129,7 +192,11 @@ export default function HeroSectionEditor() {
         body: JSON.stringify({
           section: 'hero',
           page: 'home',
-          content
+          content: {
+            ...content,
+            images: normalizeImages(content.images),
+            backgroundImage: normalizeImages(content.images)[0] || content.backgroundImage,
+          }
         })
       })
 
@@ -219,6 +286,94 @@ export default function HeroSectionEditor() {
                   rows={3}
                 />
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Hero Images */}
+          <Card>
+            <CardContent className="p-6 space-y-6">
+              <h2 className="text-lg font-semibold text-gray-900 border-b pb-3">Hero Images (3-card carousel)</h2>
+
+              <div className="grid md:grid-cols-3 gap-6">
+                {normalizeImages(content.images).map((src, index) => (
+                  <div key={index} className="space-y-3">
+                    <div className="aspect-square rounded-xl border border-gray-200 overflow-hidden bg-gray-50 flex items-center justify-center">
+                      {src ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={src} alt={`Hero image ${index + 1}`} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="text-center text-gray-400">
+                          <ImageIcon className="w-8 h-8 mx-auto mb-2" />
+                          <div className="text-sm">No image</div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Input
+                        value={src}
+                        onChange={(e) => {
+                          const nextImages = normalizeImages(content.images)
+                          nextImages[index] = e.target.value
+                          setContent((prev) => ({
+                            ...prev,
+                            images: nextImages,
+                            backgroundImage: nextImages[0] || prev.backgroundImage,
+                          }))
+                          setSuccess('')
+                        }}
+                        placeholder="/images/... or /uploads/..."
+                      />
+
+                      <div className="flex gap-2">
+                        <label className="flex-1">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => handleUploadAtIndex(index, e.target.files?.[0])}
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            className="w-full"
+                            disabled={uploadingIndex === index}
+                            onClick={(e) => {
+                              const input = (e.currentTarget.parentElement?.querySelector('input[type=file]') as HTMLInputElement | null)
+                              input?.click()
+                            }}
+                          >
+                            {uploadingIndex === index ? 'Uploading...' : 'Upload'}
+                          </Button>
+                        </label>
+
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            const nextImages = normalizeImages(content.images)
+                            nextImages[index] = ''
+                            setContent((prev) => ({
+                              ...prev,
+                              images: nextImages,
+                              backgroundImage: nextImages[0] || prev.backgroundImage,
+                            }))
+                            setSuccess('')
+                          }}
+                        >
+                          Clear
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <p className="text-sm text-gray-500">
+                Tip: uploaded files are saved under <span className="font-mono">/uploads</span>.
+              </p>
             </CardContent>
           </Card>
 

@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useMemo, useState } from 'react'
 import { Button } from '@/components/ui/Button'
 import { ArrowRight } from 'lucide-react'
 import { coercePageContent } from '@/lib/utils/pageContent'
@@ -16,6 +17,7 @@ interface HeroContent {
   secondaryButtonText: string
   secondaryButtonLink: string
   backgroundImage: string
+  images?: string[]
   stats: { label: string; value: string }[]
 }
 
@@ -29,6 +31,7 @@ const defaultContent: HeroContent = {
   secondaryButtonText: 'Explore Our Services',
   secondaryButtonLink: '/services',
   backgroundImage: '/images/automation/1.png',
+  images: ['/images/automation/1.png', '/images/automation/2.png', '/images/it/I33.jfif'],
   stats: [
     { label: 'Years Experience', value: '6+' },
     { label: 'Projects Done', value: '100+' },
@@ -39,6 +42,29 @@ const defaultContent: HeroContent = {
 export function HeroSection({ content }: { content?: unknown }) {
   const c = coercePageContent<HeroContent>(content, defaultContent)
   const heroImage = c.backgroundImage || defaultContent.backgroundImage
+
+  const images = useMemo(() => {
+    const raw = Array.isArray(c.images) ? c.images.filter(Boolean) : []
+    const base = raw.length
+      ? raw
+      : heroImage
+        ? [heroImage]
+        : [defaultContent.backgroundImage]
+
+    const normalized = base.slice(0, 3)
+    while (normalized.length < 3) normalized.push(defaultContent.backgroundImage)
+    return normalized
+  }, [c.images, heroImage])
+
+  const [activeIndex, setActiveIndex] = useState(0)
+  const next = () => setActiveIndex((i) => (i + 1) % images.length)
+  const prev = () => setActiveIndex((i) => (i - 1 + images.length) % images.length)
+
+  const variants = {
+    left: { x: -120, rotate: -12, scale: 0.9, opacity: 0.85, zIndex: 1 },
+    center: { x: 0, rotate: -3, scale: 1, opacity: 1, zIndex: 3 },
+    right: { x: 120, rotate: 6, scale: 0.9, opacity: 0.85, zIndex: 1 },
+  } as const
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-gray-50 to-blue-50">
@@ -102,16 +128,47 @@ export function HeroSection({ content }: { content?: unknown }) {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="relative hidden lg:block"
           >
-            <div className="relative aspect-square">
+            <motion.div
+              className="relative aspect-square"
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              onDragEnd={(_, info) => {
+                if (info.offset.x < -60) next()
+                if (info.offset.x > 60) prev()
+              }}
+            >
               <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-700 rounded-3xl transform rotate-3" />
-              <Image
-                src={heroImage}
-                alt="Automation Solutions"
-                fill
-                className="object-cover rounded-3xl shadow-2xl transform -rotate-3 hover:rotate-0 transition-transform duration-500"
-                priority
-              />
-            </div>
+
+              {/* 3-card wheel */}
+              <div className="absolute inset-0 overflow-visible">
+                {([-1, 0, 1] as const).map((slotOffset) => {
+                  const index = (activeIndex + slotOffset + images.length) % images.length
+                  const position = slotOffset === 0 ? 'center' : slotOffset === -1 ? 'left' : 'right'
+                  const src = images[index]
+
+                  return (
+                    <motion.div
+                      key={`${src}-${position}-${index}`}
+                      className="absolute inset-0"
+                      animate={position}
+                      variants={variants}
+                      transition={{ type: 'spring', stiffness: 260, damping: 30 }}
+                      style={{ transformOrigin: 'center center' }}
+                    >
+                      <div className="relative w-full h-full">
+                        <Image
+                          src={src}
+                          alt="Hero showcase"
+                          fill
+                          className="object-cover rounded-3xl shadow-2xl"
+                          priority
+                        />
+                      </div>
+                    </motion.div>
+                  )
+                })}
+              </div>
+            </motion.div>
             
             {/* Floating Card */}
             <motion.div

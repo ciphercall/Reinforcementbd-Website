@@ -45,8 +45,43 @@ export default function ClientsSectionEditor() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [content, setContent] = useState<ClientsContent>(defaultContent)
+  const [uploadingClientId, setUploadingClientId] = useState<string | null>(null)
   const [success, setSuccess] = useState('')
   const [error, setError] = useState('')
+
+  const uploadImage = async (file: File) => {
+    const fd = new FormData()
+    fd.append('file', file)
+
+    const res = await fetch('/api/media', {
+      method: 'POST',
+      body: fd,
+    })
+
+    if (!res.ok) throw new Error('Upload failed')
+    const media = await res.json()
+    return media.path as string
+  }
+
+  const handleClientLogoUpload = async (clientId: string, file?: File | null) => {
+    if (!file) return
+    setUploadingClientId(clientId)
+    setError('')
+    setSuccess('')
+
+    try {
+      const uploadedPath = await uploadImage(file)
+      setContent((prev) => ({
+        ...prev,
+        clients: prev.clients.map((c) => (c.id === clientId ? { ...c, logo: uploadedPath } : c)),
+      }))
+      setSuccess('Logo uploaded')
+    } catch {
+      setError('Failed to upload logo')
+    } finally {
+      setUploadingClientId(null)
+    }
+  }
 
   useEffect(() => {
     if (status === 'authenticated') {
@@ -267,11 +302,34 @@ export default function ClientsSectionEditor() {
                           onChange={(e) => handleClientChange(client.id, 'name', e.target.value)}
                           placeholder="Client name"
                         />
-                        <Input
-                          value={client.logo}
-                          onChange={(e) => handleClientChange(client.id, 'logo', e.target.value)}
-                          placeholder="/images/clients/logo.png"
-                        />
+                        <div className="space-y-2">
+                          <Input
+                            value={client.logo}
+                            onChange={(e) => handleClientChange(client.id, 'logo', e.target.value)}
+                            placeholder="/images/clients/logo.png or /uploads/..."
+                          />
+                          <div className="flex gap-2">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              id={`clients-logo-upload-${client.id}`}
+                              onChange={(e) => handleClientLogoUpload(client.id, e.target.files?.[0])}
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              disabled={uploadingClientId === client.id}
+                              onClick={() => {
+                                const input = document.getElementById(`clients-logo-upload-${client.id}`) as HTMLInputElement | null
+                                input?.click()
+                              }}
+                            >
+                              {uploadingClientId === client.id ? 'Uploading...' : 'Upload'}
+                            </Button>
+                          </div>
+                        </div>
                       </div>
                       <button
                         type="button"
@@ -315,11 +373,34 @@ export default function ClientsSectionEditor() {
                           onChange={(e) => handleClientChange(client.id, 'name', e.target.value)}
                           placeholder="Client name"
                         />
-                        <Input
-                          value={client.logo}
-                          onChange={(e) => handleClientChange(client.id, 'logo', e.target.value)}
-                          placeholder="/images/clients/logo.png"
-                        />
+                        <div className="space-y-2">
+                          <Input
+                            value={client.logo}
+                            onChange={(e) => handleClientChange(client.id, 'logo', e.target.value)}
+                            placeholder="/images/clients/logo.png or /uploads/..."
+                          />
+                          <div className="flex gap-2">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              id={`clients-logo-upload-${client.id}`}
+                              onChange={(e) => handleClientLogoUpload(client.id, e.target.files?.[0])}
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              disabled={uploadingClientId === client.id}
+                              onClick={() => {
+                                const input = document.getElementById(`clients-logo-upload-${client.id}`) as HTMLInputElement | null
+                                input?.click()
+                              }}
+                            >
+                              {uploadingClientId === client.id ? 'Uploading...' : 'Upload'}
+                            </Button>
+                          </div>
+                        </div>
                       </div>
                       <button
                         type="button"
