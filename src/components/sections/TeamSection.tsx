@@ -102,7 +102,7 @@ export function TeamSection({ content }: { content?: unknown }) {
         subtitle={c.sectionSubtitle}
       />
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid justify-center gap-6 [grid-template-columns:repeat(auto-fit,minmax(240px,280px))]">
         {shownMembers.map((member, index) => (
           <motion.div
             key={member.id}

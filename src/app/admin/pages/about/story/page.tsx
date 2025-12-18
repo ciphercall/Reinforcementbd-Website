@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import { AdminSidebar } from '@/components/admin/AdminSidebar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
+import { coercePageContent } from '@/lib/utils/pageContent'
 import { ArrowLeft, Save, Loader2, Plus, Trash2 } from 'lucide-react'
 
 interface StoryContent {
@@ -16,39 +18,70 @@ interface StoryContent {
   stats: { label: string; value: string }[]
 }
 
+const defaultContent: StoryContent = {
+  title: 'Our Story',
+  description: 'Reinforcement Group has been a trusted partner for businesses across Bangladesh since 2018.',
+  paragraphs: [
+    'Founded with a vision to provide comprehensive automation, IT, and architectural solutions, Reinforcement Group has grown to become a leading provider of integrated business solutions.',
+    'Our journey began with industrial automation and has expanded to encompass IT solutions and architectural services through our three specialized divisions.',
+  ],
+  image: '/images/about-story.jpg',
+  imageAlt: 'Reinforcement Group office and team',
+  stats: [
+    { label: 'Years Experience', value: '7+' },
+    { label: 'Happy Clients', value: '100+' },
+    { label: 'Projects Delivered', value: '200+' },
+    { label: 'Team Members', value: '20+' },
+  ],
+}
+
 export default function AboutStoryEditor() {
   const router = useRouter()
+  const { data: session, status } = useSession()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [content, setContent] = useState<StoryContent>({
-    title: 'Our Story',
-    description: 'Reinforcement Group has been a trusted partner for businesses across Bangladesh since 2018.',
-    paragraphs: [
-      'Founded with a vision to provide comprehensive automation, IT, and architectural solutions, Reinforcement Group has grown to become a leading provider of integrated business solutions.',
-      'Our journey began with industrial automation and has expanded to encompass IT solutions and architectural services through our three specialized divisions.'
-    ],
-    image: '/images/about-story.jpg',
-    imageAlt: 'Reinforcement Group office and team',
-    stats: [
-      { label: 'Years Experience', value: '7+' },
-      { label: 'Happy Clients', value: '100+' },
-      { label: 'Projects Delivered', value: '200+' },
-      { label: 'Team Members', value: '20+' }
-    ]
-  })
+  const [uploading, setUploading] = useState(false)
+  const [content, setContent] = useState<StoryContent>(defaultContent)
 
   useEffect(() => {
-    fetchContent()
-  }, [])
+    if (status === 'authenticated') fetchContent()
+    if (status === 'unauthenticated') router.push('/admin/login')
+  }, [status, router])
+
+  const uploadImage = async (file: File) => {
+    const fd = new FormData()
+    fd.append('file', file)
+
+    const res = await fetch('/api/media', {
+      method: 'POST',
+      body: fd,
+    })
+
+    if (!res.ok) throw new Error('Upload failed')
+    const media = await res.json()
+    return media.path as string
+  }
+
+  const handleStoryImageUpload = async (file?: File | null) => {
+    if (!file) return
+    setUploading(true)
+
+    try {
+      const uploadedPath = await uploadImage(file)
+      setContent((prev) => ({ ...prev, image: uploadedPath }))
+    } catch {
+      alert('Failed to upload image')
+    } finally {
+      setUploading(false)
+    }
+  }
 
   const fetchContent = async () => {
     try {
       const res = await fetch('/api/page-content?page=about&section=story')
       if (res.ok) {
         const data = await res.json()
-        if (data.content) {
-          setContent(data.content)
-        }
+        setContent(coercePageContent<StoryContent>(data.content, defaultContent))
       }
     } catch (error) {
       console.error('Error fetching content:', error)
@@ -56,6 +89,18 @@ export default function AboutStoryEditor() {
       setLoading(false)
     }
   }
+
+  if (status === 'loading' || loading) {
+    return (
+      <AdminSidebar>
+        <div className="flex items-center justify-center h-64">
+          <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+        </div>
+      </AdminSidebar>
+    )
+  }
+
+  if (!session) return null
 
   const handleSave = async () => {
     setSaving(true)
@@ -222,6 +267,27 @@ export default function AboutStoryEditor() {
                   onChange={(e) => setContent({ ...content, image: e.target.value })}
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
+                <div className="mt-2 flex gap-2">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    id="about-story-image-upload"
+                    onChange={(e) => handleStoryImageUpload(e.target.files?.[0])}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled={uploading}
+                    onClick={() => {
+                      const input = document.getElementById('about-story-image-upload') as HTMLInputElement | null
+                      input?.click()
+                    }}
+                  >
+                    {uploading ? 'Uploading...' : 'Upload'}
+                  </Button>
+                </div>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">

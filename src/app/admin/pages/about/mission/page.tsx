@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import { AdminSidebar } from '@/components/admin/AdminSidebar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
+import { coercePageContent } from '@/lib/utils/pageContent'
 import { ArrowLeft, Save, Loader2 } from 'lucide-react'
 
 interface MissionContent {
@@ -17,37 +19,41 @@ interface MissionContent {
   goals: { title: string; description: string }[]
 }
 
+const defaultContent: MissionContent = {
+  missionTitle: 'Our Mission',
+  missionText:
+    'To provide innovative and reliable business solutions that empower organizations to achieve their goals while maintaining the highest standards of quality and integrity.',
+  missionIcon: 'Target',
+  visionTitle: 'Our Vision',
+  visionText:
+    'To be the most trusted partner for businesses across Bangladesh, driving growth and transformation through technology and expertise.',
+  visionIcon: 'Eye',
+  goals: [
+    { title: 'Excellence', description: 'Deliver exceptional service quality in every engagement' },
+    { title: 'Innovation', description: 'Continuously evolve with cutting-edge solutions' },
+    { title: 'Partnership', description: 'Build lasting relationships with our clients' },
+    { title: 'Growth', description: 'Enable sustainable business growth for all stakeholders' },
+  ],
+}
+
 export default function AboutMissionEditor() {
   const router = useRouter()
+  const { data: session, status } = useSession()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [content, setContent] = useState<MissionContent>({
-    missionTitle: 'Our Mission',
-    missionText: 'To provide innovative and reliable business solutions that empower organizations to achieve their goals while maintaining the highest standards of quality and integrity.',
-    missionIcon: 'Target',
-    visionTitle: 'Our Vision',
-    visionText: 'To be the most trusted partner for businesses across Bangladesh, driving growth and transformation through technology and expertise.',
-    visionIcon: 'Eye',
-    goals: [
-      { title: 'Excellence', description: 'Deliver exceptional service quality in every engagement' },
-      { title: 'Innovation', description: 'Continuously evolve with cutting-edge solutions' },
-      { title: 'Partnership', description: 'Build lasting relationships with our clients' },
-      { title: 'Growth', description: 'Enable sustainable business growth for all stakeholders' }
-    ]
-  })
+  const [content, setContent] = useState<MissionContent>(defaultContent)
 
   useEffect(() => {
-    fetchContent()
-  }, [])
+    if (status === 'authenticated') fetchContent()
+    if (status === 'unauthenticated') router.push('/admin/login')
+  }, [status, router])
 
   const fetchContent = async () => {
     try {
       const res = await fetch('/api/page-content?page=about&section=mission')
       if (res.ok) {
         const data = await res.json()
-        if (data.content) {
-          setContent(data.content)
-        }
+        setContent(coercePageContent<MissionContent>(data.content, defaultContent))
       }
     } catch (error) {
       console.error('Error fetching content:', error)
@@ -88,7 +94,7 @@ export default function AboutMissionEditor() {
     setContent({ ...content, goals: updated })
   }
 
-  if (loading) {
+  if (status === 'loading' || loading) {
     return (
       <AdminSidebar>
         <div className="flex items-center justify-center h-64">
@@ -97,6 +103,8 @@ export default function AboutMissionEditor() {
       </AdminSidebar>
     )
   }
+
+  if (!session) return null
 
   return (
     <AdminSidebar>

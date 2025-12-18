@@ -9,6 +9,9 @@ import {
   Newspaper,
   Target,
   Award,
+  Users,
+  Layers,
+  Clock,
   ChevronRight
 } from 'lucide-react'
 
@@ -25,6 +28,12 @@ const sections = [
     icon: Newspaper,
     description: 'About Reinforcement Group - company history and overview'
   },
+  {
+    name: 'Journey Timeline',
+    href: '/admin/pages/about/journey',
+    icon: Clock,
+    description: 'Timeline milestones from founding to today'
+  },
   { 
     name: 'Mission & Vision', 
     href: '/admin/pages/about/mission', 
@@ -36,6 +45,18 @@ const sections = [
     href: '/admin/pages/about/values', 
     icon: Award,
     description: 'Company core values and principles'
+  },
+  {
+    name: 'Team',
+    href: '/admin/pages/about/team',
+    icon: Users,
+    description: 'Team members shown on the About page'
+  },
+  {
+    name: 'Divisions',
+    href: '/admin/pages/about/divisions',
+    icon: Layers,
+    description: 'Edit the three divisions section'
   },
 ]
 

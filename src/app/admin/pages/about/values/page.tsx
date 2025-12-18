@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import { AdminSidebar } from '@/components/admin/AdminSidebar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
+import { coercePageContent } from '@/lib/utils/pageContent'
 import { ArrowLeft, Save, Loader2, Plus, Trash2, GripVertical } from 'lucide-react'
 
 interface Value {
@@ -19,35 +21,41 @@ interface ValuesContent {
   values: Value[]
 }
 
+const defaultContent: ValuesContent = {
+  sectionTitle: 'Our Core Values',
+  sectionSubtitle: 'The principles that guide everything we do',
+  values: [
+    { icon: 'Shield', title: 'Integrity', description: 'We maintain the highest ethical standards in all our dealings' },
+    { icon: 'Users', title: 'Collaboration', description: 'We work together with clients as true partners' },
+    {
+      icon: 'Lightbulb',
+      title: 'Innovation',
+      description: 'We embrace change and continuously seek better solutions',
+    },
+    { icon: 'Award', title: 'Excellence', description: 'We strive for excellence in every project we undertake' },
+    { icon: 'Heart', title: 'Respect', description: 'We value and respect every individual we work with' },
+    { icon: 'TrendingUp', title: 'Growth', description: 'We are committed to continuous learning and improvement' },
+  ],
+}
+
 export default function AboutValuesEditor() {
   const router = useRouter()
+  const { data: session, status } = useSession()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [content, setContent] = useState<ValuesContent>({
-    sectionTitle: 'Our Core Values',
-    sectionSubtitle: 'The principles that guide everything we do',
-    values: [
-      { icon: 'Shield', title: 'Integrity', description: 'We maintain the highest ethical standards in all our dealings' },
-      { icon: 'Users', title: 'Collaboration', description: 'We work together with clients as true partners' },
-      { icon: 'Lightbulb', title: 'Innovation', description: 'We embrace change and continuously seek better solutions' },
-      { icon: 'Award', title: 'Excellence', description: 'We strive for excellence in every project we undertake' },
-      { icon: 'Heart', title: 'Respect', description: 'We value and respect every individual we work with' },
-      { icon: 'TrendingUp', title: 'Growth', description: 'We are committed to continuous learning and improvement' }
-    ]
-  })
+  const [content, setContent] = useState<ValuesContent>(defaultContent)
 
   useEffect(() => {
-    fetchContent()
-  }, [])
+    if (status === 'authenticated') fetchContent()
+    if (status === 'unauthenticated') router.push('/admin/login')
+  }, [status, router])
 
   const fetchContent = async () => {
     try {
       const res = await fetch('/api/page-content?page=about&section=values')
       if (res.ok) {
         const data = await res.json()
-        if (data.content) {
-          setContent(data.content)
-        }
+        setContent(coercePageContent<ValuesContent>(data.content, defaultContent))
       }
     } catch (error) {
       console.error('Error fetching content:', error)
@@ -88,6 +96,18 @@ export default function AboutValuesEditor() {
       values: [...content.values, { icon: 'Star', title: '', description: '' }]
     })
   }
+
+  if (status === 'loading' || loading) {
+    return (
+      <AdminSidebar>
+        <div className="flex items-center justify-center h-64">
+          <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+        </div>
+      </AdminSidebar>
+    )
+  }
+
+  if (!session) return null
 
   const updateValue = (index: number, field: keyof Value, value: string) => {
     const updated = [...content.values]
