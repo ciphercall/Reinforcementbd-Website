@@ -8,6 +8,8 @@ import {
   Layout,
   MapPin,
   Clock,
+  Briefcase,
+  FileText,
   ChevronRight
 } from 'lucide-react'
 
@@ -29,6 +31,18 @@ const sections = [
     href: '/admin/pages/contact/hours', 
     icon: Clock,
     description: 'Business hours and availability'
+  },
+  {
+    name: 'Form Settings',
+    href: '/admin/pages/contact/form',
+    icon: FileText,
+    description: 'Customize form text, placeholders, and messages'
+  },
+  {
+    name: 'Service Options',
+    href: '/admin/pages/contact/services',
+    icon: Briefcase,
+    description: 'Manage contact form service dropdown options'
   },
 ]
 

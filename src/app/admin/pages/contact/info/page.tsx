@@ -163,10 +163,10 @@ export default function ContactInfoEditor() {
                 </label>
                 <input
                   type="text"
-                  value={content.address.line1}
+                  value={content.address?.line1 || ''}
                   onChange={(e) => setContent({ 
                     ...content, 
-                    address: { ...content.address, line1: e.target.value }
+                    address: { ...(content.address || {}), line1: e.target.value }
                   })}
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
@@ -177,10 +177,10 @@ export default function ContactInfoEditor() {
                 </label>
                 <input
                   type="text"
-                  value={content.address.line2}
+                  value={content.address?.line2 || ''}
                   onChange={(e) => setContent({ 
                     ...content, 
-                    address: { ...content.address, line2: e.target.value }
+                    address: { ...(content.address || {}), line2: e.target.value }
                   })}
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
@@ -191,10 +191,10 @@ export default function ContactInfoEditor() {
                 </label>
                 <input
                   type="text"
-                  value={content.address.city}
+                  value={content.address?.city || ''}
                   onChange={(e) => setContent({ 
                     ...content, 
-                    address: { ...content.address, city: e.target.value }
+                    address: { ...(content.address || {}), city: e.target.value }
                   })}
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
@@ -205,10 +205,10 @@ export default function ContactInfoEditor() {
                 </label>
                 <input
                   type="text"
-                  value={content.address.country}
+                  value={content.address?.country || ''}
                   onChange={(e) => setContent({ 
                     ...content, 
-                    address: { ...content.address, country: e.target.value }
+                    address: { ...(content.address || {}), country: e.target.value }
                   })}
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
@@ -230,10 +230,10 @@ export default function ContactInfoEditor() {
                 </label>
                 <input
                   type="text"
-                  value={content.phone.primary}
+                  value={content.phone?.primary || ''}
                   onChange={(e) => setContent({ 
                     ...content, 
-                    phone: { ...content.phone, primary: e.target.value }
+                    phone: { ...(content.phone || {}), primary: e.target.value }
                   })}
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
@@ -244,10 +244,10 @@ export default function ContactInfoEditor() {
                 </label>
                 <input
                   type="text"
-                  value={content.phone.secondary}
+                  value={content.phone?.secondary || ''}
                   onChange={(e) => setContent({ 
                     ...content, 
-                    phone: { ...content.phone, secondary: e.target.value }
+                    phone: { ...(content.phone || {}), secondary: e.target.value }
                   })}
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
@@ -258,10 +258,10 @@ export default function ContactInfoEditor() {
                 </label>
                 <input
                   type="email"
-                  value={content.email.primary}
+                  value={content.email?.primary || ''}
                   onChange={(e) => setContent({ 
                     ...content, 
-                    email: { ...content.email, primary: e.target.value }
+                    email: { ...(content.email || {}), primary: e.target.value }
                   })}
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
@@ -272,10 +272,10 @@ export default function ContactInfoEditor() {
                 </label>
                 <input
                   type="email"
-                  value={content.email.support}
+                  value={content.email?.support || ''}
                   onChange={(e) => setContent({ 
                     ...content, 
-                    email: { ...content.email, support: e.target.value }
+                    email: { ...(content.email || {}), support: e.target.value }
                   })}
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
@@ -296,10 +296,10 @@ export default function ContactInfoEditor() {
               </label>
               <input
                 type="text"
-                value={content.map.embedUrl}
+                value={content.map?.embedUrl || ''}
                 onChange={(e) => setContent({ 
                   ...content, 
-                  map: { ...content.map, embedUrl: e.target.value }
+                  map: { ...(content.map || {}), embedUrl: e.target.value }
                 })}
                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="https://www.google.com/maps/embed?pb=..."
@@ -315,10 +315,10 @@ export default function ContactInfoEditor() {
                 </label>
                 <input
                   type="text"
-                  value={content.map.latitude}
+                  value={content.map?.latitude || ''}
                   onChange={(e) => setContent({ 
                     ...content, 
-                    map: { ...content.map, latitude: e.target.value }
+                    map: { ...(content.map || {}), latitude: e.target.value }
                   })}
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
@@ -329,10 +329,10 @@ export default function ContactInfoEditor() {
                 </label>
                 <input
                   type="text"
-                  value={content.map.longitude}
+                  value={content.map?.longitude || ''}
                   onChange={(e) => setContent({ 
                     ...content, 
-                    map: { ...content.map, longitude: e.target.value }
+                    map: { ...(content.map || {}), longitude: e.target.value }
                   })}
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
@@ -354,10 +354,10 @@ export default function ContactInfoEditor() {
                 </label>
                 <input
                   type="url"
-                  value={content.social.facebook}
+                  value={content.social?.facebook || ''}
                   onChange={(e) => setContent({ 
                     ...content, 
-                    social: { ...content.social, facebook: e.target.value }
+                    social: { ...(content.social || {}), facebook: e.target.value }
                   })}
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
@@ -368,10 +368,10 @@ export default function ContactInfoEditor() {
                 </label>
                 <input
                   type="url"
-                  value={content.social.linkedin}
+                  value={content.social?.linkedin || ''}
                   onChange={(e) => setContent({ 
                     ...content, 
-                    social: { ...content.social, linkedin: e.target.value }
+                    social: { ...(content.social || {}), linkedin: e.target.value }
                   })}
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
@@ -382,10 +382,10 @@ export default function ContactInfoEditor() {
                 </label>
                 <input
                   type="url"
-                  value={content.social.twitter}
+                  value={content.social?.twitter || ''}
                   onChange={(e) => setContent({ 
                     ...content, 
-                    social: { ...content.social, twitter: e.target.value }
+                    social: { ...(content.social || {}), twitter: e.target.value }
                   })}
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
