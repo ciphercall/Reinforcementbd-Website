@@ -1,11 +1,13 @@
 import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 import { authOptions } from '@/lib/auth'
 import { AdminSidebar } from '@/components/admin/AdminSidebar'
 import { Card, CardContent } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import prisma from '@/lib/db/prisma'
-import { Globe, MapPin, ExternalLink } from 'lucide-react'
+import Image from 'next/image'
+import { Globe, MapPin, ExternalLink, Plus, Edit } from 'lucide-react'
 
 async function getPartners() {
   try {
@@ -35,9 +37,12 @@ export default async function AdminPartnersPage() {
             <h1 className="text-2xl font-bold text-gray-900">Partners</h1>
             <p className="text-gray-600">Manage strategic partners</p>
           </div>
-          <Button>
-            Add Partner
-          </Button>
+          <Link href="/admin/partners/new">
+            <Button>
+              <Plus className="w-4 h-4 mr-2" />
+              Add Partner
+            </Button>
+          </Link>
         </div>
 
         {/* Partners List */}
@@ -55,7 +60,17 @@ export default async function AdminPartnersPage() {
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-start space-x-4">
                       <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center">
-                        <Globe className="w-6 h-6 text-blue-600" />
+                        {partner.logo ? (
+                          <Image
+                            src={partner.logo}
+                            alt={partner.name}
+                            width={32}
+                            height={32}
+                            className="object-contain"
+                          />
+                        ) : (
+                          <Globe className="w-6 h-6 text-blue-600" />
+                        )}
                       </div>
                       <div>
                         <h3 className="font-semibold text-gray-900 text-lg">{partner.name}</h3>
@@ -88,6 +103,15 @@ export default async function AdminPartnersPage() {
                       <p className="text-sm text-blue-700">{partner.partnership}</p>
                     </div>
                   )}
+
+                  <div className="flex justify-end pt-4 mt-4 border-t">
+                    <Link href={`/admin/partners/${partner.id}`}>
+                      <Button variant="outline" size="sm">
+                        <Edit className="w-4 h-4 mr-2" />
+                        Edit
+                      </Button>
+                    </Link>
+                  </div>
                 </CardContent>
               </Card>
             ))

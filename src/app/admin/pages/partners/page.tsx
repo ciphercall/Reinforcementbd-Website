@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/Card'
 import { 
   Layout,
   Handshake,
+  Award,
   ChevronRight
 } from 'lucide-react'
 
@@ -16,6 +17,12 @@ const sections = [
     href: '/admin/pages/partners/header', 
     icon: Layout,
     description: 'Hero section with title and introduction'
+  },
+  {
+    name: 'Partnership Benefits',
+    href: '/admin/pages/partners/benefits',
+    icon: Award,
+    description: 'Edit benefits section content and icons'
   },
   { 
     name: 'Partners List', 

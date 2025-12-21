@@ -103,6 +103,16 @@ const navigation = [
       { name: 'Form Settings', href: '/admin/pages/contact/form', icon: FileText },
     ]
   },
+  {
+    name: 'Partners Page',
+    href: '/admin/pages/partners',
+    icon: Handshake,
+    children: [
+      { name: 'Page Header', href: '/admin/pages/partners/header', icon: Layout },
+      { name: 'Benefits Section', href: '/admin/pages/partners/benefits', icon: Award },
+      { name: 'Partners List', href: '/admin/partners', icon: Handshake },
+    ],
+  },
   { 
     name: 'Services', 
     href: '/admin/services', 

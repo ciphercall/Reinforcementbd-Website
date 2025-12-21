@@ -84,6 +84,7 @@ model Partner {
   description String   @db.Text
   partnership String   @db.Text
   logo        String?
+  backgroundImage String?
   website     String?
   location    String?
   order       Int      @default(0)
