@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/Card'
 import { 
   Layout,
   Grid3X3,
+  Cpu,
   ChevronRight
 } from 'lucide-react'
 
@@ -16,6 +17,12 @@ const sections = [
     href: '/admin/pages/services/header', 
     icon: Layout,
     description: 'Hero section with title and introduction'
+  },
+  {
+    name: 'Automation Division Page',
+    href: '/admin/pages/services/automation',
+    icon: Cpu,
+    description: 'Edit the /services/automation visitor page content'
   },
   { 
     name: 'Services List', 

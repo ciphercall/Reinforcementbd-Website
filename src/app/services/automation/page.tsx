@@ -6,16 +6,11 @@ import { Card, CardContent } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { AutomationPartnersCarousel } from '@/components/sections/PartnerLogosCarousel'
 import { CTASection } from '@/components/sections/CTASection'
+import { getPageContents } from '@/lib/pageContent'
+import { coercePageContent } from '@/lib/utils/pageContent'
+import { resolveLucideIcon } from '@/lib/utils/lucideIcon'
 import { 
   Cpu,
-  Settings,
-  Gauge,
-  Zap,
-  Shield,
-  Factory,
-  Wrench,
-  MonitorPlay,
-  CircuitBoard,
   ArrowRight,
   CheckCircle
 } from 'lucide-react'
@@ -26,80 +21,163 @@ export const metadata: Metadata = {
   keywords: 'PLC programming, SCADA, HMI, VFD, industrial automation, Siemens, Schneider, Bangladesh',
 }
 
-const services = [
-  {
-    title: 'PLC Programming',
-    description: 'Expert programming for Siemens S7, Schneider Modicon, Allen Bradley, and other major PLC brands.',
-    icon: Cpu,
-    image: '/images/automation/1.png',
-    features: ['Siemens S7 Series', 'Schneider Modicon', 'Allen Bradley', 'Delta PLC', 'Custom Logic Design']
-  },
-  {
-    title: 'SCADA Systems',
-    description: 'Complete SCADA implementation for monitoring and control of industrial processes.',
-    icon: MonitorPlay,
-    image: '/images/automation/2.png',
-    features: ['Real-time Monitoring', 'Data Logging', 'Alarm Management', 'Remote Access', 'Historical Trends']
-  },
-  {
-    title: 'HMI Design & Programming',
-    description: 'User-friendly Human Machine Interface design for optimal operator control.',
-    icon: Settings,
-    image: '/images/automation/3.png',
-    features: ['Touchscreen Interfaces', 'Intuitive Design', 'Multi-language Support', 'Custom Graphics', 'Responsive Layouts']
-  },
-  {
-    title: 'VFD Installation',
-    description: 'Variable Frequency Drive installation and configuration for motor speed control.',
-    icon: Zap,
-    image: '/images/automation/4.png',
-    features: ['Energy Savings', 'Motor Protection', 'Speed Control', 'Soft Start', 'Parameter Setup']
-  },
-  {
-    title: 'Industrial Control Panels',
-    description: 'Custom control panel design, fabrication, and installation for industrial applications.',
-    icon: CircuitBoard,
-    image: '/images/automation/5.png',
-    features: ['Panel Design', 'Wiring & Assembly', 'Testing & Commissioning', 'Documentation', 'Maintenance Support']
-  },
-  {
-    title: 'Process Automation',
-    description: 'End-to-end automation of manufacturing and industrial processes.',
-    icon: Factory,
-    image: '/images/automation/6.png',
-    features: ['Production Lines', 'Quality Control', 'Material Handling', 'Packaging Systems', 'Batch Processing']
-  },
-  {
-    title: 'Instrumentation',
-    description: 'Industrial instrumentation installation, calibration, and maintenance.',
-    icon: Gauge,
-    image: '/images/automation/7.png',
-    features: ['Sensors & Transmitters', 'Flow Meters', 'Level Sensors', 'Temperature Probes', 'Calibration Services']
-  },
-  {
-    title: 'Maintenance & Support',
-    description: 'Ongoing maintenance, troubleshooting, and technical support for automation systems.',
-    icon: Wrench,
-    image: '/images/automation/8.png',
-    features: ['24/7 Support', 'Preventive Maintenance', 'Troubleshooting', 'System Upgrades', 'Training']
-  },
-  {
-    title: 'Safety Systems',
-    description: 'Industrial safety systems design and implementation for personnel and equipment protection.',
-    icon: Shield,
-    image: '/images/automation/9.png',
-    features: ['Safety PLCs', 'E-Stop Systems', 'Light Curtains', 'Safety Relays', 'Risk Assessment']
-  }
-]
+export const dynamic = 'force-dynamic'
 
-const stats = [
-  { value: '500+', label: 'Projects Completed' },
-  { value: '7+', label: 'Years Experience' },
-  { value: '50+', label: 'Industrial Clients' },
-  { value: '24/7', label: 'Support Available' }
-]
+interface AutomationStat {
+  value: string
+  label: string
+}
 
-export default function AutomationPage() {
+interface AutomationServiceCard {
+  title: string
+  description: string
+  icon: string
+  image: string
+  features: string[]
+}
+
+interface AutomationBenefit {
+  title: string
+  desc: string
+}
+
+interface AutomationHero {
+  badgeText: string
+  title: string
+  description: string
+  primaryCtaText: string
+  primaryCtaLink: string
+  secondaryCtaText: string
+  secondaryCtaLink: string
+  heroImages: string[]
+}
+
+interface AutomationWhy {
+  title: string
+  description: string
+  benefits: AutomationBenefit[]
+  showcaseImages: string[]
+}
+
+interface AutomationPageContent {
+  hero: AutomationHero
+  stats: AutomationStat[]
+  servicesHeader: { title: string; subtitle: string }
+  services: AutomationServiceCard[]
+  why: AutomationWhy
+}
+
+const defaultContent: AutomationPageContent = {
+  hero: {
+    badgeText: 'Automation Division',
+    title: 'Industrial Automation Solutions',
+    description:
+      'From PLC programming to complete SCADA systems, we deliver cutting-edge automation solutions that increase efficiency, reduce costs, and enhance productivity for industries across Bangladesh.',
+    primaryCtaText: 'Get a Quote',
+    primaryCtaLink: '/contact',
+    secondaryCtaText: 'View Services',
+    secondaryCtaLink: '#services',
+    heroImages: ['/images/automation/1.png', '/images/automation/2.png', '/images/automation/3.png', '/images/automation/4.png'],
+  },
+  stats: [
+    { value: '500+', label: 'Projects Completed' },
+    { value: '7+', label: 'Years Experience' },
+    { value: '50+', label: 'Industrial Clients' },
+    { value: '24/7', label: 'Support Available' },
+  ],
+  servicesHeader: {
+    title: 'Our Automation Services',
+    subtitle: 'Comprehensive automation solutions for every industrial need',
+  },
+  services: [
+    {
+      title: 'PLC Programming',
+      description: 'Expert programming for Siemens S7, Schneider Modicon, Allen Bradley, and other major PLC brands.',
+      icon: 'Cpu',
+      image: '/images/automation/1.png',
+      features: ['Siemens S7 Series', 'Schneider Modicon', 'Allen Bradley', 'Delta PLC', 'Custom Logic Design'],
+    },
+    {
+      title: 'SCADA Systems',
+      description: 'Complete SCADA implementation for monitoring and control of industrial processes.',
+      icon: 'MonitorPlay',
+      image: '/images/automation/2.png',
+      features: ['Real-time Monitoring', 'Data Logging', 'Alarm Management', 'Remote Access', 'Historical Trends'],
+    },
+    {
+      title: 'HMI Design & Programming',
+      description: 'User-friendly Human Machine Interface design for optimal operator control.',
+      icon: 'Settings',
+      image: '/images/automation/3.png',
+      features: ['Touchscreen Interfaces', 'Intuitive Design', 'Multi-language Support', 'Custom Graphics', 'Responsive Layouts'],
+    },
+    {
+      title: 'VFD Installation',
+      description: 'Variable Frequency Drive installation and configuration for motor speed control.',
+      icon: 'Zap',
+      image: '/images/automation/4.png',
+      features: ['Energy Savings', 'Motor Protection', 'Speed Control', 'Soft Start', 'Parameter Setup'],
+    },
+    {
+      title: 'Industrial Control Panels',
+      description: 'Custom control panel design, fabrication, and installation for industrial applications.',
+      icon: 'CircuitBoard',
+      image: '/images/automation/5.png',
+      features: ['Panel Design', 'Wiring & Assembly', 'Testing & Commissioning', 'Documentation', 'Maintenance Support'],
+    },
+    {
+      title: 'Process Automation',
+      description: 'End-to-end automation of manufacturing and industrial processes.',
+      icon: 'Factory',
+      image: '/images/automation/6.png',
+      features: ['Production Lines', 'Quality Control', 'Material Handling', 'Packaging Systems', 'Batch Processing'],
+    },
+    {
+      title: 'Instrumentation',
+      description: 'Industrial instrumentation installation, calibration, and maintenance.',
+      icon: 'Gauge',
+      image: '/images/automation/7.png',
+      features: ['Sensors & Transmitters', 'Flow Meters', 'Level Sensors', 'Temperature Probes', 'Calibration Services'],
+    },
+    {
+      title: 'Maintenance & Support',
+      description: 'Ongoing maintenance, troubleshooting, and technical support for automation systems.',
+      icon: 'Wrench',
+      image: '/images/automation/8.png',
+      features: ['24/7 Support', 'Preventive Maintenance', 'Troubleshooting', 'System Upgrades', 'Training'],
+    },
+    {
+      title: 'Safety Systems',
+      description: 'Industrial safety systems design and implementation for personnel and equipment protection.',
+      icon: 'Shield',
+      image: '/images/automation/9.png',
+      features: ['Safety PLCs', 'E-Stop Systems', 'Light Curtains', 'Safety Relays', 'Risk Assessment'],
+    },
+  ],
+  why: {
+    title: 'Why Choose Our Automation Division?',
+    description:
+      'With years of experience in industrial automation, we bring expertise across all major PLC and SCADA platforms. Our team of certified engineers delivers solutions that meet international standards while understanding local industry requirements.',
+    benefits: [
+      { title: 'Certified Engineers', desc: 'Siemens & Schneider certified professionals' },
+      { title: 'Multi-brand Expertise', desc: 'Work with all major automation brands' },
+      { title: 'Full Lifecycle Support', desc: 'From design to commissioning & maintenance' },
+      { title: 'Industry Experience', desc: 'Textile, pharma, food, manufacturing & more' },
+    ],
+    showcaseImages: ['/images/automation/10.png', '/images/automation/11.png', '/images/automation/12.png', '/images/automation/13.png'],
+  },
+}
+
+export default async function AutomationPage() {
+  const cms = await getPageContents('services-automation', ['page'])
+  const c = coercePageContent<AutomationPageContent>(cms['page'], defaultContent)
+
+  const heroImages = Array.isArray(c.hero?.heroImages) ? c.hero.heroImages : defaultContent.hero.heroImages
+  const stats = Array.isArray(c.stats) ? c.stats : defaultContent.stats
+  const services = Array.isArray(c.services) ? c.services : defaultContent.services
+  const benefits = Array.isArray(c.why?.benefits) ? c.why.benefits : defaultContent.why.benefits
+  const showcaseImages = Array.isArray(c.why?.showcaseImages) ? c.why.showcaseImages : defaultContent.why.showcaseImages
+
   return (
     <>
       {/* Hero Section */}
@@ -113,37 +191,35 @@ export default function AutomationPage() {
             <div className="space-y-8">
               <div className="inline-flex items-center px-4 py-2 bg-white/20 text-white rounded-full text-sm font-medium">
                 <Cpu className="w-4 h-4 mr-2" />
-                Automation Division
+                {c.hero?.badgeText || defaultContent.hero.badgeText}
               </div>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-                Industrial Automation Solutions
+                {c.hero?.title || defaultContent.hero.title}
               </h1>
               <p className="text-xl text-orange-100 leading-relaxed">
-                From PLC programming to complete SCADA systems, we deliver cutting-edge 
-                automation solutions that increase efficiency, reduce costs, and enhance 
-                productivity for industries across Bangladesh.
+                {c.hero?.description || defaultContent.hero.description}
               </p>
               <div className="flex flex-wrap gap-4">
-                <Link href="/contact">
+                <Link href={c.hero?.primaryCtaLink || defaultContent.hero.primaryCtaLink}>
                   <Button size="lg" className="!bg-white !text-orange-600 hover:!bg-orange-50 flex items-center">
-                    Get a Quote
+                    {c.hero?.primaryCtaText || defaultContent.hero.primaryCtaText}
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
-                <Link href="#services">
+                <Link href={c.hero?.secondaryCtaLink || defaultContent.hero.secondaryCtaLink}>
                   <Button size="lg" className="!border-2 !border-white !text-white !bg-transparent hover:!bg-white/10">
-                    View Services
+                    {c.hero?.secondaryCtaText || defaultContent.hero.secondaryCtaText}
                   </Button>
                 </Link>
               </div>
             </div>
             <div className="relative">
               <div className="grid grid-cols-2 gap-4">
-                {[1, 2, 3, 4].map((num) => (
-                  <div key={num} className="bg-white/10 backdrop-blur-sm rounded-xl p-2 shadow-xl">
+                {heroImages.slice(0, 4).map((src, index) => (
+                  <div key={`${src}-${index}`} className="bg-white/10 backdrop-blur-sm rounded-xl p-2 shadow-xl">
                     <Image
-                      src={`/images/automation/${num}.png`}
-                      alt={`Automation ${num}`}
+                      src={src}
+                      alt={`Automation ${index + 1}`}
                       width={200}
                       height={150}
                       className="rounded-lg object-contain w-full h-32"
@@ -173,8 +249,8 @@ export default function AutomationPage() {
       {/* Services Section */}
       <Section background="gray" id="services">
         <SectionHeader
-          title="Our Automation Services"
-          subtitle="Comprehensive automation solutions for every industrial need"
+          title={c.servicesHeader?.title || defaultContent.servicesHeader.title}
+          subtitle={c.servicesHeader?.subtitle || defaultContent.servicesHeader.subtitle}
         />
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => (
@@ -190,13 +266,16 @@ export default function AutomationPage() {
               <CardContent className="p-6 space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-lg bg-orange-100 flex items-center justify-center group-hover:bg-orange-600 transition-colors">
-                    <service.icon className="w-6 h-6 text-orange-600 group-hover:text-white transition-colors" />
+                    {(() => {
+                      const Icon = resolveLucideIcon(service.icon, Cpu)
+                      return <Icon className="w-6 h-6 text-orange-600 group-hover:text-white transition-colors" />
+                    })()}
                   </div>
                   <h3 className="text-xl font-semibold text-gray-900">{service.title}</h3>
                 </div>
                 <p className="text-gray-600">{service.description}</p>
                 <ul className="space-y-2">
-                  {service.features.slice(0, 3).map((feature, i) => (
+                  {(Array.isArray(service.features) ? service.features : []).slice(0, 3).map((feature, i) => (
                     <li key={i} className="flex items-center text-sm text-gray-600">
                       <CheckCircle className="w-4 h-4 text-orange-500 mr-2 flex-shrink-0" />
                       {feature}
@@ -214,21 +293,13 @@ export default function AutomationPage() {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-              Why Choose Our Automation Division?
+              {c.why?.title || defaultContent.why.title}
             </h2>
             <p className="text-lg text-gray-600 leading-relaxed">
-              With years of experience in industrial automation, we bring expertise 
-              across all major PLC and SCADA platforms. Our team of certified engineers 
-              delivers solutions that meet international standards while understanding 
-              local industry requirements.
+              {c.why?.description || defaultContent.why.description}
             </p>
             <div className="grid sm:grid-cols-2 gap-6">
-              {[
-                { title: 'Certified Engineers', desc: 'Siemens & Schneider certified professionals' },
-                { title: 'Multi-brand Expertise', desc: 'Work with all major automation brands' },
-                { title: 'Full Lifecycle Support', desc: 'From design to commissioning & maintenance' },
-                { title: 'Industry Experience', desc: 'Textile, pharma, food, manufacturing & more' }
-              ].map((item, i) => (
+              {benefits.map((item, i) => (
                 <div key={i} className="flex items-start gap-3">
                   <CheckCircle className="w-6 h-6 text-orange-500 flex-shrink-0 mt-1" />
                   <div>
@@ -240,11 +311,11 @@ export default function AutomationPage() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            {[10, 11, 12, 13].map((num) => (
-              <div key={num} className="bg-gray-100 rounded-xl p-4 shadow-sm">
+            {showcaseImages.slice(0, 4).map((src, index) => (
+              <div key={`${src}-${index}`} className="bg-gray-100 rounded-xl p-4 shadow-sm">
                 <Image
-                  src={`/images/automation/${num}.png`}
-                  alt={`Automation showcase ${num}`}
+                  src={src}
+                  alt={`Automation showcase ${index + 1}`}
                   width={250}
                   height={200}
                   className="rounded-lg object-contain w-full h-40"

@@ -29,6 +29,7 @@ import {
   Layout,
   Target,
   Zap,
+  Cpu,
   ListChecks,
   HelpCircle,
   Megaphone,
@@ -85,6 +86,7 @@ const navigation = [
     icon: Briefcase,
     children: [
       { name: 'Page Header', href: '/admin/pages/services/header', icon: Layout },
+      { name: 'Automation Division', href: '/admin/pages/services/automation', icon: Cpu },
       { name: 'All Services', href: '/admin/services', icon: Briefcase },
     ]
   },

@@ -6,9 +6,12 @@ import {
   Building2,
   CheckCircle,
   Clock,
+  CircuitBoard,
   Code,
+  Cpu,
   Factory,
   Globe,
+  Gauge,
   GraduationCap,
   Headphones,
   Heart,
@@ -17,6 +20,7 @@ import {
   Layers,
   Lock,
   Mail,
+  MonitorPlay,
   Phone,
   PieChart,
   Pill,
@@ -30,6 +34,7 @@ import {
   ThumbsUp,
   TrendingUp,
   Users,
+  Wrench,
   Zap
 } from 'lucide-react'
 
@@ -40,9 +45,12 @@ const ICONS: Record<string, LucideIcon> = {
   Building2,
   CheckCircle,
   Clock,
+  CircuitBoard,
   Code,
+  Cpu,
   Factory,
   Globe,
+  Gauge,
   GraduationCap,
   Headphones,
   Heart,
@@ -51,6 +59,7 @@ const ICONS: Record<string, LucideIcon> = {
   Layers,
   Lock,
   Mail,
+  MonitorPlay,
   Phone,
   PieChart,
   Pill,
@@ -64,6 +73,7 @@ const ICONS: Record<string, LucideIcon> = {
   ThumbsUp,
   TrendingUp,
   Users,
+  Wrench,
   Zap
 }
 
