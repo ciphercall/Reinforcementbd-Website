@@ -8,6 +8,7 @@ import {
   Layout,
   Grid3X3,
   Building2,
+  Monitor,
   Cpu,
   ChevronRight
 } from 'lucide-react'
@@ -30,6 +31,12 @@ const sections = [
     href: '/admin/pages/services/architect-view',
     icon: Building2,
     description: 'Edit the /services/architect-view visitor page content'
+  },
+  {
+    name: 'IT Zone Division Page',
+    href: '/admin/pages/services/it-zone',
+    icon: Monitor,
+    description: 'Edit the /services/it-zone visitor page content'
   },
   { 
     name: 'Services List', 
