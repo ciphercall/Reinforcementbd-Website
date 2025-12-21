@@ -87,6 +87,7 @@ const navigation = [
     children: [
       { name: 'Page Header', href: '/admin/pages/services/header', icon: Layout },
       { name: 'Automation Division', href: '/admin/pages/services/automation', icon: Cpu },
+      { name: 'Architect View Division', href: '/admin/pages/services/architect-view', icon: Building2 },
       { name: 'All Services', href: '/admin/services', icon: Briefcase },
     ]
   },

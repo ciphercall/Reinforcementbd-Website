@@ -6,15 +6,11 @@ import { Card, CardContent } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { ArchitectPartnersCarousel } from '@/components/sections/PartnerLogosCarousel'
 import { CTASection } from '@/components/sections/CTASection'
+import { getPageContents } from '@/lib/pageContent'
+import { coercePageContent } from '@/lib/utils/pageContent'
+import { resolveLucideIcon } from '@/lib/utils/lucideIcon'
 import { 
   Building2,
-  Palette,
-  Home,
-  Ruler,
-  PenTool,
-  Layers,
-  Eye,
-  Lightbulb,
   ArrowRight,
   CheckCircle
 } from 'lucide-react'
@@ -25,74 +21,184 @@ export const metadata: Metadata = {
   keywords: 'architecture, interior design, building design, 3D visualization, landscape design, Bangladesh',
 }
 
-const services = [
-  {
-    title: 'Architectural Design',
-    description: 'Complete architectural design services for residential, commercial, and industrial projects.',
-    icon: Building2,
-    features: ['Conceptual Design', 'Design Development', 'Construction Documents', 'Building Permits', 'Site Planning']
-  },
-  {
-    title: 'Interior Design',
-    description: 'Creative interior design solutions that blend aesthetics with functionality.',
-    icon: Palette,
-    features: ['Space Planning', 'Material Selection', 'Furniture Design', 'Lighting Design', 'Color Schemes']
-  },
-  {
-    title: 'Residential Design',
-    description: 'Custom home designs that reflect your lifestyle and preferences.',
-    icon: Home,
-    features: ['Single Family Homes', 'Apartments', 'Villas', 'Renovations', 'Extensions']
-  },
-  {
-    title: '3D Visualization',
-    description: 'Photorealistic 3D renderings to visualize your project before construction.',
-    icon: Eye,
-    features: ['3D Modeling', 'Photorealistic Renders', 'Virtual Tours', 'Animations', 'VR Presentations']
-  },
-  {
-    title: 'Technical Drawings',
-    description: 'Detailed technical drawings and blueprints for construction.',
-    icon: Ruler,
-    features: ['Floor Plans', 'Elevations', 'Sections', 'Details', 'As-Built Drawings']
-  },
-  {
-    title: 'Landscape Design',
-    description: 'Outdoor space design that enhances the beauty and functionality of your property.',
-    icon: Layers,
-    features: ['Garden Design', 'Hardscape Design', 'Planting Plans', 'Irrigation Systems', 'Outdoor Lighting']
-  },
-  {
-    title: 'Concept Development',
-    description: 'Initial concept development and feasibility studies for your projects.',
-    icon: Lightbulb,
-    features: ['Site Analysis', 'Feasibility Studies', 'Concept Sketches', 'Design Options', 'Budget Estimates']
-  },
-  {
-    title: 'Construction Support',
-    description: 'On-site supervision and support during the construction phase.',
-    icon: PenTool,
-    features: ['Site Supervision', 'Quality Control', 'Contractor Coordination', 'Change Orders', 'Final Inspection']
-  }
-]
+export const dynamic = 'force-dynamic'
 
-const stats = [
-  { value: '100+', label: 'Projects Designed' },
-  { value: '50+', label: 'Happy Clients' },
-  { value: '15+', label: 'Awards Won' },
-  { value: '5+', label: 'Years Experience' }
-]
+interface Stat {
+  value: string
+  label: string
+}
 
-const portfolioImages = [
-  { src: '/images/profile/1.jpg', alt: 'Architecture Project 1' },
-  { src: '/images/profile/2.jpg', alt: 'Architecture Project 2' },
-  { src: '/images/profile/3.jpg', alt: 'Architecture Project 3' },
-  { src: '/images/profile/4.jpeg', alt: 'Architecture Project 4' },
-  { src: '/images/profile/5.jpg', alt: 'Architecture Project 5' },
-  { src: '/images/profile/6.jpeg', alt: 'Architecture Project 6' },
-]
+interface FeatureCard {
+  title: string
+  description: string
+  icon: string
+  features: string[]
+}
 
-export default function ArchitectViewPage() {
+interface ImageItem {
+  src: string
+  alt: string
+}
+
+interface Benefit {
+  title: string
+  desc: string
+}
+
+interface HeroContent {
+  badgeText: string
+  title: string
+  description: string
+  primaryCtaText: string
+  primaryCtaLink: string
+  secondaryCtaText: string
+  secondaryCtaLink: string
+  heroImages: ImageItem[]
+}
+
+interface PortfolioContent {
+  title: string
+  subtitle: string
+  images: ImageItem[]
+}
+
+interface WhyContent {
+  title: string
+  description: string
+  benefits: Benefit[]
+  showcaseImages: ImageItem[]
+}
+
+interface ArchitectViewPageContent {
+  hero: HeroContent
+  stats: Stat[]
+  servicesHeader: { title: string; subtitle: string }
+  services: FeatureCard[]
+  portfolio: PortfolioContent
+  why: WhyContent
+}
+const defaultContent: ArchitectViewPageContent = {
+  hero: {
+    badgeText: 'Architect View Division',
+    title: 'Architectural Excellence',
+    description:
+      'Transform your vision into stunning architectural reality. Our team of experienced architects and designers creates spaces that inspire, combining aesthetics with functionality for exceptional results.',
+    primaryCtaText: 'Start Your Project',
+    primaryCtaLink: '/contact',
+    secondaryCtaText: 'Our Services',
+    secondaryCtaLink: '#services',
+    heroImages: [
+      { src: '/images/profile/1.jpg', alt: 'Architecture Project 1' },
+      { src: '/images/profile/2.jpg', alt: 'Architecture Project 2' },
+      { src: '/images/profile/3.jpg', alt: 'Architecture Project 3' },
+      { src: '/images/profile/4.jpeg', alt: 'Architecture Project 4' },
+    ],
+  },
+  stats: [
+    { value: '100+', label: 'Projects Designed' },
+    { value: '50+', label: 'Happy Clients' },
+    { value: '15+', label: 'Awards Won' },
+    { value: '5+', label: 'Years Experience' },
+  ],
+  servicesHeader: {
+    title: 'Our Architectural Services',
+    subtitle: 'Comprehensive design services for every type of project',
+  },
+  services: [
+    {
+      title: 'Architectural Design',
+      description: 'Complete architectural design services for residential, commercial, and industrial projects.',
+      icon: 'Building2',
+      features: ['Conceptual Design', 'Design Development', 'Construction Documents', 'Building Permits', 'Site Planning'],
+    },
+    {
+      title: 'Interior Design',
+      description: 'Creative interior design solutions that blend aesthetics with functionality.',
+      icon: 'Palette',
+      features: ['Space Planning', 'Material Selection', 'Furniture Design', 'Lighting Design', 'Color Schemes'],
+    },
+    {
+      title: 'Residential Design',
+      description: 'Custom home designs that reflect your lifestyle and preferences.',
+      icon: 'Home',
+      features: ['Single Family Homes', 'Apartments', 'Villas', 'Renovations', 'Extensions'],
+    },
+    {
+      title: '3D Visualization',
+      description: 'Photorealistic 3D renderings to visualize your project before construction.',
+      icon: 'Eye',
+      features: ['3D Modeling', 'Photorealistic Renders', 'Virtual Tours', 'Animations', 'VR Presentations'],
+    },
+    {
+      title: 'Technical Drawings',
+      description: 'Detailed technical drawings and blueprints for construction.',
+      icon: 'Ruler',
+      features: ['Floor Plans', 'Elevations', 'Sections', 'Details', 'As-Built Drawings'],
+    },
+    {
+      title: 'Landscape Design',
+      description: 'Outdoor space design that enhances the beauty and functionality of your property.',
+      icon: 'Layers',
+      features: ['Garden Design', 'Hardscape Design', 'Planting Plans', 'Irrigation Systems', 'Outdoor Lighting'],
+    },
+    {
+      title: 'Concept Development',
+      description: 'Initial concept development and feasibility studies for your projects.',
+      icon: 'Lightbulb',
+      features: ['Site Analysis', 'Feasibility Studies', 'Concept Sketches', 'Design Options', 'Budget Estimates'],
+    },
+    {
+      title: 'Construction Support',
+      description: 'On-site supervision and support during the construction phase.',
+      icon: 'PenTool',
+      features: ['Site Supervision', 'Quality Control', 'Contractor Coordination', 'Change Orders', 'Final Inspection'],
+    },
+  ],
+  portfolio: {
+    title: 'Our Portfolio',
+    subtitle: 'A glimpse of our architectural projects',
+    images: [
+      { src: '/images/profile/1.jpg', alt: 'Architecture Project 1' },
+      { src: '/images/profile/2.jpg', alt: 'Architecture Project 2' },
+      { src: '/images/profile/3.jpg', alt: 'Architecture Project 3' },
+      { src: '/images/profile/4.jpeg', alt: 'Architecture Project 4' },
+      { src: '/images/profile/5.jpg', alt: 'Architecture Project 5' },
+      { src: '/images/profile/6.jpeg', alt: 'Architecture Project 6' },
+      { src: '/images/profile/7.jpg', alt: 'Architecture Project 7' },
+      { src: '/images/profile/8.webp', alt: 'Architecture Project 8' },
+      { src: '/images/profile/9.jpg', alt: 'Architecture Project 9' },
+    ],
+  },
+  why: {
+    title: 'Why Choose Our Architecture Division?',
+    description:
+      'Our architects combine creative vision with technical expertise to deliver projects that exceed expectations. We focus on sustainable design practices and innovative solutions that stand the test of time.',
+    benefits: [
+      { title: 'Creative Excellence', desc: 'Award-winning design concepts' },
+      { title: 'Sustainable Design', desc: 'Eco-friendly and energy-efficient' },
+      { title: 'Client-Focused', desc: 'Your vision, our expertise' },
+      { title: 'End-to-End Service', desc: 'From concept to completion' },
+    ],
+    showcaseImages: [
+      { src: '/images/profile/10.jpeg', alt: 'Architecture showcase 10' },
+      { src: '/images/profile/11.jpeg', alt: 'Architecture showcase 11' },
+      { src: '/images/profile/12.jpeg', alt: 'Architecture showcase 12' },
+      { src: '/images/profile/13.jpeg', alt: 'Architecture showcase 13' },
+    ],
+  },
+}
+
+export default async function ArchitectViewPage() {
+  const cms = await getPageContents('services-architect-view', ['page'])
+  const c = coercePageContent<ArchitectViewPageContent>(cms['page'], defaultContent)
+
+  const stats = Array.isArray(c.stats) ? c.stats : defaultContent.stats
+  const services = Array.isArray(c.services) ? c.services : defaultContent.services
+  const heroImages = Array.isArray(c.hero?.heroImages) ? c.hero.heroImages : defaultContent.hero.heroImages
+  const portfolioImages = Array.isArray(c.portfolio?.images) ? c.portfolio.images : defaultContent.portfolio.images
+  const benefits = Array.isArray(c.why?.benefits) ? c.why.benefits : defaultContent.why.benefits
+  const showcaseImages = Array.isArray(c.why?.showcaseImages) ? c.why.showcaseImages : defaultContent.why.showcaseImages
+
   return (
     <>
       {/* Hero Section */}
@@ -106,33 +212,31 @@ export default function ArchitectViewPage() {
             <div className="space-y-8">
               <div className="inline-flex items-center px-4 py-2 bg-white/20 text-white rounded-full text-sm font-medium">
                 <Building2 className="w-4 h-4 mr-2" />
-                Architect View Division
+                {c.hero?.badgeText || defaultContent.hero.badgeText}
               </div>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-                Architectural Excellence
+                {c.hero?.title || defaultContent.hero.title}
               </h1>
               <p className="text-xl text-emerald-100 leading-relaxed">
-                Transform your vision into stunning architectural reality. Our team of 
-                experienced architects and designers creates spaces that inspire, 
-                combining aesthetics with functionality for exceptional results.
+                {c.hero?.description || defaultContent.hero.description}
               </p>
               <div className="flex flex-wrap gap-4">
-                <Link href="/contact">
+                <Link href={c.hero?.primaryCtaLink || defaultContent.hero.primaryCtaLink}>
                   <Button size="lg" className="!bg-white !text-emerald-600 hover:!bg-emerald-50 flex items-center">
-                    Start Your Project
+                    {c.hero?.primaryCtaText || defaultContent.hero.primaryCtaText}
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
-                <Link href="#services">
+                <Link href={c.hero?.secondaryCtaLink || defaultContent.hero.secondaryCtaLink}>
                   <Button size="lg" className="!border-2 !border-white !text-white !bg-transparent hover:!bg-white/10">
-                    Our Services
+                    {c.hero?.secondaryCtaText || defaultContent.hero.secondaryCtaText}
                   </Button>
                 </Link>
               </div>
             </div>
             <div className="relative">
               <div className="grid grid-cols-2 gap-4">
-                {portfolioImages.slice(0, 4).map((img, i) => (
+                {heroImages.slice(0, 4).map((img, i) => (
                   <div key={i} className="bg-white/10 backdrop-blur-sm rounded-xl p-2 shadow-xl overflow-hidden">
                     <Image
                       src={img.src}
@@ -166,20 +270,23 @@ export default function ArchitectViewPage() {
       {/* Services Section */}
       <Section background="gray" id="services">
         <SectionHeader
-          title="Our Architectural Services"
-          subtitle="Comprehensive design services for every type of project"
+          title={c.servicesHeader?.title || defaultContent.servicesHeader.title}
+          subtitle={c.servicesHeader?.subtitle || defaultContent.servicesHeader.subtitle}
         />
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {services.map((service, index) => (
             <Card key={index} className="group hover:shadow-xl transition-all duration-300">
               <CardContent className="p-6 space-y-4">
                 <div className="w-14 h-14 rounded-xl bg-emerald-100 flex items-center justify-center group-hover:bg-emerald-600 transition-colors">
-                  <service.icon className="w-7 h-7 text-emerald-600 group-hover:text-white transition-colors" />
+                  {(() => {
+                    const Icon = resolveLucideIcon(service.icon, Building2)
+                    return <Icon className="w-7 h-7 text-emerald-600 group-hover:text-white transition-colors" />
+                  })()}
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900">{service.title}</h3>
                 <p className="text-gray-600 text-sm">{service.description}</p>
                 <ul className="space-y-2">
-                  {service.features.slice(0, 3).map((feature, i) => (
+                  {(Array.isArray(service.features) ? service.features : []).slice(0, 3).map((feature, i) => (
                     <li key={i} className="flex items-center text-sm text-gray-600">
                       <CheckCircle className="w-4 h-4 text-emerald-500 mr-2 flex-shrink-0" />
                       {feature}
@@ -195,15 +302,11 @@ export default function ArchitectViewPage() {
       {/* Portfolio Gallery */}
       <Section background="white">
         <SectionHeader
-          title="Our Portfolio"
-          subtitle="A glimpse of our architectural projects"
+          title={c.portfolio?.title || defaultContent.portfolio.title}
+          subtitle={c.portfolio?.subtitle || defaultContent.portfolio.subtitle}
         />
         <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-          {[...portfolioImages, 
-            { src: '/images/profile/7.jpg', alt: 'Architecture Project 7' },
-            { src: '/images/profile/8.webp', alt: 'Architecture Project 8' },
-            { src: '/images/profile/9.jpg', alt: 'Architecture Project 9' }
-          ].map((img, i) => (
+          {portfolioImages.map((img, i) => (
             <div key={i} className="group relative aspect-[4/3] rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow">
               <Image
                 src={img.src}
@@ -226,20 +329,13 @@ export default function ArchitectViewPage() {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-              Why Choose Our Architecture Division?
+              {c.why?.title || defaultContent.why.title}
             </h2>
             <p className="text-lg text-gray-600 leading-relaxed">
-              Our architects combine creative vision with technical expertise to deliver 
-              projects that exceed expectations. We focus on sustainable design practices 
-              and innovative solutions that stand the test of time.
+              {c.why?.description || defaultContent.why.description}
             </p>
             <div className="grid sm:grid-cols-2 gap-6">
-              {[
-                { title: 'Creative Excellence', desc: 'Award-winning design concepts' },
-                { title: 'Sustainable Design', desc: 'Eco-friendly and energy-efficient' },
-                { title: 'Client-Focused', desc: 'Your vision, our expertise' },
-                { title: 'End-to-End Service', desc: 'From concept to completion' }
-              ].map((item, i) => (
+              {benefits.map((item, i) => (
                 <div key={i} className="flex items-start gap-3">
                   <CheckCircle className="w-6 h-6 text-emerald-500 flex-shrink-0 mt-1" />
                   <div>
@@ -251,11 +347,11 @@ export default function ArchitectViewPage() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            {[10, 11, 12, 13].map((num) => (
-              <div key={num} className="rounded-xl overflow-hidden shadow-md">
+            {showcaseImages.slice(0, 4).map((img, i) => (
+              <div key={`${img.src}-${i}`} className="rounded-xl overflow-hidden shadow-md">
                 <Image
-                  src={`/images/profile/${num}.jpeg`}
-                  alt={`Architecture showcase ${num}`}
+                  src={img.src}
+                  alt={img.alt}
                   width={300}
                   height={250}
                   className="object-cover w-full h-48"

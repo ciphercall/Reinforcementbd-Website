@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/Card'
 import { 
   Layout,
   Grid3X3,
+  Building2,
   Cpu,
   ChevronRight
 } from 'lucide-react'
@@ -23,6 +24,12 @@ const sections = [
     href: '/admin/pages/services/automation',
     icon: Cpu,
     description: 'Edit the /services/automation visitor page content'
+  },
+  {
+    name: 'Architect View Division Page',
+    href: '/admin/pages/services/architect-view',
+    icon: Building2,
+    description: 'Edit the /services/architect-view visitor page content'
   },
   { 
     name: 'Services List', 
