@@ -129,7 +129,12 @@ const defaultMission: MissionContent = {
   visionText:
     'To be the leading integrated solutions provider in Bangladesh, recognized for excellence, innovation, and customer satisfaction across all our service areas.',
   visionIcon: 'Eye',
-  goals: [],
+  goals: [
+    { title: 'Excellence', description: 'Deliver exceptional service quality in every engagement' },
+    { title: 'Innovation', description: 'Continuously evolve with cutting-edge solutions' },
+    { title: 'Partnership', description: 'Build lasting relationships with our clients' },
+    { title: 'Growth', description: 'Enable sustainable business growth for all stakeholders' },
+  ],
 }
 
 const defaultValues: ValuesContent = {
@@ -226,6 +231,7 @@ export default async function AboutPage() {
   const heroBadge = story.stats?.[0] ?? defaultStory.stats[0]
   const MissionIcon = resolveLucideIcon(mission.missionIcon, Target)
   const VisionIcon = resolveLucideIcon(mission.visionIcon, Eye)
+  const goals = Array.isArray(mission.goals) ? mission.goals : defaultMission.goals
 
   const visibleCount = Math.max(
     0,
@@ -354,6 +360,22 @@ export default async function AboutPage() {
             </CardContent>
           </Card>
         </div>
+
+        {goals.length > 0 && (
+          <div className="max-w-4xl mx-auto mt-10">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">Our Goals</h3>
+            <div className="grid sm:grid-cols-2 gap-6">
+              {goals.map((goal) => (
+                <Card key={goal.title}>
+                  <CardContent className="p-6 space-y-2">
+                    <h4 className="font-semibold text-gray-900">{goal.title}</h4>
+                    <p className="text-sm text-gray-600 leading-relaxed">{goal.description}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
       </Section>
 
       {/* Our Values */}

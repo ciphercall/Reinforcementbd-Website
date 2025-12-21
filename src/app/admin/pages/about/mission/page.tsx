@@ -53,7 +53,12 @@ export default function AboutMissionEditor() {
       const res = await fetch('/api/page-content?page=about&section=mission')
       if (res.ok) {
         const data = await res.json()
-        setContent(coercePageContent<MissionContent>(data.content, defaultContent))
+        const coerced = coercePageContent<MissionContent>(data.content, defaultContent)
+        setContent({
+          ...defaultContent,
+          ...coerced,
+          goals: Array.isArray(coerced.goals) ? coerced.goals : defaultContent.goals,
+        })
       }
     } catch (error) {
       console.error('Error fetching content:', error)
@@ -231,7 +236,7 @@ export default function AboutMissionEditor() {
           </CardHeader>
           <CardContent>
             <div className="grid md:grid-cols-2 gap-4">
-              {content.goals.map((goal, index) => (
+              {(content.goals ?? []).map((goal, index) => (
                 <div key={index} className="border rounded-lg p-4 space-y-3">
                   <div>
                     <label className="block text-xs font-medium text-gray-500 mb-1">

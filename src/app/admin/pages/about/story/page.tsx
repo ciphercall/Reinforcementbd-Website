@@ -81,7 +81,13 @@ export default function AboutStoryEditor() {
       const res = await fetch('/api/page-content?page=about&section=story')
       if (res.ok) {
         const data = await res.json()
-        setContent(coercePageContent<StoryContent>(data.content, defaultContent))
+        const coerced = coercePageContent<StoryContent>(data.content, defaultContent)
+        setContent({
+          ...defaultContent,
+          ...coerced,
+          paragraphs: Array.isArray(coerced.paragraphs) ? coerced.paragraphs : defaultContent.paragraphs,
+          stats: Array.isArray(coerced.stats) ? coerced.stats : defaultContent.stats,
+        })
       }
     } catch (error) {
       console.error('Error fetching content:', error)
@@ -131,12 +137,12 @@ export default function AboutStoryEditor() {
   const addParagraph = () => {
     setContent({
       ...content,
-      paragraphs: [...content.paragraphs, '']
+      paragraphs: [...(content.paragraphs ?? []), '']
     })
   }
 
   const updateParagraph = (index: number, value: string) => {
-    const updated = [...content.paragraphs]
+    const updated = [...(content.paragraphs ?? [])]
     updated[index] = value
     setContent({ ...content, paragraphs: updated })
   }
@@ -144,7 +150,7 @@ export default function AboutStoryEditor() {
   const removeParagraph = (index: number) => {
     setContent({
       ...content,
-      paragraphs: content.paragraphs.filter((_, i) => i !== index)
+      paragraphs: (content.paragraphs ?? []).filter((_, i) => i !== index)
     })
   }
 
