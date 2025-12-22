@@ -2,8 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import prisma from '@/lib/db/prisma'
-import { unlink } from 'node:fs/promises'
-import path from 'node:path'
+import { del } from '@vercel/blob'
 
 // DELETE a media file
 export async function DELETE(
@@ -27,13 +26,12 @@ export async function DELETE(
       return NextResponse.json({ error: 'Media not found' }, { status: 404 })
     }
 
-    // Delete physical file
+    // Delete physical file from Vercel Blob
     try {
-      const filePath = path.join(process.cwd(), 'public', media.path)
-      await unlink(filePath)
+      await del(media.path)
     } catch (error) {
-      console.error('Error deleting physical file:', error)
-      // Continue even if file doesn't exist physically
+      console.error('Error deleting from blob storage:', error)
+      // Continue even if blob deletion fails
     }
 
     // Delete from database

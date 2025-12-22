@@ -2,8 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import prisma from '@/lib/db/prisma'
-import { unlink } from 'node:fs/promises'
-import path from 'node:path'
+import { del } from '@vercel/blob'
 
 // POST batch delete media files
 export async function POST(request: NextRequest) {
@@ -25,14 +24,13 @@ export async function POST(request: NextRequest) {
       where: { id: { in: ids } }
     })
 
-    // Delete physical files
+    // Delete physical files from Vercel Blob
     const deletionPromises = mediaFiles.map(async (media) => {
       try {
-        const filePath = path.join(process.cwd(), 'public', media.path)
-        await unlink(filePath)
+        await del(media.path)
       } catch (error) {
-        console.error(`Error deleting file ${media.path}:`, error)
-        // Continue even if file doesn't exist
+        console.error(`Error deleting blob ${media.path}:`, error)
+        // Continue even if blob doesn't exist
       }
     })
 

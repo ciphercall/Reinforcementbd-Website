@@ -2,8 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import prisma from '@/lib/db/prisma'
-import { mkdir, writeFile } from 'node:fs/promises'
-import path from 'node:path'
+import { put } from '@vercel/blob'
 import crypto from 'node:crypto'
 
 export const runtime = 'nodejs'
@@ -40,36 +39,34 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No files provided' }, { status: 400 })
     }
 
-    const uploadsDir = path.join(process.cwd(), 'public', 'uploads')
-    await mkdir(uploadsDir, { recursive: true })
-
     const uploadedMedia = []
 
     for (const fileItem of filesToProcess) {
       if (!(fileItem instanceof File)) continue
 
-      const bytes = Buffer.from(await fileItem.arrayBuffer())
+      // Generate safe filename
       const safeOriginalName = (fileItem.name || 'upload')
         .toLowerCase()
         .replace(/[^a-z0-9._-]+/g, '-')
         .replace(/-+/g, '-')
         .replace(/^-|-$/g, '')
 
-      const ext = path.extname(safeOriginalName) || ''
-      const base = path.basename(safeOriginalName, ext) || 'upload'
-      const filename = `${base}-${Date.now()}-${crypto.randomUUID().substring(0, 8)}${ext}`
+      const ext = safeOriginalName.split('.').pop() || ''
+      const base = safeOriginalName.replace(`.${ext}`, '') || 'upload'
+      const filename = `${base}-${Date.now()}-${crypto.randomUUID().substring(0, 8)}.${ext}`
 
-      const filePathOnDisk = path.join(uploadsDir, filename)
-      await writeFile(filePathOnDisk, bytes)
-
-      const publicPath = `/uploads/${filename}`
+      // Upload to Vercel Blob
+      const blob = await put(filename, fileItem, {
+        access: 'public',
+        addRandomSuffix: false,
+      })
 
       const media = await prisma.media.create({
         data: {
           filename,
-          path: publicPath,
+          path: blob.url,
           mimeType: fileItem.type || 'application/octet-stream',
-          size: bytes.length,
+          size: fileItem.size,
           alt: null,
         }
       })
