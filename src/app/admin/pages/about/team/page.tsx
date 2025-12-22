@@ -84,6 +84,12 @@ export default function AboutTeamEditor() {
   const [uploadingMemberId, setUploadingMemberId] = useState<string | null>(null)
 
   useEffect(() => {
+    if (status === 'authenticated') {
+      router.replace('/admin/pages/home/team-preview')
+    }
+  }, [status, router])
+
+  useEffect(() => {
     if (status === 'authenticated') fetchContent()
     if (status === 'unauthenticated') router.push('/admin/login')
   }, [status, router])

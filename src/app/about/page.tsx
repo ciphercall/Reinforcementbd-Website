@@ -2,8 +2,9 @@ import { Metadata } from 'next'
 import Image from 'next/image'
 import { Section, SectionHeader } from '@/components/ui/Section'
 import { Card, CardContent } from '@/components/ui/Card'
-import { Target, Eye, Award, Zap, Linkedin, Mail } from 'lucide-react'
+import { Target, Eye, Award, Zap } from 'lucide-react'
 import { CTASection } from '@/components/sections/CTASection'
+import { TeamSection } from '@/components/sections/TeamSection'
 import { getPageContents } from '@/lib/pageContent'
 import { coercePageContent } from '@/lib/utils/pageContent'
 import { resolveLucideIcon } from '@/lib/utils/lucideIcon'
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
 
 export const dynamic = 'force-dynamic'
 
-const ABOUT_SECTIONS = ['header', 'story', 'journey', 'mission', 'values', 'team', 'divisions'] as const
+const ABOUT_SECTIONS = ['header', 'story', 'journey', 'mission', 'values', 'divisions'] as const
 
 interface HeaderContent {
   title: string
@@ -55,24 +56,6 @@ interface ValuesContent {
   sectionTitle: string
   sectionSubtitle: string
   values: { title: string; description: string; icon: string }[]
-}
-
-interface AboutTeamMember {
-  id: string
-  name: string
-  position: string
-  bio: string
-  image: string
-  showImage?: boolean
-  linkedin: string
-  email: string
-}
-
-interface AboutTeamContent {
-  sectionTitle: string
-  sectionSubtitle: string
-  visibleCount?: number
-  members: AboutTeamMember[]
 }
 
 interface DivisionsContent {
@@ -148,54 +131,6 @@ const defaultValues: ValuesContent = {
   ],
 }
 
-const defaultTeam: AboutTeamContent = {
-  sectionTitle: 'Meet Our Team',
-  sectionSubtitle: 'Expert Engineers Driving Excellence',
-  visibleCount: 0,
-  members: [
-    {
-      id: '1',
-      name: 'Engr. Md. Shariful Islam',
-      position: 'Director',
-      bio: 'Founder and Director of Reinforcement Group with extensive experience in electrical engineering and automation. Leading the company vision since 2018.',
-      image: '/images/team/shariful.jpg',
-      showImage: true,
-      linkedin: '#',
-      email: 'shariful@ragrpbd.com',
-    },
-    {
-      id: '2',
-      name: 'Engr. Gazi Monir-Uz-Zaman',
-      position: 'Director',
-      bio: 'Co-Director bringing strategic leadership and technical expertise to drive company growth and innovation in all three divisions.',
-      image: '/images/team/monir.jpg',
-      showImage: true,
-      linkedin: '#',
-      email: 'gazi@ragrpbd.com',
-    },
-    {
-      id: '3',
-      name: 'Ar. Miss. Sultana',
-      position: 'Head of Design',
-      bio: 'Leading the Reinforcement Architect View division with creative architectural designs and innovative visualization solutions.',
-      image: '/images/team/sultana.jpg',
-      showImage: true,
-      linkedin: '#',
-      email: 'sultana@ragrpbd.com',
-    },
-    {
-      id: '4',
-      name: 'Engr. Md. Sarful Hasan',
-      position: 'Chief Advisor',
-      bio: 'Providing strategic guidance and technical advisory services with years of industry experience in automation and electrical systems.',
-      image: '/images/team/sarful.jpg',
-      showImage: true,
-      linkedin: '#',
-      email: 'sarful@ragrpbd.com',
-    },
-  ],
-}
-
 const defaultDivisions: DivisionsContent = {
   sectionTitle: 'Our Three Divisions',
   sectionSubtitle: 'Comprehensive solutions under one roof',
@@ -220,31 +155,18 @@ const defaultDivisions: DivisionsContent = {
 
 export default async function AboutPage() {
   const cms = await getPageContents('about', [...ABOUT_SECTIONS])
+  const homeCms = await getPageContents('home', ['team-preview'])
   const header = coercePageContent<HeaderContent>(cms['header'], defaultHeader)
   const story = coercePageContent<StoryContent>(cms['story'], defaultStory)
   const journey = coercePageContent<JourneyContent>(cms['journey'], defaultJourney)
   const mission = coercePageContent<MissionContent>(cms['mission'], defaultMission)
   const values = coercePageContent<ValuesContent>(cms['values'], defaultValues)
-  const aboutTeam = coercePageContent<AboutTeamContent>(cms['team'], defaultTeam)
   const divisions = coercePageContent<DivisionsContent>(cms['divisions'], defaultDivisions)
 
   const heroBadge = story.stats?.[0] ?? defaultStory.stats[0]
   const MissionIcon = resolveLucideIcon(mission.missionIcon, Target)
   const VisionIcon = resolveLucideIcon(mission.visionIcon, Eye)
   const goals = Array.isArray(mission.goals) ? mission.goals : defaultMission.goals
-
-  const visibleCount = Math.max(
-    0,
-    Math.min(
-      Number.isFinite(aboutTeam.visibleCount as number) ? (aboutTeam.visibleCount as number) : defaultTeam.visibleCount ?? 0,
-      aboutTeam.members?.length ?? 0
-    )
-  )
-  const members = (aboutTeam.members ?? []).map((m) => ({
-    ...m,
-    showImage: m.showImage !== false,
-  }))
-  const shownMembers = visibleCount ? members.slice(0, visibleCount) : members
 
   return (
     <>
@@ -342,21 +264,17 @@ export default async function AboutPage() {
                 <MissionIcon className="w-7 h-7 text-white" />
               </div>
               <h2 className="text-2xl font-bold text-gray-900">{mission.missionTitle}</h2>
-              <p className="text-gray-600 leading-relaxed">
-                {mission.missionText}
-              </p>
+              <p className="text-gray-600 leading-relaxed">{mission.missionText}</p>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardContent className="p-8 space-y-4">
               <div className="w-14 h-14 bg-gray-900 rounded-xl flex items-center justify-center">
                 <VisionIcon className="w-7 h-7 text-white" />
               </div>
               <h2 className="text-2xl font-bold text-gray-900">{mission.visionTitle}</h2>
-              <p className="text-gray-600 leading-relaxed">
-                {mission.visionText}
-              </p>
+              <p className="text-gray-600 leading-relaxed">{mission.visionText}</p>
             </CardContent>
           </Card>
         </div>
@@ -380,83 +298,27 @@ export default async function AboutPage() {
 
       {/* Our Values */}
       <Section background="white">
-        <SectionHeader
-          title={values.sectionTitle}
-          subtitle={values.sectionSubtitle}
-        />
+        <SectionHeader title={values.sectionTitle} subtitle={values.sectionSubtitle} />
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {(values.values ?? defaultValues.values).map((value) => {
             const Icon = resolveLucideIcon(value.icon, Award)
             return (
-            <Card key={value.title}>
-              <CardContent className="p-6 text-center space-y-4">
-                <div className="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
-                  <Icon className="w-7 h-7 text-blue-600" />
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900">{value.title}</h3>
-                <p className="text-sm text-gray-600">{value.description}</p>
-              </CardContent>
-            </Card>
-          )})}
+              <Card key={value.title}>
+                <CardContent className="p-6 text-center space-y-4">
+                  <div className="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
+                    <Icon className="w-7 h-7 text-blue-600" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900">{value.title}</h3>
+                  <p className="text-sm text-gray-600">{value.description}</p>
+                </CardContent>
+              </Card>
+            )
+          })}
         </div>
       </Section>
 
-      {/* Team Section */}
-      <Section background="gray" id="team">
-        <SectionHeader
-          title={aboutTeam.sectionTitle}
-          subtitle={aboutTeam.sectionSubtitle}
-        />
-        <div className="grid justify-center gap-6 [grid-template-columns:repeat(auto-fit,minmax(240px,280px))]">
-          {shownMembers.map((member) => (
-            <Card key={member.id} className="overflow-hidden group">
-              <div className="relative aspect-square">
-                {member.showImage && member.image ? (
-                  <>
-                    <Image
-                      src={member.image}
-                      alt={member.name}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                  </>
-                ) : (
-                  <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200" />
-                )}
-
-                <div className="absolute bottom-4 right-4 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <a
-                    href={member.linkedin}
-                    className="p-2 bg-white/20 backdrop-blur-sm rounded-full hover:bg-blue-600 transition-colors"
-                    aria-label="LinkedIn"
-                  >
-                    <Linkedin className="w-4 h-4 text-white" />
-                  </a>
-                  <a
-                    href={`mailto:${member.email}`}
-                    className="p-2 bg-white/20 backdrop-blur-sm rounded-full hover:bg-blue-600 transition-colors"
-                    aria-label="Email"
-                  >
-                    <Mail className="w-4 h-4 text-white" />
-                  </a>
-                </div>
-                <div className="absolute bottom-0 left-0 right-0 p-4">
-                  <h3 className={`text-lg font-bold ${member.showImage && member.image ? 'text-white' : 'text-gray-900'}`}>
-                    {member.name}
-                  </h3>
-                  <p className={`${member.showImage && member.image ? 'text-blue-300' : 'text-blue-600'} text-sm font-medium`}>
-                    {member.position}
-                  </p>
-                </div>
-              </div>
-              <CardContent className="p-4">
-                <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">{member.bio}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </Section>
+      {/* Team Section (shared with Home) */}
+      <TeamSection content={homeCms['team-preview']} />
 
       {/* Our Divisions */}
       <Section background="white">
