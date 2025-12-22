@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 import { Menu, X, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
 import { Button } from '@/components/ui/Button'
@@ -28,6 +29,18 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
+  const pathname = usePathname()
+
+  // Helper function to check if a menu item is active
+  const isActive = (href: string, children?: Array<{ href: string }>) => {
+    if (pathname === href) return true
+    if (children) {
+      return children.some(child => pathname === child.href || pathname.startsWith(child.href + '/'))
+    }
+    // For parent items, check if current path starts with the href (but not for home page)
+    if (href !== '/' && pathname.startsWith(href)) return true
+    return false
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -73,7 +86,11 @@ export function Navbar() {
                   href={item.href}
                   className={cn(
                     'flex items-center space-x-1 text-sm font-medium transition-colors',
-                    scrolled ? 'text-gray-700 hover:text-blue-600' : 'text-gray-800 hover:text-blue-600'
+                    isActive(item.href, item.children)
+                      ? 'text-blue-600 font-semibold'
+                      : scrolled 
+                        ? 'text-gray-700 hover:text-blue-600' 
+                        : 'text-gray-800 hover:text-blue-600'
                   )}
                 >
                   <span>{item.name}</span>
@@ -88,7 +105,12 @@ export function Navbar() {
                         <Link
                           key={child.name}
                           href={child.href}
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                          className={cn(
+                            'block px-4 py-2 text-sm transition-colors',
+                            pathname === child.href || pathname.startsWith(child.href + '/')
+                              ? 'bg-blue-50 text-blue-600 font-semibold'
+                              : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'
+                          )}
                         >
                           {child.name}
                         </Link>
@@ -131,7 +153,12 @@ export function Navbar() {
                 <div key={item.name}>
                   <Link
                     href={item.href}
-                    className="block py-2 text-gray-700 font-medium hover:text-blue-600"
+                    className={cn(
+                      'block py-2 font-medium transition-colors',
+                      isActive(item.href, item.children)
+                        ? 'text-blue-600 font-semibold'
+                        : 'text-gray-700 hover:text-blue-600'
+                    )}
                     onClick={() => setIsOpen(false)}
                   >
                     {item.name}
@@ -142,7 +169,12 @@ export function Navbar() {
                         <Link
                           key={child.name}
                           href={child.href}
-                          className="block py-1.5 text-sm text-gray-500 hover:text-blue-600"
+                          className={cn(
+                            'block py-1.5 text-sm transition-colors',
+                            pathname === child.href || pathname.startsWith(child.href + '/')
+                              ? 'text-blue-600 font-semibold'
+                              : 'text-gray-500 hover:text-blue-600'
+                          )}
                           onClick={() => setIsOpen(false)}
                         >
                           {child.name}

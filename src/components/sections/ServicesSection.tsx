@@ -99,6 +99,28 @@ const itemVariants = {
   visible: { opacity: 1, y: 0 }
 }
 
+function normalizeImageSrc(input: unknown): string | null {
+  if (typeof input !== 'string') return null
+
+  const trimmed = input.trim()
+  if (!trimmed) return null
+
+  const prefixed =
+    trimmed.startsWith('/') ||
+    trimmed.startsWith('http://') ||
+    trimmed.startsWith('https://') ||
+    trimmed.startsWith('data:') ||
+    trimmed.startsWith('blob:')
+      ? trimmed
+      : `/${trimmed}`
+
+  try {
+    return encodeURI(prefixed)
+  } catch {
+    return null
+  }
+}
+
 export function ServicesSection({ content }: { content?: unknown }) {
   const c = coercePageContent<ServicesPreviewContent>(content, defaultContent)
 
@@ -119,18 +141,21 @@ export function ServicesSection({ content }: { content?: unknown }) {
         {c.items.map((division) => {
           const Icon = resolveLucideIcon(division.icon, Star)
           const gradient = colorToGradient[division.color ?? ''] ?? colorToGradient.blue
+          const imageSrc = normalizeImageSrc((division as unknown as { image?: unknown }).image)
 
           return (
           <motion.div key={division.id} variants={itemVariants}>
             <Card className="h-full overflow-hidden hover:shadow-xl transition-all duration-300 group">
               {/* Image */}
               <div className="relative h-48 overflow-hidden">
-                <Image
-                  src={division.image}
-                  alt={division.title}
-                  fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-500"
-                />
+                {imageSrc ? (
+                  <Image
+                    src={imageSrc}
+                    alt={division.title}
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                ) : null}
                 <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-60`} />
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">

@@ -148,10 +148,39 @@ const defaultForm: FormContent = {
   callToActionDescription: 'Prefer to talk? Schedule a 30-minute discovery call with our team to discuss your requirements and how we can help.'
 }
 
+function normalizeContactInfo(input: unknown): ContactInfoContent {
+  const partial = coercePageContent<Partial<ContactInfoContent>>(input, {})
+
+  return {
+    ...defaultInfo,
+    ...partial,
+    address: {
+      ...defaultInfo.address,
+      ...(partial.address ?? {})
+    },
+    phone: {
+      ...defaultInfo.phone,
+      ...(partial.phone ?? {})
+    },
+    email: {
+      ...defaultInfo.email,
+      ...(partial.email ?? {})
+    },
+    map: {
+      ...defaultInfo.map,
+      ...(partial.map ?? {})
+    },
+    social: {
+      ...defaultInfo.social,
+      ...(partial.social ?? {})
+    }
+  }
+}
+
 export default async function ContactPage() {
   const cms = await getPageContents('contact', ['header', 'info', 'hours', 'services', 'form'])
   const header = coercePageContent<ContactHeaderContent>(cms['header'], defaultHeader)
-  const info = coercePageContent<ContactInfoContent>(cms['info'], defaultInfo)
+  const info = normalizeContactInfo(cms['info'])
   const hours = coercePageContent<HoursContent>(cms['hours'], defaultHours)
   const servicesContent = coercePageContent<ServicesContent>(cms['services'], defaultServices)
   const formContent = coercePageContent<FormContent>(cms['form'], defaultForm)
@@ -275,7 +304,7 @@ export default async function ContactPage() {
             </Card>
 
             {/* Map */}
-            {info.map.embedUrl && (
+            {info.map?.embedUrl ? (
               <Card className="overflow-hidden">
                 <div className="relative h-64 bg-gray-200">
                   <iframe
@@ -298,7 +327,7 @@ export default async function ContactPage() {
                   </p>
                 </CardContent>
               </Card>
-            )}
+            ) : null}
           </div>
         </div>
       </Section>
