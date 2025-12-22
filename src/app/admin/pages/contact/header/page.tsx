@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation'
 import { AdminSidebar } from '@/components/admin/AdminSidebar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
-import { ArrowLeft, Save, Loader2, Upload } from 'lucide-react'
+import { ImagePicker } from '@/components/admin/ImagePicker'
+import { ArrowLeft, Save, Loader2 } from 'lucide-react'
 
 interface HeaderContent {
   title: string
@@ -18,7 +19,6 @@ export default function ContactHeaderEditor() {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [uploadingImage, setUploadingImage] = useState(false)
   const [content, setContent] = useState<HeaderContent>({
     title: 'Contact Us',
     subtitle: 'Get in touch with our team. We\'re here to help with your business needs.',
@@ -43,23 +43,6 @@ export default function ContactHeaderEditor() {
       console.error('Error fetching content:', error)
     } finally {
       setLoading(false)
-    }
-  }
-
-  const uploadImage = async (file: File) => {
-    setUploadingImage(true)
-    try {
-      const fd = new FormData()
-      fd.append('file', file)
-      const res = await fetch('/api/media', { method: 'POST', body: fd })
-      if (!res.ok) throw new Error('Upload failed')
-      const media = await res.json()
-      setContent((p) => ({ ...p, backgroundImage: media.path as string }))
-    } catch (error) {
-      console.error('Upload error:', error)
-      alert('Failed to upload image')
-    } finally {
-      setUploadingImage(false)
     }
   }
 
@@ -171,32 +154,12 @@ export default function ContactHeaderEditor() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Background Image URL
-              </label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={content.backgroundImage}
-                  onChange={(e) => setContent({ ...content, backgroundImage: e.target.value })}
-                  placeholder="/uploads/... or /images/..."
-                  className="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-                <label className="inline-flex">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0]
-                      if (file) void uploadImage(file)
-                    }}
-                  />
-                  <Button type="button" variant="outline" disabled={uploadingImage}>
-                    {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                  </Button>
-                </label>
-              </div>
+              <ImagePicker
+                label="Background Image URL"
+                value={content.backgroundImage}
+                onChange={(path) => setContent({ ...content, backgroundImage: path })}
+                placeholder="/uploads/... or /images/..."
+              />
               <p className="text-xs text-gray-500 mt-2">
                 This image appears as a background overlay in the Contact page hero section.
               </p>

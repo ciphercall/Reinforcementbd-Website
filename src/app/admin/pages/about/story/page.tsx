@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react'
 import { AdminSidebar } from '@/components/admin/AdminSidebar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
+import { ImagePicker } from '@/components/admin/ImagePicker'
 import { coercePageContent } from '@/lib/utils/pageContent'
 import { ArrowLeft, Save, Loader2, Plus, Trash2 } from 'lucide-react'
 
@@ -40,41 +41,12 @@ export default function AboutStoryEditor() {
   const { data: session, status } = useSession()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [uploading, setUploading] = useState(false)
   const [content, setContent] = useState<StoryContent>(defaultContent)
 
   useEffect(() => {
     if (status === 'authenticated') fetchContent()
     if (status === 'unauthenticated') router.push('/admin/login')
   }, [status, router])
-
-  const uploadImage = async (file: File) => {
-    const fd = new FormData()
-    fd.append('file', file)
-
-    const res = await fetch('/api/media', {
-      method: 'POST',
-      body: fd,
-    })
-
-    if (!res.ok) throw new Error('Upload failed')
-    const media = await res.json()
-    return media.path as string
-  }
-
-  const handleStoryImageUpload = async (file?: File | null) => {
-    if (!file) return
-    setUploading(true)
-
-    try {
-      const uploadedPath = await uploadImage(file)
-      setContent((prev) => ({ ...prev, image: uploadedPath }))
-    } catch {
-      alert('Failed to upload image')
-    } finally {
-      setUploading(false)
-    }
-  }
 
   const fetchContent = async () => {
     try {
@@ -264,36 +236,12 @@ export default function AboutStoryEditor() {
 
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Image URL
-                </label>
-                <input
-                  type="text"
+                <ImagePicker
+                  label="Image URL"
                   value={content.image}
-                  onChange={(e) => setContent({ ...content, image: e.target.value })}
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  onChange={(path) => setContent({ ...content, image: path })}
+                  placeholder="/images/about-story.jpg"
                 />
-                <div className="mt-2 flex gap-2">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    id="about-story-image-upload"
-                    onChange={(e) => handleStoryImageUpload(e.target.files?.[0])}
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    disabled={uploading}
-                    onClick={() => {
-                      const input = document.getElementById('about-story-image-upload') as HTMLInputElement | null
-                      input?.click()
-                    }}
-                  >
-                    {uploading ? 'Uploading...' : 'Upload'}
-                  </Button>
-                </div>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">

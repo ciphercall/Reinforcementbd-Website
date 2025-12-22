@@ -9,6 +9,7 @@ import { Card, CardContent } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
+import { ImagePicker } from '@/components/admin/ImagePicker'
 import { ArrowLeft, Eye, Save } from 'lucide-react'
 import { coercePageContent } from '@/lib/utils/pageContent'
 
@@ -50,40 +51,8 @@ export default function AboutPreviewEditor() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [content, setContent] = useState<AboutPreviewContent>(defaultContent)
-  const [uploading, setUploading] = useState(false)
   const [success, setSuccess] = useState('')
   const [error, setError] = useState('')
-
-  const uploadImage = async (file: File) => {
-    const fd = new FormData()
-    fd.append('file', file)
-
-    const res = await fetch('/api/media', {
-      method: 'POST',
-      body: fd,
-    })
-
-    if (!res.ok) throw new Error('Upload failed')
-    const media = await res.json()
-    return media.path as string
-  }
-
-  const handleImageUpload = async (file?: File | null) => {
-    if (!file) return
-    setUploading(true)
-    setError('')
-    setSuccess('')
-
-    try {
-      const uploadedPath = await uploadImage(file)
-      setContent((prev) => ({ ...prev, image: uploadedPath }))
-      setSuccess('Image uploaded')
-    } catch {
-      setError('Failed to upload image')
-    } finally {
-      setUploading(false)
-    }
-  }
 
   useEffect(() => {
     if (status === 'authenticated') fetchContent()
@@ -210,31 +179,12 @@ export default function AboutPreviewEditor() {
               <h2 className="text-lg font-semibold text-gray-900 border-b pb-3">Image & Badge</h2>
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Image</label>
-                  <div className="space-y-2">
-                    <Input value={content.image} onChange={(e) => handleChange('image', e.target.value)} placeholder="/images/... or /uploads/..." />
-                    <div className="flex gap-2">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        id="about-preview-image-upload"
-                        onChange={(e) => handleImageUpload(e.target.files?.[0])}
-                      />
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        disabled={uploading}
-                        onClick={() => {
-                          const input = document.getElementById('about-preview-image-upload') as HTMLInputElement | null
-                          input?.click()
-                        }}
-                      >
-                        {uploading ? 'Uploading...' : 'Upload'}
-                      </Button>
-                    </div>
-                  </div>
+                  <ImagePicker
+                    label="Image"
+                    value={content.image}
+                    onChange={(path) => handleChange('image', path)}
+                    placeholder="/images/... or /uploads/..."
+                  />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Years Experience</label>

@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react'
 import { AdminSidebar } from '@/components/admin/AdminSidebar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
+import { ImagePicker } from '@/components/admin/ImagePicker'
 import { coercePageContent } from '@/lib/utils/pageContent'
 import { ArrowLeft, Loader2, Plus, Save, Trash2 } from 'lucide-react'
 
@@ -81,7 +82,6 @@ export default function AboutTeamEditor() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [content, setContent] = useState<TeamContent>(defaultContent)
-  const [uploadingMemberId, setUploadingMemberId] = useState<string | null>(null)
 
   useEffect(() => {
     if (status === 'authenticated') {
@@ -128,37 +128,6 @@ export default function AboutTeamEditor() {
   }
 
   if (!session) return null
-
-  const uploadImage = async (file: File) => {
-    const fd = new FormData()
-    fd.append('file', file)
-
-    const res = await fetch('/api/media', {
-      method: 'POST',
-      body: fd,
-    })
-
-    if (!res.ok) throw new Error('Upload failed')
-    const media = await res.json()
-    return media.path as string
-  }
-
-  const handleMemberImageUpload = async (memberId: string, file?: File | null) => {
-    if (!file) return
-    setUploadingMemberId(memberId)
-
-    try {
-      const uploadedPath = await uploadImage(file)
-      setContent((prev) => ({
-        ...prev,
-        members: prev.members.map((m) => (m.id === memberId ? { ...m, image: uploadedPath } : m)),
-      }))
-    } catch {
-      alert('Failed to upload image')
-    } finally {
-      setUploadingMemberId(null)
-    }
-  }
 
   const handleSave = async () => {
     setSaving(true)
@@ -352,37 +321,12 @@ export default function AboutTeamEditor() {
 
                       <div className="grid md:grid-cols-3 gap-4">
                         <div>
-                          <label className="block text-sm text-gray-600 mb-1">Image</label>
-                          <div className="space-y-2">
-                            <input
-                              type="text"
-                              value={m.image}
-                              onChange={(e) => updateMember(m.id, 'image', e.target.value)}
-                              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                              placeholder="/images/team/... or /uploads/..."
-                            />
-                            <div className="flex gap-2">
-                              <input
-                                type="file"
-                                accept="image/*"
-                                className="hidden"
-                                id={`about-team-image-upload-${m.id}`}
-                                onChange={(e) => handleMemberImageUpload(m.id, e.target.files?.[0])}
-                              />
-                              <Button
-                                type="button"
-                                variant="outline"
-                                size="sm"
-                                disabled={uploadingMemberId === m.id}
-                                onClick={() => {
-                                  const input = document.getElementById(`about-team-image-upload-${m.id}`) as HTMLInputElement | null
-                                  input?.click()
-                                }}
-                              >
-                                {uploadingMemberId === m.id ? 'Uploading...' : 'Upload'}
-                              </Button>
-                            </div>
-                          </div>
+                          <ImagePicker
+                            label="Image"
+                            value={m.image}
+                            onChange={(path) => updateMember(m.id, 'image', path)}
+                            placeholder="/images/team/... or /uploads/..."
+                          />
                         </div>
                         <div>
                           <label className="block text-sm text-gray-600 mb-1">LinkedIn URL</label>

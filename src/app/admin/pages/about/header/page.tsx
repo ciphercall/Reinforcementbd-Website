@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react'
 import { AdminSidebar } from '@/components/admin/AdminSidebar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
+import { ImagePicker } from '@/components/admin/ImagePicker'
 import { coercePageContent } from '@/lib/utils/pageContent'
 import { ArrowLeft, Save, Loader2 } from 'lucide-react'
 
@@ -29,36 +30,7 @@ export default function AboutHeaderEditor() {
   const { data: session, status } = useSession()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [uploading, setUploading] = useState(false)
   const [content, setContent] = useState<HeaderContent>(defaultContent)
-
-  const uploadImage = async (file: File) => {
-    const fd = new FormData()
-    fd.append('file', file)
-
-    const res = await fetch('/api/media', {
-      method: 'POST',
-      body: fd,
-    })
-
-    if (!res.ok) throw new Error('Upload failed')
-    const media = await res.json()
-    return media.path as string
-  }
-
-  const handleBackgroundUpload = async (file?: File | null) => {
-    if (!file) return
-    setUploading(true)
-
-    try {
-      const uploadedPath = await uploadImage(file)
-      setContent((prev) => ({ ...prev, backgroundImage: uploadedPath }))
-    } catch {
-      alert('Failed to upload image')
-    } finally {
-      setUploading(false)
-    }
-  }
 
   useEffect(() => {
     if (status === 'authenticated') fetchContent()
@@ -190,37 +162,12 @@ export default function AboutHeaderEditor() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Background Image URL
-              </label>
-              <input
-                type="text"
+              <ImagePicker
+                label="Background Image URL"
                 value={content.backgroundImage}
-                onChange={(e) => setContent({ ...content, backgroundImage: e.target.value })}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                onChange={(path) => setContent({ ...content, backgroundImage: path })}
                 placeholder="/images/about-hero.jpg"
               />
-              <div className="mt-2 flex gap-2">
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  id="about-header-bg-upload"
-                  onChange={(e) => handleBackgroundUpload(e.target.files?.[0])}
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  disabled={uploading}
-                  onClick={() => {
-                    const input = document.getElementById('about-header-bg-upload') as HTMLInputElement | null
-                    input?.click()
-                  }}
-                >
-                  {uploading ? 'Uploading...' : 'Upload'}
-                </Button>
-              </div>
               <p className="text-sm text-gray-500 mt-1">
                 Upload images in Media Library and use the path here
               </p>

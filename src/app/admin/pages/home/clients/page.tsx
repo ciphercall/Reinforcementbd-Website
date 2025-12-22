@@ -9,7 +9,8 @@ import { Card, CardContent } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
-import { ArrowLeft, Save, Eye, Plus, Trash2, Image as ImageIcon } from 'lucide-react'
+import { ImagePicker } from '@/components/admin/ImagePicker'
+import { ArrowLeft, Save, Eye, Plus, Trash2 } from 'lucide-react'
 import { coercePageContent } from '@/lib/utils/pageContent'
 
 interface Client {
@@ -45,43 +46,8 @@ export default function ClientsSectionEditor() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [content, setContent] = useState<ClientsContent>(defaultContent)
-  const [uploadingClientId, setUploadingClientId] = useState<string | null>(null)
   const [success, setSuccess] = useState('')
   const [error, setError] = useState('')
-
-  const uploadImage = async (file: File) => {
-    const fd = new FormData()
-    fd.append('file', file)
-
-    const res = await fetch('/api/media', {
-      method: 'POST',
-      body: fd,
-    })
-
-    if (!res.ok) throw new Error('Upload failed')
-    const media = await res.json()
-    return media.path as string
-  }
-
-  const handleClientLogoUpload = async (clientId: string, file?: File | null) => {
-    if (!file) return
-    setUploadingClientId(clientId)
-    setError('')
-    setSuccess('')
-
-    try {
-      const uploadedPath = await uploadImage(file)
-      setContent((prev) => ({
-        ...prev,
-        clients: prev.clients.map((c) => (c.id === clientId ? { ...c, logo: uploadedPath } : c)),
-      }))
-      setSuccess('Logo uploaded')
-    } catch {
-      setError('Failed to upload logo')
-    } finally {
-      setUploadingClientId(null)
-    }
-  }
 
   useEffect(() => {
     if (status === 'authenticated') {
@@ -290,10 +256,8 @@ export default function ClientsSectionEditor() {
                   <div key={client.id} className="p-4 bg-gray-50 rounded-lg border">
                     <div className="flex items-start space-x-4">
                       <div className="w-16 h-16 bg-white rounded-lg border flex items-center justify-center overflow-hidden">
-                        {client.logo ? (
+                        {client.logo && (
                           <img src={client.logo} alt={client.name} className="w-full h-full object-contain" />
-                        ) : (
-                          <ImageIcon className="w-8 h-8 text-gray-300" />
                         )}
                       </div>
                       <div className="flex-1 space-y-2">
@@ -302,34 +266,12 @@ export default function ClientsSectionEditor() {
                           onChange={(e) => handleClientChange(client.id, 'name', e.target.value)}
                           placeholder="Client name"
                         />
-                        <div className="space-y-2">
-                          <Input
-                            value={client.logo}
-                            onChange={(e) => handleClientChange(client.id, 'logo', e.target.value)}
-                            placeholder="/images/clients/logo.png or /uploads/..."
-                          />
-                          <div className="flex gap-2">
-                            <input
-                              type="file"
-                              accept="image/*"
-                              className="hidden"
-                              id={`clients-logo-upload-${client.id}`}
-                              onChange={(e) => handleClientLogoUpload(client.id, e.target.files?.[0])}
-                            />
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="sm"
-                              disabled={uploadingClientId === client.id}
-                              onClick={() => {
-                                const input = document.getElementById(`clients-logo-upload-${client.id}`) as HTMLInputElement | null
-                                input?.click()
-                              }}
-                            >
-                              {uploadingClientId === client.id ? 'Uploading...' : 'Upload'}
-                            </Button>
-                          </div>
-                        </div>
+                        <ImagePicker
+                          label=""
+                          value={client.logo}
+                          onChange={(path) => handleClientChange(client.id, 'logo', path)}
+                          placeholder="/images/clients/logo.png or /uploads/..."
+                        />
                       </div>
                       <button
                         type="button"
@@ -361,10 +303,8 @@ export default function ClientsSectionEditor() {
                   <div key={client.id} className="p-4 bg-gray-50 rounded-lg border">
                     <div className="flex items-start space-x-4">
                       <div className="w-16 h-16 bg-white rounded-lg border flex items-center justify-center overflow-hidden">
-                        {client.logo ? (
+                        {client.logo && (
                           <img src={client.logo} alt={client.name} className="w-full h-full object-contain" />
-                        ) : (
-                          <ImageIcon className="w-8 h-8 text-gray-300" />
                         )}
                       </div>
                       <div className="flex-1 space-y-2">
@@ -373,34 +313,12 @@ export default function ClientsSectionEditor() {
                           onChange={(e) => handleClientChange(client.id, 'name', e.target.value)}
                           placeholder="Client name"
                         />
-                        <div className="space-y-2">
-                          <Input
-                            value={client.logo}
-                            onChange={(e) => handleClientChange(client.id, 'logo', e.target.value)}
-                            placeholder="/images/clients/logo.png or /uploads/..."
-                          />
-                          <div className="flex gap-2">
-                            <input
-                              type="file"
-                              accept="image/*"
-                              className="hidden"
-                              id={`clients-logo-upload-${client.id}`}
-                              onChange={(e) => handleClientLogoUpload(client.id, e.target.files?.[0])}
-                            />
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="sm"
-                              disabled={uploadingClientId === client.id}
-                              onClick={() => {
-                                const input = document.getElementById(`clients-logo-upload-${client.id}`) as HTMLInputElement | null
-                                input?.click()
-                              }}
-                            >
-                              {uploadingClientId === client.id ? 'Uploading...' : 'Upload'}
-                            </Button>
-                          </div>
-                        </div>
+                        <ImagePicker
+                          label=""
+                          value={client.logo}
+                          onChange={(path) => handleClientChange(client.id, 'logo', path)}
+                          placeholder="/images/clients/logo.png or /uploads/..."
+                        />
                       </div>
                       <button
                         type="button"

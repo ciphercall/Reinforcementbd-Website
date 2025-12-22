@@ -9,7 +9,8 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
 import { coercePageContent } from '@/lib/utils/pageContent'
-import { ArrowLeft, Loader2, Plus, Save, Trash2, Upload } from 'lucide-react'
+import { ImagePicker } from '@/components/admin/ImagePicker'
+import { ArrowLeft, Loader2, Plus, Save, Trash2 } from 'lucide-react'
 
 type Stat = { value: string; label: string }
 
@@ -126,7 +127,6 @@ export default function AutomationDivisionEditor() {
 
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [uploadingKey, setUploadingKey] = useState<string | null>(null)
   const [content, setContent] = useState<AutomationPageContent>(defaultContent)
 
   const isAuthed = status === 'authenticated'
@@ -136,20 +136,6 @@ export default function AutomationDivisionEditor() {
     if (status === 'unauthenticated') router.push('/admin/login')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status])
-
-  const uploadImage = async (file: File) => {
-    const fd = new FormData()
-    fd.append('file', file)
-
-    const res = await fetch('/api/media', {
-      method: 'POST',
-      body: fd,
-    })
-
-    if (!res.ok) throw new Error('Upload failed')
-    const media = await res.json()
-    return media.path as string
-  }
 
   const fetchContent = async () => {
     try {
@@ -193,50 +179,6 @@ export default function AutomationDivisionEditor() {
 
   const heroImages = useMemo(() => content.hero.heroImages ?? [], [content.hero.heroImages])
   const showcaseImages = useMemo(() => content.why.showcaseImages ?? [], [content.why.showcaseImages])
-
-  const handleUploadToList = async (key: string, index: number, file?: File | null, listName?: 'heroImages' | 'showcaseImages') => {
-    if (!file || !listName) return
-    setUploadingKey(key)
-    try {
-      const uploadedPath = await uploadImage(file)
-      if (listName === 'heroImages') {
-        setContent((prev) => {
-          const next = [...(prev.hero.heroImages ?? [])]
-          next[index] = uploadedPath
-          return { ...prev, hero: { ...prev.hero, heroImages: next } }
-        })
-      }
-      if (listName === 'showcaseImages') {
-        setContent((prev) => {
-          const next = [...(prev.why.showcaseImages ?? [])]
-          next[index] = uploadedPath
-          return { ...prev, why: { ...prev.why, showcaseImages: next } }
-        })
-      }
-    } catch {
-      alert('Failed to upload image')
-    } finally {
-      setUploadingKey(null)
-    }
-  }
-
-  const handleUploadServiceImage = async (serviceIndex: number, file?: File | null) => {
-    if (!file) return
-    const key = `service-image-${serviceIndex}`
-    setUploadingKey(key)
-    try {
-      const uploadedPath = await uploadImage(file)
-      setContent((prev) => {
-        const services = [...prev.services]
-        services[serviceIndex] = { ...services[serviceIndex], image: uploadedPath }
-        return { ...prev, services }
-      })
-    } catch {
-      alert('Failed to upload image')
-    } finally {
-      setUploadingKey(null)
-    }
-  }
 
   if (status === 'loading' || loading) {
     return (
@@ -361,57 +303,35 @@ export default function AutomationDivisionEditor() {
 
               <div className="space-y-3">
                 {heroImages.map((src, index) => {
-                  const uploadId = `automation-hero-image-upload-${index}`
                   const key = `hero-${index}`
                   return (
                     <div key={key} className="flex flex-col md:flex-row gap-2 md:items-center">
-                      <Input
+                      <ImagePicker
+                        label=""
                         value={src}
-                        onChange={(e) => {
-                          const value = e.target.value
+                        onChange={(path) => {
                           setContent((p) => {
                             const next = [...(p.hero.heroImages ?? [])]
-                            next[index] = value
+                            next[index] = path
                             return { ...p, hero: { ...p.hero, heroImages: next } }
                           })
                         }}
                         placeholder="/images/... or /uploads/..."
                       />
-                      <div className="flex gap-2">
-                        <input
-                          id={uploadId}
-                          type="file"
-                          accept="image/*"
-                          className="hidden"
-                          onChange={(e) => handleUploadToList(key, index, e.target.files?.[0], 'heroImages')}
-                        />
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          disabled={uploadingKey === key}
-                          onClick={() => {
-                            const el = document.getElementById(uploadId) as HTMLInputElement | null
-                            el?.click()
-                          }}
-                        >
-                          {uploadingKey === key ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          className="text-red-600 hover:bg-red-50"
-                          onClick={() =>
-                            setContent((p) => ({
-                              ...p,
-                              hero: { ...p.hero, heroImages: (p.hero.heroImages ?? []).filter((_, i) => i !== index) },
-                            }))
-                          }
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="text-red-600 hover:bg-red-50"
+                        onClick={() =>
+                          setContent((p) => ({
+                            ...p,
+                            hero: { ...p.hero, heroImages: (p.hero.heroImages ?? []).filter((_, i) => i !== index) },
+                          }))
+                        }
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
                     </div>
                   )
                 })}
@@ -592,45 +512,18 @@ export default function AutomationDivisionEditor() {
 
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">Image</label>
-                          <div className="flex flex-col md:flex-row gap-2 md:items-center">
-                            <Input
-                              value={service.image}
-                              onChange={(e) => {
-                                const image = e.target.value
-                                setContent((p) => {
-                                  const services = [...p.services]
-                                  services[index] = { ...services[index], image }
-                                  return { ...p, services }
-                                })
-                              }}
-                              placeholder="/images/... or /uploads/..."
-                            />
-                            <div className="flex gap-2">
-                              <input
-                                id={uploadId}
-                                type="file"
-                                accept="image/*"
-                                className="hidden"
-                                onChange={(e) => handleUploadServiceImage(index, e.target.files?.[0])}
-                              />
-                              <Button
-                                type="button"
-                                variant="outline"
-                                size="sm"
-                                disabled={uploadingKey === `service-image-${index}`}
-                                onClick={() => {
-                                  const el = document.getElementById(uploadId) as HTMLInputElement | null
-                                  el?.click()
-                                }}
-                              >
-                                {uploadingKey === `service-image-${index}` ? (
-                                  <Loader2 className="w-4 h-4 animate-spin" />
-                                ) : (
-                                  <Upload className="w-4 h-4" />
-                                )}
-                              </Button>
-                            </div>
-                          </div>
+                          <ImagePicker
+                            label=""
+                            value={service.image}
+                            onChange={(path) => {
+                              setContent((p) => {
+                                const services = [...p.services]
+                                services[index] = { ...services[index], image: path }
+                                return { ...p, services }
+                              })
+                            }}
+                            placeholder="/images/... or /uploads/..."
+                          />
                         </div>
 
                         <div className="space-y-2">
@@ -818,57 +711,35 @@ export default function AutomationDivisionEditor() {
 
               <div className="space-y-3">
                 {showcaseImages.map((src, index) => {
-                  const uploadId = `automation-showcase-image-upload-${index}`
                   const key = `showcase-${index}`
                   return (
                     <div key={key} className="flex flex-col md:flex-row gap-2 md:items-center">
-                      <Input
+                      <ImagePicker
+                        label=""
                         value={src}
-                        onChange={(e) => {
-                          const value = e.target.value
+                        onChange={(path) => {
                           setContent((p) => {
                             const next = [...(p.why.showcaseImages ?? [])]
-                            next[index] = value
+                            next[index] = path
                             return { ...p, why: { ...p.why, showcaseImages: next } }
                           })
                         }}
                         placeholder="/images/... or /uploads/..."
                       />
-                      <div className="flex gap-2">
-                        <input
-                          id={uploadId}
-                          type="file"
-                          accept="image/*"
-                          className="hidden"
-                          onChange={(e) => handleUploadToList(key, index, e.target.files?.[0], 'showcaseImages')}
-                        />
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          disabled={uploadingKey === key}
-                          onClick={() => {
-                            const el = document.getElementById(uploadId) as HTMLInputElement | null
-                            el?.click()
-                          }}
-                        >
-                          {uploadingKey === key ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          className="text-red-600 hover:bg-red-50"
-                          onClick={() =>
-                            setContent((p) => ({
-                              ...p,
-                              why: { ...p.why, showcaseImages: (p.why.showcaseImages ?? []).filter((_, i) => i !== index) },
-                            }))
-                          }
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="text-red-600 hover:bg-red-50"
+                        onClick={() =>
+                          setContent((p) => ({
+                            ...p,
+                            why: { ...p.why, showcaseImages: (p.why.showcaseImages ?? []).filter((_, i) => i !== index) },
+                          }))
+                        }
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
                     </div>
                   )
                 })}

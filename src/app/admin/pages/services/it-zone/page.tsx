@@ -8,8 +8,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
+import { ImagePicker } from '@/components/admin/ImagePicker'
 import { coercePageContent } from '@/lib/utils/pageContent'
-import { ArrowLeft, Loader2, Plus, Save, Trash2, Upload } from 'lucide-react'
+import { ArrowLeft, Loader2, Plus, Save, Trash2 } from 'lucide-react'
 
 type Stat = { value: string; label: string }
 
@@ -188,7 +189,6 @@ export default function ITZoneDivisionEditor() {
 
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [uploadingKey, setUploadingKey] = useState<string | null>(null)
   const [content, setContent] = useState<ITZonePageContent>(defaultContent)
 
   useEffect(() => {
@@ -196,16 +196,6 @@ export default function ITZoneDivisionEditor() {
     if (status === 'unauthenticated') router.push('/admin/login')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status])
-
-  const uploadImage = async (file: File) => {
-    const fd = new FormData()
-    fd.append('file', file)
-
-    const res = await fetch('/api/media', { method: 'POST', body: fd })
-    if (!res.ok) throw new Error('Upload failed')
-    const media = await res.json()
-    return media.path as string
-  }
 
   const fetchContent = async () => {
     try {
@@ -242,51 +232,6 @@ export default function ITZoneDivisionEditor() {
 
   const heroImages = useMemo(() => content.hero.heroImages ?? [], [content.hero.heroImages])
   const showcaseImages = useMemo(() => content.why.showcaseImages ?? [], [content.why.showcaseImages])
-
-  const uploadToImageList = async (
-    key: string,
-    list: 'heroImages' | 'showcaseImages',
-    index: number,
-    file?: File | null
-  ) => {
-    if (!file) return
-    setUploadingKey(key)
-    try {
-      const uploadedPath = await uploadImage(file)
-      setContent((prev) => {
-        if (list === 'heroImages') {
-          const next = [...(prev.hero.heroImages ?? [])]
-          next[index] = { ...next[index], src: uploadedPath }
-          return { ...prev, hero: { ...prev.hero, heroImages: next } }
-        }
-        const next = [...(prev.why.showcaseImages ?? [])]
-        next[index] = { ...next[index], src: uploadedPath }
-        return { ...prev, why: { ...prev.why, showcaseImages: next } }
-      })
-    } catch {
-      alert('Failed to upload image')
-    } finally {
-      setUploadingKey(null)
-    }
-  }
-
-  const uploadServiceImage = async (serviceIndex: number, file?: File | null) => {
-    if (!file) return
-    const key = `service-image-${serviceIndex}`
-    setUploadingKey(key)
-    try {
-      const uploadedPath = await uploadImage(file)
-      setContent((prev) => {
-        const services = [...prev.services]
-        services[serviceIndex] = { ...services[serviceIndex], image: uploadedPath }
-        return { ...prev, services }
-      })
-    } catch {
-      alert('Failed to upload image')
-    } finally {
-      setUploadingKey(null)
-    }
-  }
 
   if (status === 'loading' || loading) {
     return (
@@ -377,25 +322,25 @@ export default function ITZoneDivisionEditor() {
 
               <div className="space-y-3">
                 {heroImages.map((img, index) => {
-                  const uploadId = `it-hero-upload-${index}`
                   const key = `hero-${index}`
                   return (
                     <div key={key} className="border rounded-lg p-4 bg-gray-50 space-y-2">
-                      <div className="flex flex-col md:flex-row gap-2 md:items-center">
-                        <Input value={img.src} onChange={(e) => setContent((p) => {
-                          const next = [...p.hero.heroImages]
-                          next[index] = { ...next[index], src: e.target.value }
-                          return { ...p, hero: { ...p.hero, heroImages: next } }
-                        })} placeholder="/images/... or /uploads/..." />
-                        <div className="flex gap-2">
-                          <input id={uploadId} type="file" accept="image/*" className="hidden" onChange={(e) => uploadToImageList(key, 'heroImages', index, e.target.files?.[0])} />
-                          <Button type="button" variant="outline" size="sm" disabled={uploadingKey === key} onClick={() => (document.getElementById(uploadId) as HTMLInputElement | null)?.click()}>
-                            {uploadingKey === key ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                          </Button>
-                          <Button type="button" variant="outline" size="sm" className="text-red-600 hover:bg-red-50" onClick={() => setContent((p) => ({ ...p, hero: { ...p.hero, heroImages: p.hero.heroImages.filter((_, i) => i !== index) } }))}>
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
+                      <div className="flex items-end gap-2">
+                        <div className="flex-1">
+                          <ImagePicker
+                            label="Image"
+                            value={img.src}
+                            onChange={(path) => setContent((p) => {
+                              const next = [...p.hero.heroImages]
+                              next[index] = { ...next[index], src: path }
+                              return { ...p, hero: { ...p.hero, heroImages: next } }
+                            })}
+                            placeholder="Select hero image..."
+                          />
                         </div>
+                        <Button type="button" variant="outline" size="sm" className="text-red-600 hover:bg-red-50" onClick={() => setContent((p) => ({ ...p, hero: { ...p.hero, heroImages: p.hero.heroImages.filter((_, i) => i !== index) } }))}>
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
                       </div>
                       <Input value={img.alt} onChange={(e) => setContent((p) => {
                         const next = [...p.hero.heroImages]
@@ -518,20 +463,16 @@ export default function ITZoneDivisionEditor() {
                         </div>
 
                         <div className="border rounded-lg p-3 bg-white">
-                          <label className="block text-sm font-medium text-gray-700 mb-2">Service Image</label>
-                          <div className="flex flex-col md:flex-row gap-2 md:items-center">
-                            <Input value={service.image} onChange={(e) => setContent((p) => {
+                          <ImagePicker
+                            label="Service Image"
+                            value={service.image}
+                            onChange={(path) => setContent((p) => {
                               const services = [...p.services]
-                              services[index] = { ...services[index], image: e.target.value }
+                              services[index] = { ...services[index], image: path }
                               return { ...p, services }
-                            })} placeholder="/images/... or /uploads/..." />
-                            <div className="flex gap-2">
-                              <input id={uploadId} type="file" accept="image/*" className="hidden" onChange={(e) => uploadServiceImage(index, e.target.files?.[0])} />
-                              <Button type="button" variant="outline" size="sm" disabled={uploadingKey === key} onClick={() => (document.getElementById(uploadId) as HTMLInputElement | null)?.click()}>
-                                {uploadingKey === key ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                              </Button>
-                            </div>
-                          </div>
+                            })}
+                            placeholder="Select service image..."
+                          />
                         </div>
 
                         <div className="space-y-2">
@@ -644,25 +585,25 @@ export default function ITZoneDivisionEditor() {
 
               <div className="space-y-3">
                 {showcaseImages.map((img, index) => {
-                  const uploadId = `it-showcase-upload-${index}`
                   const key = `showcase-${index}`
                   return (
                     <div key={key} className="border rounded-lg p-4 bg-gray-50 space-y-2">
-                      <div className="flex flex-col md:flex-row gap-2 md:items-center">
-                        <Input value={img.src} onChange={(e) => setContent((p) => {
-                          const next = [...p.why.showcaseImages]
-                          next[index] = { ...next[index], src: e.target.value }
-                          return { ...p, why: { ...p.why, showcaseImages: next } }
-                        })} placeholder="/images/... or /uploads/..." />
-                        <div className="flex gap-2">
-                          <input id={uploadId} type="file" accept="image/*" className="hidden" onChange={(e) => uploadToImageList(key, 'showcaseImages', index, e.target.files?.[0])} />
-                          <Button type="button" variant="outline" size="sm" disabled={uploadingKey === key} onClick={() => (document.getElementById(uploadId) as HTMLInputElement | null)?.click()}>
-                            {uploadingKey === key ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                          </Button>
-                          <Button type="button" variant="outline" size="sm" className="text-red-600 hover:bg-red-50" onClick={() => setContent((p) => ({ ...p, why: { ...p.why, showcaseImages: p.why.showcaseImages.filter((_, i) => i !== index) } }))}>
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
+                      <div className="flex items-end gap-2">
+                        <div className="flex-1">
+                          <ImagePicker
+                            label="Image"
+                            value={img.src}
+                            onChange={(path) => setContent((p) => {
+                              const next = [...p.why.showcaseImages]
+                              next[index] = { ...next[index], src: path }
+                              return { ...p, why: { ...p.why, showcaseImages: next } }
+                            })}
+                            placeholder="Select showcase image..."
+                          />
                         </div>
+                        <Button type="button" variant="outline" size="sm" className="text-red-600 hover:bg-red-50" onClick={() => setContent((p) => ({ ...p, why: { ...p.why, showcaseImages: p.why.showcaseImages.filter((_, i) => i !== index) } }))}>
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
                       </div>
                       <Input value={img.alt} onChange={(e) => setContent((p) => {
                         const next = [...p.why.showcaseImages]

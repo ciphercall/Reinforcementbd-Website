@@ -10,6 +10,7 @@ import { Card, CardContent } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
+import { ImagePicker } from '@/components/admin/ImagePicker'
 import { ArrowLeft, Save, Eye, Image as ImageIcon, Plus, Trash2 } from 'lucide-react'
 import { coercePageContent } from '@/lib/utils/pageContent'
 
@@ -50,7 +51,6 @@ export default function HeroSectionEditor() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [content, setContent] = useState<HeroContent>(defaultContent)
-  const [uploadingIndex, setUploadingIndex] = useState<number | null>(null)
   const [success, setSuccess] = useState('')
   const [error, setError] = useState('')
 
@@ -309,70 +309,45 @@ export default function HeroSectionEditor() {
                       )}
                     </div>
 
-                    <div className="space-y-2">
-                      <Input
-                        value={src}
-                        onChange={(e) => {
-                          const nextImages = normalizeImages(content.images)
-                          nextImages[index] = e.target.value
-                          setContent((prev) => ({
-                            ...prev,
-                            images: nextImages,
-                            backgroundImage: nextImages[0] || prev.backgroundImage,
-                          }))
-                          setSuccess('')
-                        }}
-                        placeholder="/images/... or /uploads/..."
-                      />
+                    <ImagePicker
+                      label="Image"
+                      value={src}
+                      onChange={(path) => {
+                        const nextImages = normalizeImages(content.images)
+                        nextImages[index] = path
+                        setContent((prev) => ({
+                          ...prev,
+                          images: nextImages,
+                          backgroundImage: nextImages[0] || prev.backgroundImage,
+                        }))
+                        setSuccess('')
+                      }}
+                      placeholder="Select hero image..."
+                    />
 
-                      <div className="flex gap-2">
-                        <label className="flex-1">
-                          <input
-                            type="file"
-                            accept="image/*"
-                            className="hidden"
-                            onChange={(e) => handleUploadAtIndex(index, e.target.files?.[0])}
-                          />
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            className="w-full"
-                            disabled={uploadingIndex === index}
-                            onClick={(e) => {
-                              const input = (e.currentTarget.parentElement?.querySelector('input[type=file]') as HTMLInputElement | null)
-                              input?.click()
-                            }}
-                          >
-                            {uploadingIndex === index ? 'Uploading...' : 'Upload'}
-                          </Button>
-                        </label>
-
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => {
-                            const nextImages = normalizeImages(content.images)
-                            nextImages[index] = ''
-                            setContent((prev) => ({
-                              ...prev,
-                              images: nextImages,
-                              backgroundImage: nextImages[0] || prev.backgroundImage,
-                            }))
-                            setSuccess('')
-                          }}
-                        >
-                          Clear
-                        </Button>
-                      </div>
-                    </div>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        const nextImages = normalizeImages(content.images)
+                        nextImages[index] = ''
+                        setContent((prev) => ({
+                          ...prev,
+                          images: nextImages,
+                          backgroundImage: nextImages[0] || prev.backgroundImage,
+                        }))
+                        setSuccess('')
+                      }}
+                    >
+                      Clear
+                    </Button>
                   </div>
                 ))}
               </div>
 
               <p className="text-sm text-gray-500">
-                Tip: uploaded files are saved under <span className="font-mono">/uploads</span>.
+                Select images from the Media Library.
               </p>
             </CardContent>
           </Card>

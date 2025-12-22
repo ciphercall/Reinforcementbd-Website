@@ -9,7 +9,8 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
 import { coercePageContent } from '@/lib/utils/pageContent'
-import { ArrowLeft, Loader2, Plus, Save, Trash2, Upload } from 'lucide-react'
+import { ImagePicker } from '@/components/admin/ImagePicker'
+import { ArrowLeft, Loader2, Plus, Save, Trash2 } from 'lucide-react'
 
 type Stat = { value: string; label: string }
 
@@ -204,7 +205,6 @@ export default function ArchitectViewDivisionEditor() {
 
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [uploadingKey, setUploadingKey] = useState<string | null>(null)
   const [content, setContent] = useState<ArchitectViewPageContent>(defaultContent)
 
   useEffect(() => {
@@ -212,16 +212,6 @@ export default function ArchitectViewDivisionEditor() {
     if (status === 'unauthenticated') router.push('/admin/login')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status])
-
-  const uploadImage = async (file: File) => {
-    const fd = new FormData()
-    fd.append('file', file)
-
-    const res = await fetch('/api/media', { method: 'POST', body: fd })
-    if (!res.ok) throw new Error('Upload failed')
-    const media = await res.json()
-    return media.path as string
-  }
 
   const fetchContent = async () => {
     try {
@@ -259,33 +249,6 @@ export default function ArchitectViewDivisionEditor() {
   const heroImages = useMemo(() => content.hero.heroImages ?? [], [content.hero.heroImages])
   const portfolioImages = useMemo(() => content.portfolio.images ?? [], [content.portfolio.images])
   const showcaseImages = useMemo(() => content.why.showcaseImages ?? [], [content.why.showcaseImages])
-
-  const uploadToImageList = async (key: string, list: 'heroImages' | 'portfolioImages' | 'showcaseImages', index: number, file?: File | null) => {
-    if (!file) return
-    setUploadingKey(key)
-    try {
-      const uploadedPath = await uploadImage(file)
-      setContent((prev) => {
-        if (list === 'heroImages') {
-          const next = [...(prev.hero.heroImages ?? [])]
-          next[index] = { ...next[index], src: uploadedPath }
-          return { ...prev, hero: { ...prev.hero, heroImages: next } }
-        }
-        if (list === 'portfolioImages') {
-          const next = [...(prev.portfolio.images ?? [])]
-          next[index] = { ...next[index], src: uploadedPath }
-          return { ...prev, portfolio: { ...prev.portfolio, images: next } }
-        }
-        const next = [...(prev.why.showcaseImages ?? [])]
-        next[index] = { ...next[index], src: uploadedPath }
-        return { ...prev, why: { ...prev.why, showcaseImages: next } }
-      })
-    } catch {
-      alert('Failed to upload image')
-    } finally {
-      setUploadingKey(null)
-    }
-  }
 
   if (status === 'loading' || loading) {
     return (
@@ -375,38 +338,25 @@ export default function ArchitectViewDivisionEditor() {
 
               <div className="space-y-3">
                 {heroImages.map((img, index) => {
-                  const uploadId = `architect-hero-upload-${index}`
                   const key = `hero-${index}`
                   return (
                     <div key={key} className="border rounded-lg p-4 bg-gray-50 space-y-2">
                       <div className="flex flex-col md:flex-row gap-2 md:items-center">
-                        <Input
+                        <ImagePicker
+                          label=""
                           value={img.src}
-                          onChange={(e) => {
-                            const src = e.target.value
+                          onChange={(path) => {
                             setContent((p) => {
                               const next = [...p.hero.heroImages]
-                              next[index] = { ...next[index], src }
+                              next[index] = { ...next[index], src: path }
                               return { ...p, hero: { ...p.hero, heroImages: next } }
                             })
                           }}
                           placeholder="/images/... or /uploads/..."
                         />
-                        <div className="flex gap-2">
-                          <input
-                            id={uploadId}
-                            type="file"
-                            accept="image/*"
-                            className="hidden"
-                            onChange={(e) => uploadToImageList(key, 'heroImages', index, e.target.files?.[0])}
-                          />
-                          <Button type="button" variant="outline" size="sm" disabled={uploadingKey === key} onClick={() => (document.getElementById(uploadId) as HTMLInputElement | null)?.click()}>
-                            {uploadingKey === key ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                          </Button>
-                          <Button type="button" variant="outline" size="sm" className="text-red-600 hover:bg-red-50" onClick={() => setContent((p) => ({ ...p, hero: { ...p.hero, heroImages: p.hero.heroImages.filter((_, i) => i !== index) } }))}>
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
+                        <Button type="button" variant="outline" size="sm" className="text-red-600 hover:bg-red-50" onClick={() => setContent((p) => ({ ...p, hero: { ...p.hero, heroImages: p.hero.heroImages.filter((_, i) => i !== index) } }))}>
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
                       </div>
                       <Input
                         value={img.alt}
@@ -606,25 +556,23 @@ export default function ArchitectViewDivisionEditor() {
 
               <div className="space-y-3">
                 {portfolioImages.map((img, index) => {
-                  const uploadId = `architect-portfolio-upload-${index}`
                   const key = `portfolio-${index}`
                   return (
                     <div key={key} className="border rounded-lg p-4 bg-gray-50 space-y-2">
                       <div className="flex flex-col md:flex-row gap-2 md:items-center">
-                        <Input value={img.src} onChange={(e) => setContent((p) => {
-                          const next = [...p.portfolio.images]
-                          next[index] = { ...next[index], src: e.target.value }
-                          return { ...p, portfolio: { ...p.portfolio, images: next } }
-                        })} placeholder="/images/... or /uploads/..." />
-                        <div className="flex gap-2">
-                          <input id={uploadId} type="file" accept="image/*" className="hidden" onChange={(e) => uploadToImageList(key, 'portfolioImages', index, e.target.files?.[0])} />
-                          <Button type="button" variant="outline" size="sm" disabled={uploadingKey === key} onClick={() => (document.getElementById(uploadId) as HTMLInputElement | null)?.click()}>
-                            {uploadingKey === key ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                          </Button>
-                          <Button type="button" variant="outline" size="sm" className="text-red-600 hover:bg-red-50" onClick={() => setContent((p) => ({ ...p, portfolio: { ...p.portfolio, images: p.portfolio.images.filter((_, i) => i !== index) } }))}>
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
+                        <ImagePicker
+                          label=""
+                          value={img.src}
+                          onChange={(path) => setContent((p) => {
+                            const next = [...p.portfolio.images]
+                            next[index] = { ...next[index], src: path }
+                            return { ...p, portfolio: { ...p.portfolio, images: next } }
+                          })}
+                          placeholder="/images/... or /uploads/..."
+                        />
+                        <Button type="button" variant="outline" size="sm" className="text-red-600 hover:bg-red-50" onClick={() => setContent((p) => ({ ...p, portfolio: { ...p.portfolio, images: p.portfolio.images.filter((_, i) => i !== index) } }))}>
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
                       </div>
                       <Input value={img.alt} onChange={(e) => setContent((p) => {
                         const next = [...p.portfolio.images]
@@ -702,25 +650,23 @@ export default function ArchitectViewDivisionEditor() {
 
               <div className="space-y-3">
                 {showcaseImages.map((img, index) => {
-                  const uploadId = `architect-showcase-upload-${index}`
                   const key = `showcase-${index}`
                   return (
                     <div key={key} className="border rounded-lg p-4 bg-gray-50 space-y-2">
                       <div className="flex flex-col md:flex-row gap-2 md:items-center">
-                        <Input value={img.src} onChange={(e) => setContent((p) => {
-                          const next = [...p.why.showcaseImages]
-                          next[index] = { ...next[index], src: e.target.value }
-                          return { ...p, why: { ...p.why, showcaseImages: next } }
-                        })} placeholder="/images/... or /uploads/..." />
-                        <div className="flex gap-2">
-                          <input id={uploadId} type="file" accept="image/*" className="hidden" onChange={(e) => uploadToImageList(key, 'showcaseImages', index, e.target.files?.[0])} />
-                          <Button type="button" variant="outline" size="sm" disabled={uploadingKey === key} onClick={() => (document.getElementById(uploadId) as HTMLInputElement | null)?.click()}>
-                            {uploadingKey === key ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                          </Button>
-                          <Button type="button" variant="outline" size="sm" className="text-red-600 hover:bg-red-50" onClick={() => setContent((p) => ({ ...p, why: { ...p.why, showcaseImages: p.why.showcaseImages.filter((_, i) => i !== index) } }))}>
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
+                        <ImagePicker
+                          label=""
+                          value={img.src}
+                          onChange={(path) => setContent((p) => {
+                            const next = [...p.why.showcaseImages]
+                            next[index] = { ...next[index], src: path }
+                            return { ...p, why: { ...p.why, showcaseImages: next } }
+                          })}
+                          placeholder="/images/... or /uploads/..."
+                        />
+                        <Button type="button" variant="outline" size="sm" className="text-red-600 hover:bg-red-50" onClick={() => setContent((p) => ({ ...p, why: { ...p.why, showcaseImages: p.why.showcaseImages.filter((_, i) => i !== index) } }))}>
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
                       </div>
                       <Input value={img.alt} onChange={(e) => setContent((p) => {
                         const next = [...p.why.showcaseImages]

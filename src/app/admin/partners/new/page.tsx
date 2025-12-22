@@ -5,19 +5,18 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import { AdminSidebar } from '@/components/admin/AdminSidebar'
+import { ImagePicker } from '@/components/admin/ImagePicker'
 import { Card, CardContent } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
-import { ArrowLeft, Loader2, Save, Upload } from 'lucide-react'
+import { ArrowLeft, Loader2, Save } from 'lucide-react'
 
 export default function NewPartnerPage() {
   const router = useRouter()
   const { data: session, status } = useSession()
 
   const [saving, setSaving] = useState(false)
-  const [uploadingLogo, setUploadingLogo] = useState(false)
-  const [uploadingBackground, setUploadingBackground] = useState(false)
   const [form, setForm] = useState({
     name: '',
     location: '',
@@ -29,42 +28,6 @@ export default function NewPartnerPage() {
     order: 0,
     isActive: true,
   })
-
-  const uploadLogo = async (file: File) => {
-    setUploadingLogo(true)
-    try {
-      const fd = new FormData()
-      fd.append('file', file)
-      const res = await fetch('/api/media', { method: 'POST', body: fd, credentials: 'include' })
-      if (res.status === 401) {
-        router.push('/admin/login')
-        return
-      }
-      if (!res.ok) throw new Error('Upload failed')
-      const media = await res.json()
-      setForm((p) => ({ ...p, logo: media.path as string }))
-    } finally {
-      setUploadingLogo(false)
-    }
-  }
-
-  const uploadBackground = async (file: File) => {
-    setUploadingBackground(true)
-    try {
-      const fd = new FormData()
-      fd.append('file', file)
-      const res = await fetch('/api/media', { method: 'POST', body: fd, credentials: 'include' })
-      if (res.status === 401) {
-        router.push('/admin/login')
-        return
-      }
-      if (!res.ok) throw new Error('Upload failed')
-      const media = await res.json()
-      setForm((p) => ({ ...p, backgroundImage: media.path as string }))
-    } finally {
-      setUploadingBackground(false)
-    }
-  }
 
   const save = async () => {
     if (!session) {
@@ -147,50 +110,20 @@ export default function NewPartnerPage() {
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Logo</label>
-              <div className="flex gap-2">
-                <Input value={form.logo} onChange={(e) => setForm((p) => ({ ...p, logo: e.target.value }))} placeholder="/uploads/... or /images/..." />
-                <label className="inline-flex">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0]
-                      if (file) void uploadLogo(file)
-                    }}
-                  />
-                  <Button type="button" variant="outline" disabled={uploadingLogo}>
-                    {uploadingLogo ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                  </Button>
-                </label>
-              </div>
-            </div>
+            <ImagePicker
+              label="Logo"
+              value={form.logo}
+              onChange={(path) => setForm((p) => ({ ...p, logo: path }))}
+              placeholder="Select partner logo..."
+            />
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Card Background Image</label>
-              <div className="flex gap-2">
-                <Input
-                  value={form.backgroundImage}
-                  onChange={(e) => setForm((p) => ({ ...p, backgroundImage: e.target.value }))}
-                  placeholder="/uploads/... or /images/..."
-                />
-                <label className="inline-flex">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0]
-                      if (file) void uploadBackground(file)
-                    }}
-                  />
-                  <Button type="button" variant="outline" disabled={uploadingBackground}>
-                    {uploadingBackground ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                  </Button>
-                </label>
-              </div>
+              <ImagePicker
+                label="Card Background Image"
+                value={form.backgroundImage}
+                onChange={(path) => setForm((p) => ({ ...p, backgroundImage: path }))}
+                placeholder="Select background image..."
+              />
               <p className="text-xs text-gray-500 mt-2">
                 This image replaces the blue card background on the visitor Partners page.
               </p>

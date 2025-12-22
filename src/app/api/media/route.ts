@@ -21,7 +21,7 @@ export async function GET() {
   }
 }
 
-// POST upload a media file
+// POST upload media file(s) - supports multiple files
 export async function POST(request: NextRequest) {
   const session = await getServerSession(authOptions)
   if (!session) {
@@ -30,43 +30,55 @@ export async function POST(request: NextRequest) {
 
   try {
     const formData = await request.formData()
+    const files = formData.getAll('files')
     const file = formData.get('file')
-    const alt = formData.get('alt')
 
-    if (!(file instanceof File)) {
-      return NextResponse.json({ error: 'Missing file' }, { status: 400 })
+    // Support both single 'file' and multiple 'files'
+    const filesToProcess = files.length > 0 ? files : (file ? [file] : [])
+
+    if (filesToProcess.length === 0) {
+      return NextResponse.json({ error: 'No files provided' }, { status: 400 })
     }
-
-    const bytes = Buffer.from(await file.arrayBuffer())
-    const safeOriginalName = (file.name || 'upload')
-      .toLowerCase()
-      .replace(/[^a-z0-9._-]+/g, '-')
-      .replace(/-+/g, '-')
-      .replace(/^-|-$/g, '')
-
-    const ext = path.extname(safeOriginalName) || ''
-    const base = path.basename(safeOriginalName, ext) || 'upload'
-    const filename = `${base}-${Date.now()}-${crypto.randomUUID()}${ext}`
 
     const uploadsDir = path.join(process.cwd(), 'public', 'uploads')
     await mkdir(uploadsDir, { recursive: true })
 
-    const filePathOnDisk = path.join(uploadsDir, filename)
-    await writeFile(filePathOnDisk, bytes)
+    const uploadedMedia = []
 
-    const publicPath = `/uploads/${filename}`
+    for (const fileItem of filesToProcess) {
+      if (!(fileItem instanceof File)) continue
 
-    const media = await prisma.media.create({
-      data: {
-        filename,
-        path: publicPath,
-        mimeType: file.type || 'application/octet-stream',
-        size: bytes.length,
-        alt: typeof alt === 'string' && alt.trim() ? alt.trim() : null,
-      }
-    })
+      const bytes = Buffer.from(await fileItem.arrayBuffer())
+      const safeOriginalName = (fileItem.name || 'upload')
+        .toLowerCase()
+        .replace(/[^a-z0-9._-]+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '')
 
-    return NextResponse.json(media)
+      const ext = path.extname(safeOriginalName) || ''
+      const base = path.basename(safeOriginalName, ext) || 'upload'
+      const filename = `${base}-${Date.now()}-${crypto.randomUUID().substring(0, 8)}${ext}`
+
+      const filePathOnDisk = path.join(uploadsDir, filename)
+      await writeFile(filePathOnDisk, bytes)
+
+      const publicPath = `/uploads/${filename}`
+
+      const media = await prisma.media.create({
+        data: {
+          filename,
+          path: publicPath,
+          mimeType: fileItem.type || 'application/octet-stream',
+          size: bytes.length,
+          alt: null,
+        }
+      })
+
+      uploadedMedia.push(media)
+    }
+
+    // Return single object if one file, array if multiple
+    return NextResponse.json(uploadedMedia.length === 1 ? uploadedMedia[0] : uploadedMedia)
   } catch (error) {
     console.error('Error uploading media:', error)
     return NextResponse.json({ error: 'Failed to upload media' }, { status: 500 })
