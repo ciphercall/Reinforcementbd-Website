@@ -139,46 +139,6 @@ export default function HeroSectionEditor() {
     }))
   }
 
-  const uploadImage = async (file: File) => {
-    const fd = new FormData()
-    fd.append('file', file)
-
-    const res = await fetch('/api/media', {
-      method: 'POST',
-      body: fd,
-    })
-
-    if (!res.ok) throw new Error('Upload failed')
-    const media = await res.json()
-    return media.path as string
-  }
-
-  const handleUploadAtIndex = async (index: number, file?: File | null) => {
-    if (!file) return
-
-    setUploadingIndex(index)
-    setError('')
-    setSuccess('')
-
-    try {
-      const uploadedPath = await uploadImage(file)
-      setContent((prev) => {
-        const images = normalizeImages(prev.images)
-        images[index] = uploadedPath
-        return {
-          ...prev,
-          images,
-          backgroundImage: images[0] || prev.backgroundImage,
-        }
-      })
-      setSuccess('Image uploaded')
-    } catch {
-      setError('Failed to upload image')
-    } finally {
-      setUploadingIndex(null)
-    }
-  }
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSaving(true)
