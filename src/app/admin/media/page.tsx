@@ -20,7 +20,8 @@ import {
   Info,
   Edit2,
   X,
-  CheckCircle
+  CheckCircle,
+  AlertCircle
 } from 'lucide-react'
 
 interface MediaFile {
@@ -44,6 +45,19 @@ interface UsageInfo {
   }[]
 }
 
+interface StorageStats {
+  totalFiles: number
+  usedBytes: number
+  usedFormatted: string
+  remainingBytes: number
+  remainingFormatted: string
+  quotaBytes: number
+  quotaFormatted: string
+  usedPercentage: number
+  isNearLimit: boolean
+  isOverLimit: boolean
+}
+
 export default function MediaLibraryPage() {
   const router = useRouter()
   const { data: session, status } = useSession()
@@ -58,11 +72,13 @@ export default function MediaLibraryPage() {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editingName, setEditingName] = useState('')
   const [syncing, setSyncing] = useState(false)
+  const [storageStats, setStorageStats] = useState<StorageStats | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (status === 'authenticated') {
       fetchMedia()
+      fetchStorageStats()
     }
   }, [status])
 
@@ -80,6 +96,18 @@ export default function MediaLibraryPage() {
     }
   }
 
+  const fetchStorageStats = async () => {
+    try {
+      const response = await fetch('/api/media/storage-stats')
+      if (response.ok) {
+        const data = await response.json()
+        setStorageStats(data)
+      }
+    } catch (error) {
+      console.error('Error fetching storage stats:', error)
+    }
+  }
+
   const syncUploadsFolder = async () => {
     setSyncing(true)
     try {
@@ -88,6 +116,7 @@ export default function MediaLibraryPage() {
         const data = await response.json()
         alert(`Synced ${data.newlySynced} new files from uploads folder`)
         fetchMedia()
+        fetchStorageStats()
       }
     } catch (error) {
       console.error('Error syncing:', error)
@@ -143,6 +172,7 @@ export default function MediaLibraryPage() {
 
       if (response.ok) {
         fetchMedia()
+        fetchStorageStats()
         setSelectedIds(new Set())
       } else {
         alert('Failed to upload files')
@@ -188,6 +218,7 @@ export default function MediaLibraryPage() {
           next.delete(id)
           return next
         })
+        fetchStorageStats()
       } else {
         alert('Failed to delete file')
       }
@@ -231,6 +262,7 @@ export default function MediaLibraryPage() {
       if (response.ok) {
         setMedia(prev => prev.filter(m => !selectedIds.has(m.id)))
         setSelectedIds(new Set())
+        fetchStorageStats()
       } else {
         alert('Failed to delete files')
       }
@@ -339,6 +371,62 @@ export default function MediaLibraryPage() {
             </Button>
           </div>
         </div>
+
+        {/* Storage Stats */}
+        {storageStats && (
+          <Card className="p-4">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-medium text-gray-700">Storage Usage</h3>
+                <span className="text-sm text-gray-500">
+                  {storageStats.usedFormatted} / {storageStats.quotaFormatted}
+                </span>
+              </div>
+              
+              <div className="relative w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+                <div 
+                  className={`absolute inset-y-0 left-0 rounded-full transition-all ${
+                    storageStats.isOverLimit 
+                      ? 'bg-red-500' 
+                      : storageStats.isNearLimit 
+                      ? 'bg-yellow-500' 
+                      : 'bg-green-500'
+                  }`}
+                  style={{ width: `${Math.min(storageStats.usedPercentage, 100)}%` }}
+                />
+              </div>
+              
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-gray-600">
+                  {storageStats.totalFiles} file{storageStats.totalFiles !== 1 ? 's' : ''}
+                </span>
+                <span className={`font-medium ${
+                  storageStats.isOverLimit 
+                    ? 'text-red-600' 
+                    : storageStats.isNearLimit 
+                    ? 'text-yellow-600' 
+                    : 'text-green-600'
+                }`}>
+                  {storageStats.usedPercentage.toFixed(1)}% used
+                </span>
+              </div>
+              
+              {storageStats.isOverLimit && (
+                <div className="flex items-start gap-2 p-2 bg-red-50 border border-red-200 rounded text-xs text-red-700">
+                  <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                  <span>Storage quota exceeded. Please delete some files or upgrade your plan.</span>
+                </div>
+              )}
+              
+              {storageStats.isNearLimit && !storageStats.isOverLimit && (
+                <div className="flex items-start gap-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs text-yellow-700">
+                  <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                  <span>Storage is running low. Consider cleaning up unused files.</span>
+                </div>
+              )}
+            </div>
+          </Card>
+        )}
 
         {/* Toolbar */}
         <Card className="p-4">
