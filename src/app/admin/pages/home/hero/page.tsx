@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
 import { ImagePicker } from '@/components/admin/ImagePicker'
-import { ArrowLeft, Save, Eye, Image as ImageIcon, Plus, Trash2 } from 'lucide-react'
+import { ArrowLeft, Save, Eye, Image as ImageIcon, Plus, Trash2, Video, Images } from 'lucide-react'
 import { coercePageContent } from '@/lib/utils/pageContent'
 
 interface HeroContent {
@@ -24,6 +24,8 @@ interface HeroContent {
   secondaryButtonLink: string
   backgroundImage: string
   images?: string[]
+  displayMode: 'carousel' | 'video'
+  videoUrl: string
   stats: { label: string; value: string }[]
 }
 
@@ -37,6 +39,8 @@ const defaultContent: HeroContent = {
   secondaryButtonLink: '/contact',
   backgroundImage: '/images/hero-bg.jpg',
   images: ['/images/hero-bg.jpg', '/images/automation/1.png', '/images/automation/2.png'],
+  displayMode: 'carousel',
+  videoUrl: '',
   stats: [
     { label: 'Years Experience', value: '7+' },
     { label: 'Clients Served', value: '100+' },
@@ -249,7 +253,116 @@ export default function HeroSectionEditor() {
             </CardContent>
           </Card>
 
-          {/* Hero Images */}
+          {/* Display Mode Selector */}
+          <Card>
+            <CardContent className="p-6 space-y-6">
+              <h2 className="text-lg font-semibold text-gray-900 border-b pb-3">Hero Display Mode</h2>
+              
+              <div className="grid md:grid-cols-2 gap-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setContent(prev => ({ ...prev, displayMode: 'carousel' }))
+                    setSuccess('')
+                  }}
+                  className={`p-4 rounded-xl border-2 transition-all ${
+                    content.displayMode === 'carousel'
+                      ? 'border-blue-500 bg-blue-50'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <div className="flex flex-col items-center space-y-3">
+                    <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                      content.displayMode === 'carousel' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-500'
+                    }`}>
+                      <Images className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <div className={`font-semibold ${content.displayMode === 'carousel' ? 'text-blue-700' : 'text-gray-700'}`}>
+                        Image Carousel
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        Display a 3-card image carousel
+                      </div>
+                    </div>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setContent(prev => ({ ...prev, displayMode: 'video' }))
+                    setSuccess('')
+                  }}
+                  className={`p-4 rounded-xl border-2 transition-all ${
+                    content.displayMode === 'video'
+                      ? 'border-blue-500 bg-blue-50'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <div className="flex flex-col items-center space-y-3">
+                    <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                      content.displayMode === 'video' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-500'
+                    }`}>
+                      <Video className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <div className={`font-semibold ${content.displayMode === 'video' ? 'text-blue-700' : 'text-gray-700'}`}>
+                        Video Card
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        Display a video from URL (Cloudinary, etc.)
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Video URL - Only show when video mode is selected */}
+          {content.displayMode === 'video' && (
+            <Card>
+              <CardContent className="p-6 space-y-4">
+                <h2 className="text-lg font-semibold text-gray-900 border-b pb-3">Video Settings</h2>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Video URL
+                  </label>
+                  <Input
+                    value={content.videoUrl}
+                    onChange={(e) => handleChange('videoUrl', e.target.value)}
+                    placeholder="https://res.cloudinary.com/.../video.mp4"
+                  />
+                  <p className="text-sm text-gray-500 mt-2">
+                    Enter a direct video URL (MP4 format recommended). Supports Cloudinary, AWS S3, or any direct video link.
+                  </p>
+                </div>
+
+                {content.videoUrl && (
+                  <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Video Preview
+                    </label>
+                    <div className="aspect-video rounded-xl overflow-hidden bg-gray-900 border border-gray-200">
+                      <video
+                        src={content.videoUrl}
+                        className="w-full h-full object-cover"
+                        controls
+                        muted
+                      >
+                        Your browser does not support the video tag.
+                      </video>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Hero Images - Only show when carousel mode is selected */}
+          {content.displayMode === 'carousel' && (
           <Card>
             <CardContent className="p-6 space-y-6">
               <h2 className="text-lg font-semibold text-gray-900 border-b pb-3">Hero Images (3-card carousel)</h2>
@@ -311,6 +424,7 @@ export default function HeroSectionEditor() {
               </p>
             </CardContent>
           </Card>
+          )}
 
           {/* Buttons */}
           <Card>

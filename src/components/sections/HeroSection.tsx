@@ -18,6 +18,8 @@ interface HeroContent {
   secondaryButtonLink: string
   backgroundImage: string
   images?: string[]
+  displayMode?: 'carousel' | 'video'
+  videoUrl?: string
   stats: { label: string; value: string }[]
 }
 
@@ -32,6 +34,8 @@ const defaultContent: HeroContent = {
   secondaryButtonLink: '/services',
   backgroundImage: '/images/automation/1.png',
   images: ['/images/automation/1.png', '/images/automation/2.png', '/images/it/I33.jfif'],
+  displayMode: 'carousel',
+  videoUrl: '',
   stats: [
     { label: 'Years Experience', value: '6+' },
     { label: 'Projects Done', value: '100+' },
@@ -146,78 +150,104 @@ export function HeroSection({ content }: { content?: unknown }) {
             </div>
           </motion.div>
 
-          {/* Image */}
+          {/* Image Carousel or Video Card */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="relative hidden lg:block"
           >
-            <motion.div
-              className="relative aspect-square"
-              style={{ perspective: 1200 }}
-              drag="x"
-              dragConstraints={{ left: 0, right: 0 }}
-              onDragEnd={(_, info) => {
-                if (info.offset.x < -60) next()
-                if (info.offset.x > 60) prev()
-              }}
-              onWheel={(e) => {
-                // Allow trackpad/mouse wheel navigation like your screenshot expectation.
-                // Throttle so it doesn't spin too fast.
-                if (wheelLockRef.current) return
-                const primaryDelta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY
-                if (Math.abs(primaryDelta) < 8) return
-
-                wheelLockRef.current = true
-                if (primaryDelta > 0) next()
-                else prev()
-
-                window.setTimeout(() => {
-                  wheelLockRef.current = false
-                }, 350)
-              }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-700 rounded-3xl transform rotate-3" />
-
-              {/* 3-card wheel */}
-              <div className="absolute inset-0 overflow-visible">
-                {([-1, 0, 1] as const).map((slotOffset) => {
-                  const index = (activeIndex + slotOffset + images.length) % images.length
-                  const position = slotOffset === 0 ? 'center' : slotOffset === -1 ? 'left' : 'right'
-                  const src = images[index]
-
-                  return (
-                    <motion.div
-                      key={`${position}`}
-                      className="absolute inset-0"
-                      animate={position}
-                      variants={variants}
-                      transition={{ type: 'spring', stiffness: 220, damping: 28 }}
-                      style={{ transformOrigin: 'center center' }}
-                      onClick={() => {
-                        if (slotOffset === -1) prev()
-                        if (slotOffset === 1) next()
-                      }}
-                    >
-                      <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/30 bg-white/10">
-                        <Image
-                          src={src}
-                          alt="Hero showcase"
-                          fill
-                          className="object-cover rounded-3xl shadow-2xl"
-                          priority
-                        />
-                        {/* subtle glass overlay on side cards */}
-                        {position !== 'center' && (
-                          <div className="absolute inset-0 bg-white/40" />
-                        )}
-                      </div>
-                    </motion.div>
-                  )
-                })}
+            {c.displayMode === 'video' && c.videoUrl ? (
+              /* Video Card */
+              <div className="relative aspect-square">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-700 rounded-3xl transform rotate-3" />
+                <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/30">
+                  <video
+                    src={c.videoUrl}
+                    className="w-full h-full object-cover rounded-3xl"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                  />
+                  {/* Play button overlay for visual indication */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                      <svg className="w-10 h-10 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </motion.div>
+            ) : (
+              /* Image Carousel */
+              <motion.div
+                className="relative aspect-square"
+                style={{ perspective: 1200 }}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                onDragEnd={(_, info) => {
+                  if (info.offset.x < -60) next()
+                  if (info.offset.x > 60) prev()
+                }}
+                onWheel={(e) => {
+                  // Allow trackpad/mouse wheel navigation like your screenshot expectation.
+                  // Throttle so it doesn't spin too fast.
+                  if (wheelLockRef.current) return
+                  const primaryDelta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY
+                  if (Math.abs(primaryDelta) < 8) return
+
+                  wheelLockRef.current = true
+                  if (primaryDelta > 0) next()
+                  else prev()
+
+                  window.setTimeout(() => {
+                    wheelLockRef.current = false
+                  }, 350)
+                }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-700 rounded-3xl transform rotate-3" />
+
+                {/* 3-card wheel */}
+                <div className="absolute inset-0 overflow-visible">
+                  {([-1, 0, 1] as const).map((slotOffset) => {
+                    const index = (activeIndex + slotOffset + images.length) % images.length
+                    const position = slotOffset === 0 ? 'center' : slotOffset === -1 ? 'left' : 'right'
+                    const src = images[index]
+
+                    return (
+                      <motion.div
+                        key={`${position}`}
+                        className="absolute inset-0"
+                        animate={position}
+                        variants={variants}
+                        transition={{ type: 'spring', stiffness: 220, damping: 28 }}
+                        style={{ transformOrigin: 'center center' }}
+                        onClick={() => {
+                          if (slotOffset === -1) prev()
+                          if (slotOffset === 1) next()
+                        }}
+                      >
+                        <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/30 bg-white/10">
+                          <Image
+                            src={src}
+                            alt="Hero showcase"
+                            fill
+                            className="object-cover rounded-3xl shadow-2xl"
+                            priority
+                          />
+                          {/* subtle glass overlay on side cards */}
+                          {position !== 'center' && (
+                            <div className="absolute inset-0 bg-white/40" />
+                          )}
+                        </div>
+                      </motion.div>
+                    )
+                  })}
+                </div>
+              </motion.div>
+            )}
             
             {/* Floating Card */}
             <motion.div
