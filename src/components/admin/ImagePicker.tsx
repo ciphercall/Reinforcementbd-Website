@@ -2,9 +2,10 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
-import { Search, X, Image as ImageIcon } from 'lucide-react'
+import { Search, X, Image as ImageIcon, Crop } from 'lucide-react'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
+import { ImageCropModal, CropData } from './ImageCropModal'
 
 interface MediaFile {
   id: string
@@ -16,25 +17,45 @@ interface MediaFile {
   createdAt: string
 }
 
+export interface CroppedImageData {
+  displayUrl: string // The cropped image data URL for display
+  originalUrl: string // The original image URL
+  cropData?: CropData // The crop settings
+}
+
 interface ImagePickerProps {
   value?: string
-  onChange: (path: string) => void
+  onChange: (path: string, croppedData?: CroppedImageData) => void
   label?: string
   placeholder?: string
   className?: string
+  aspectRatio?: number
+  enableCrop?: boolean
 }
 
-export function ImagePicker({ value, onChange, label, placeholder, className }: ImagePickerProps) {
+export function ImagePicker({ 
+  value, 
+  onChange, 
+  label, 
+  placeholder, 
+  className,
+  aspectRatio = 16 / 9,
+  enableCrop = true 
+}: ImagePickerProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [search, setSearch] = useState('')
   const [media, setMedia] = useState<MediaFile[]>([])
   const [loading, setLoading] = useState(false)
   const [selectedPath, setSelectedPath] = useState(value || '')
+  const [displayImageUrl, setDisplayImageUrl] = useState(value || '')
+  const [showCropModal, setShowCropModal] = useState(false)
+  const [imageToCrop, setImageToCrop] = useState<string | null>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     setSelectedPath(value || '')
+    setDisplayImageUrl(value || '')
   }, [value])
 
   useEffect(() => {
@@ -75,16 +96,54 @@ export function ImagePicker({ value, onChange, label, placeholder, className }: 
   )
 
   const handleSelect = (path: string) => {
-    setSelectedPath(path)
-    onChange(path)
-    setIsOpen(false)
+    if (enableCrop) {
+      // Open crop modal instead of directly selecting
+      setImageToCrop(path)
+      setShowCropModal(true)
+      setIsOpen(false)
+    } else {
+      // Direct selection without cropping
+      setSelectedPath(path)
+      setDisplayImageUrl(path)
+      onChange(path)
+      setIsOpen(false)
+    }
     setSearch('')
+  }
+
+  const handleCropConfirm = (croppedImageUrl: string, cropData: CropData) => {
+    if (!imageToCrop) return
+
+    const croppedData: CroppedImageData = {
+      displayUrl: croppedImageUrl,
+      originalUrl: imageToCrop,
+      cropData,
+    }
+
+    setSelectedPath(imageToCrop) // Store the original image path
+    setDisplayImageUrl(croppedImageUrl) // Display the cropped version
+    onChange(imageToCrop, croppedData) // Pass both to parent
+    setShowCropModal(false)
+    setImageToCrop(null)
+  }
+
+  const handleCropCancel = () => {
+    setShowCropModal(false)
+    setImageToCrop(null)
   }
 
   const handleClear = () => {
     setSelectedPath('')
+    setDisplayImageUrl('')
     onChange('')
     setSearch('')
+  }
+
+  const handleReCrop = () => {
+    if (selectedPath) {
+      setImageToCrop(selectedPath)
+      setShowCropModal(true)
+    }
   }
 
   const displayName = selectedPath 
@@ -123,13 +182,28 @@ export function ImagePicker({ value, onChange, label, placeholder, className }: 
               {/* Preview Thumbnail */}
               <div className="relative w-12 h-12 rounded border border-gray-300 overflow-hidden bg-gray-50">
                 <Image
-                  src={selectedPath}
+                  src={displayImageUrl}
                   alt="Selected"
                   fill
                   className="object-cover"
                   sizes="48px"
+                  unoptimized={displayImageUrl.startsWith('data:')}
                 />
               </div>
+
+              {/* Re-crop Button */}
+              {enableCrop && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleReCrop}
+                  className="text-blue-600 hover:text-blue-700"
+                  title="Re-crop image"
+                >
+                  <Crop className="w-4 h-4" />
+                </Button>
+              )}
 
               {/* Clear Button */}
               <Button
@@ -183,6 +257,12 @@ export function ImagePicker({ value, onChange, label, placeholder, className }: 
                     {/* Filename Overlay */}
                     <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-2 opacity-0 group-hover:opacity-100 transition-opacity">
                       <p className="text-xs text-white truncate">{item.filename}</p>
+                      {enableCrop && (
+                        <p className="text-xs text-blue-300 flex items-center mt-0.5">
+                          <Crop className="w-3 h-3 mr-1" />
+                          Click to crop
+                        </p>
+                      )}
                     </div>
 
                     {/* Selected Badge */}
@@ -217,6 +297,17 @@ export function ImagePicker({ value, onChange, label, placeholder, className }: 
       {/* Hidden input for form compatibility */}
       {selectedPath && (
         <input type="hidden" name={label?.toLowerCase().replace(/\s+/g, '_')} value={selectedPath} />
+      )}
+
+      {/* Crop Modal */}
+      {imageToCrop && (
+        <ImageCropModal
+          isOpen={showCropModal}
+          imageSrc={imageToCrop}
+          onClose={handleCropCancel}
+          onConfirm={handleCropConfirm}
+          aspectRatio={aspectRatio}
+        />
       )}
     </div>
   )
