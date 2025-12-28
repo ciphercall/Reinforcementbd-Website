@@ -256,12 +256,14 @@ export default async function AutomationPage() {
           {services.map((service, index) => (
             <Card key={index} className="group hover:shadow-xl transition-all duration-300 overflow-hidden">
               <div className="relative h-48 bg-gradient-to-br from-orange-100 to-orange-50">
-                <Image
-                  src={service.image}
-                  alt={service.title}
-                  fill
-                  className="object-contain p-4 group-hover:scale-105 transition-transform duration-300"
-                />
+                {service.image && (
+                  <Image
+                    src={service.image}
+                    alt={service.title}
+                    fill
+                    className="object-contain p-4 group-hover:scale-105 transition-transform duration-300"
+                  />
+                )}
               </div>
               <CardContent className="p-6 space-y-4">
                 <div className="flex items-center gap-3">
