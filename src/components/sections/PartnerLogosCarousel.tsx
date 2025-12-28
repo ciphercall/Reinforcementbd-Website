@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 interface PartnerLogo {
   src: string
@@ -27,10 +28,19 @@ export function PartnerLogosCarousel({
   className = ''
 }: PartnerLogosCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
   const animationRef = useRef<number | null>(null)
   const positionRef = useRef(0)
   const [isMounted, setIsMounted] = useState(false)
   const isPausedRef = useRef(false)
+  
+  // Drag state
+  const isDraggingRef = useRef(false)
+  const startXRef = useRef(0)
+  const scrollStartRef = useRef(0)
+  const velocityRef = useRef(0)
+  const lastXRef = useRef(0)
+  const lastTimeRef = useRef(0)
 
   useEffect(() => {
     setIsMounted(true)
@@ -44,21 +54,47 @@ export function PartnerLogosCarousel({
     }
   }, [])
 
+  const getScrollWidth = useCallback(() => {
+    const scrollElement = scrollRef.current
+    if (!scrollElement) return 0
+    return scrollElement.scrollWidth / 2
+  }, [])
+
+  const normalizePosition = useCallback((pos: number) => {
+    const scrollWidth = getScrollWidth()
+    if (scrollWidth <= 0) return pos
+    
+    // Keep position within bounds for seamless loop
+    while (pos > 0) {
+      pos -= scrollWidth
+    }
+    while (pos < -scrollWidth) {
+      pos += scrollWidth
+    }
+    return pos
+  }, [getScrollWidth])
+
+  const updatePosition = useCallback((newPosition: number) => {
+    const scrollElement = scrollRef.current
+    if (!scrollElement) return
+    
+    positionRef.current = normalizePosition(newPosition)
+    scrollElement.style.transform = `translateX(${positionRef.current}px)`
+  }, [normalizePosition])
+
   const startAnimation = useCallback(function startAnimationImpl() {
     const scrollElement = scrollRef.current
     if (!scrollElement) return
 
-    // Wait a bit to ensure all images have their dimensions
-    const scrollWidth = scrollElement.scrollWidth / 2
+    const scrollWidth = getScrollWidth()
 
     if (scrollWidth <= 0) {
-      // If scrollWidth is 0, try again shortly
       setTimeout(startAnimationImpl, 100)
       return
     }
 
     const animate = () => {
-      if (isPausedRef.current) {
+      if (isPausedRef.current || isDraggingRef.current) {
         stopAnimation()
         return
       }
@@ -78,12 +114,167 @@ export function PartnerLogosCarousel({
     }
 
     animationRef.current = requestAnimationFrame(animate)
-  }, [speed, direction, stopAnimation])
+  }, [speed, direction, stopAnimation, getScrollWidth])
+
+  // Mouse drag handlers
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    isDraggingRef.current = true
+    startXRef.current = e.clientX
+    scrollStartRef.current = positionRef.current
+    lastXRef.current = e.clientX
+    lastTimeRef.current = Date.now()
+    velocityRef.current = 0
+    stopAnimation()
+    
+    // Change cursor
+    if (containerRef.current) {
+      containerRef.current.style.cursor = 'grabbing'
+    }
+  }, [stopAnimation])
+
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!isDraggingRef.current) return
+    
+    e.preventDefault()
+    const deltaX = e.clientX - startXRef.current
+    const newPosition = scrollStartRef.current + deltaX
+    
+    // Calculate velocity for momentum
+    const now = Date.now()
+    const dt = now - lastTimeRef.current
+    if (dt > 0) {
+      velocityRef.current = (e.clientX - lastXRef.current) / dt
+    }
+    lastXRef.current = e.clientX
+    lastTimeRef.current = now
+    
+    updatePosition(newPosition)
+  }, [updatePosition])
+
+  const handleMouseUp = useCallback(() => {
+    if (!isDraggingRef.current) return
+    
+    isDraggingRef.current = false
+    
+    // Reset cursor
+    if (containerRef.current) {
+      containerRef.current.style.cursor = 'grab'
+    }
+    
+    // Apply momentum scrolling
+    const velocity = velocityRef.current
+    if (Math.abs(velocity) > 0.1) {
+      let currentVelocity = velocity * 15 // Scale up for smoother feel
+      
+      const momentumAnimate = () => {
+        if (isPausedRef.current && !isDraggingRef.current) {
+          currentVelocity *= 0.95 // Friction
+          
+          if (Math.abs(currentVelocity) > 0.5) {
+            updatePosition(positionRef.current + currentVelocity)
+            requestAnimationFrame(momentumAnimate)
+          }
+        }
+      }
+      
+      requestAnimationFrame(momentumAnimate)
+    }
+  }, [updatePosition])
+
+  const handleMouseLeave = useCallback(() => {
+    if (isDraggingRef.current) {
+      handleMouseUp()
+    }
+    isPausedRef.current = false
+    startAnimation()
+  }, [handleMouseUp, startAnimation])
+
+  // Touch handlers for mobile
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    isDraggingRef.current = true
+    startXRef.current = e.touches[0].clientX
+    scrollStartRef.current = positionRef.current
+    lastXRef.current = e.touches[0].clientX
+    lastTimeRef.current = Date.now()
+    velocityRef.current = 0
+    stopAnimation()
+  }, [stopAnimation])
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!isDraggingRef.current) return
+    
+    const deltaX = e.touches[0].clientX - startXRef.current
+    const newPosition = scrollStartRef.current + deltaX
+    
+    // Calculate velocity
+    const now = Date.now()
+    const dt = now - lastTimeRef.current
+    if (dt > 0) {
+      velocityRef.current = (e.touches[0].clientX - lastXRef.current) / dt
+    }
+    lastXRef.current = e.touches[0].clientX
+    lastTimeRef.current = now
+    
+    updatePosition(newPosition)
+  }, [updatePosition])
+
+  const handleTouchEnd = useCallback(() => {
+    handleMouseUp()
+    
+    // Resume auto-scroll after a delay
+    setTimeout(() => {
+      if (!isDraggingRef.current) {
+        isPausedRef.current = false
+        startAnimation()
+      }
+    }, 3000)
+  }, [handleMouseUp, startAnimation])
+
+  // Arrow navigation
+  const scrollByAmount = useCallback((amount: number) => {
+    stopAnimation()
+    isPausedRef.current = true
+    
+    const targetPosition = positionRef.current + amount
+    const startPosition = positionRef.current
+    const startTime = Date.now()
+    const duration = 400 // ms
+    
+    const animateScroll = () => {
+      const elapsed = Date.now() - startTime
+      const progress = Math.min(elapsed / duration, 1)
+      
+      // Easing function (ease-out cubic)
+      const easeOut = 1 - Math.pow(1 - progress, 3)
+      
+      const currentPosition = startPosition + (targetPosition - startPosition) * easeOut
+      updatePosition(currentPosition)
+      
+      if (progress < 1) {
+        requestAnimationFrame(animateScroll)
+      } else {
+        // Resume auto-scroll after delay
+        setTimeout(() => {
+          isPausedRef.current = false
+          startAnimation()
+        }, 2000)
+      }
+    }
+    
+    requestAnimationFrame(animateScroll)
+  }, [stopAnimation, updatePosition, startAnimation])
+
+  const scrollLeft = useCallback(() => {
+    scrollByAmount(300) // Scroll right (positive = move content right = see left items)
+  }, [scrollByAmount])
+
+  const scrollRight = useCallback(() => {
+    scrollByAmount(-300) // Scroll left (negative = move content left = see right items)
+  }, [scrollByAmount])
 
   useEffect(() => {
     if (!isMounted) return
 
-    // Small delay to ensure DOM is fully rendered
     const timeoutId = setTimeout(() => {
       startAnimation()
     }, 100)
@@ -108,10 +299,7 @@ export function PartnerLogosCarousel({
         isPausedRef.current = true
         stopAnimation()
       }}
-      onMouseLeave={() => {
-        isPausedRef.current = false
-        startAnimation()
-      }}
+      onMouseLeave={handleMouseLeave}
     >
       <div className="container mx-auto px-4 mb-10">
         <motion.div
@@ -131,31 +319,61 @@ export function PartnerLogosCarousel({
       </div>
 
       <div className="relative">
+        {/* Left Arrow */}
+        <button
+          onClick={scrollLeft}
+          className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-20 bg-white hover:bg-gray-100 text-gray-700 hover:text-primary p-2 md:p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+          aria-label="Scroll left"
+        >
+          <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
+        </button>
+
+        {/* Right Arrow */}
+        <button
+          onClick={scrollRight}
+          className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-20 bg-white hover:bg-gray-100 text-gray-700 hover:text-primary p-2 md:p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+          aria-label="Scroll right"
+        >
+          <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
+        </button>
+
         {/* Gradient overlays for smooth fade effect */}
-        <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-gray-50 to-transparent z-10" />
-        <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-gray-50 to-transparent z-10" />
+        <div className="absolute left-0 top-0 bottom-0 w-16 md:w-32 bg-gradient-to-r from-gray-50 to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-16 md:w-32 bg-gradient-to-l from-gray-50 to-transparent z-10 pointer-events-none" />
 
         <div
-          ref={scrollRef}
-          className="flex items-center gap-12 py-6 whitespace-nowrap"
-          style={{ willChange: 'transform' }}
+          ref={containerRef}
+          className="cursor-grab select-none"
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
         >
-          {duplicatedLogos.map((logo, index) => (
-            <div
-              key={`${logo.src}-${index}`}
-              className="relative z-0 flex-shrink-0 bg-white rounded-xl shadow-sm p-6 transition-all duration-300 hover:shadow-lg hover:scale-110 hover:z-10"
-            >
-              <div className="relative w-32 h-20 overflow-hidden">
-                <Image
-                  src={logo.src}
-                  alt={logo.alt}
-                  fill
-                  className="object-contain"
-                  sizes="128px"
-                />
+          <div
+            ref={scrollRef}
+            className="flex items-center gap-8 md:gap-12 py-6 whitespace-nowrap px-12 md:px-16"
+            style={{ willChange: 'transform' }}
+          >
+            {duplicatedLogos.map((logo, index) => (
+              <div
+                key={`${logo.src}-${index}`}
+                className="relative z-0 flex-shrink-0 bg-white rounded-xl shadow-sm p-4 md:p-6 transition-all duration-300 hover:shadow-lg hover:scale-110 hover:z-10"
+              >
+                <div className="relative w-24 h-16 md:w-32 md:h-20 overflow-hidden">
+                  <Image
+                    src={logo.src}
+                    alt={logo.alt}
+                    fill
+                    className="object-contain pointer-events-none"
+                    sizes="128px"
+                    draggable={false}
+                  />
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>
