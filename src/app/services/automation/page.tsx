@@ -277,7 +277,7 @@ export default async function AutomationPage() {
                 </div>
                 <p className="text-gray-600">{service.description}</p>
                 <ul className="space-y-2">
-                  {(Array.isArray(service.features) ? service.features : []).slice(0, 3).map((feature, i) => (
+                  {(Array.isArray(service.features) ? service.features : []).map((feature, i) => (
                     <li key={i} className="flex items-center text-sm text-gray-600">
                       <CheckCircle className="w-4 h-4 text-blue-500 mr-2 flex-shrink-0" />
                       {feature}
