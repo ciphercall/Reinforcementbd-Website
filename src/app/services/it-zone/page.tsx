@@ -265,13 +265,15 @@ export default async function ITZonePage() {
           {services.map((service, index) => (
             <Card key={index} className="group hover:shadow-xl transition-all duration-300 overflow-hidden">
               <div className="relative h-40 bg-gradient-to-br from-blue-100 to-blue-50 flex items-center justify-center">
-                <Image
-                  src={service.image}
-                  alt={service.title}
-                  width={120}
-                  height={120}
-                  className="object-contain group-hover:scale-110 transition-transform duration-300"
-                />
+                {service.image && (
+                  <Image
+                    src={service.image}
+                    alt={service.title}
+                    width={120}
+                    height={120}
+                    className="object-contain group-hover:scale-110 transition-transform duration-300"
+                  />
+                )}
               </div>
               <CardContent className="p-5 space-y-3">
                 <div className="flex items-center gap-2">

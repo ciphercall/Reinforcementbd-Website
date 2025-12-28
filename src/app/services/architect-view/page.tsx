@@ -202,7 +202,7 @@ export default async function ArchitectViewPage() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 bg-gradient-to-br from-emerald-600 to-emerald-800 text-white overflow-hidden">
+      <section className="relative pt-32 pb-20 bg-gradient-to-br from-blue-600 to-blue-800 text-white overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-20 right-20 w-72 h-72 bg-white rounded-full blur-3xl" />
           <div className="absolute bottom-20 left-20 w-96 h-96 bg-white rounded-full blur-3xl" />
@@ -217,12 +217,12 @@ export default async function ArchitectViewPage() {
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
                 {c.hero?.title || defaultContent.hero.title}
               </h1>
-              <p className="text-xl text-emerald-100 leading-relaxed">
+              <p className="text-xl text-blue-100 leading-relaxed">
                 {c.hero?.description || defaultContent.hero.description}
               </p>
               <div className="flex flex-wrap gap-4">
                 <Link href={c.hero?.primaryCtaLink || defaultContent.hero.primaryCtaLink}>
-                  <Button size="lg" className="!bg-white !text-emerald-600 hover:!bg-emerald-50 flex items-center">
+                  <Button size="lg" className="!bg-white !text-blue-600 hover:!bg-blue-50 flex items-center">
                     {c.hero?.primaryCtaText || defaultContent.hero.primaryCtaText}
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
@@ -259,7 +259,7 @@ export default async function ArchitectViewPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-emerald-600">{stat.value}</div>
+                <div className="text-3xl md:text-4xl font-bold text-blue-600">{stat.value}</div>
                 <div className="text-gray-600 mt-1">{stat.label}</div>
               </div>
             ))}
@@ -277,10 +277,10 @@ export default async function ArchitectViewPage() {
           {services.map((service, index) => (
             <Card key={index} className="group hover:shadow-xl transition-all duration-300">
               <CardContent className="p-6 space-y-4">
-                <div className="w-14 h-14 rounded-xl bg-emerald-100 flex items-center justify-center group-hover:bg-emerald-600 transition-colors">
+                <div className="w-14 h-14 rounded-xl bg-blue-100 flex items-center justify-center group-hover:bg-blue-600 transition-colors">
                   {(() => {
                     const Icon = resolveLucideIcon(service.icon, Building2)
-                    return <Icon className="w-7 h-7 text-emerald-600 group-hover:text-white transition-colors" />
+                    return <Icon className="w-7 h-7 text-blue-600 group-hover:text-white transition-colors" />
                   })()}
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900">{service.title}</h3>
@@ -288,7 +288,7 @@ export default async function ArchitectViewPage() {
                 <ul className="space-y-2">
                   {(Array.isArray(service.features) ? service.features : []).slice(0, 3).map((feature, i) => (
                     <li key={i} className="flex items-center text-sm text-gray-600">
-                      <CheckCircle className="w-4 h-4 text-emerald-500 mr-2 flex-shrink-0" />
+                      <CheckCircle className="w-4 h-4 text-blue-500 mr-2 flex-shrink-0" />
                       {feature}
                     </li>
                   ))}
@@ -337,7 +337,7 @@ export default async function ArchitectViewPage() {
             <div className="grid sm:grid-cols-2 gap-6">
               {benefits.map((item, i) => (
                 <div key={i} className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-emerald-500 flex-shrink-0 mt-1" />
+                  <CheckCircle className="w-6 h-6 text-blue-500 flex-shrink-0 mt-1" />
                   <div>
                     <h4 className="font-semibold text-gray-900">{item.title}</h4>
                     <p className="text-sm text-gray-600">{item.desc}</p>
