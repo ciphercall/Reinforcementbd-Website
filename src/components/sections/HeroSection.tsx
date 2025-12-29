@@ -104,7 +104,7 @@ export function HeroSection({ content }: { content?: unknown }) {
       </div>
 
       <div className="container mx-auto px-4 pt-24 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="grid lg:grid-cols-2 gap-12 items-center lg:items-stretch">
           {/* Content */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -155,11 +155,11 @@ export function HeroSection({ content }: { content?: unknown }) {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="relative hidden lg:block"
+            className="relative hidden lg:block h-full"
           >
             {c.displayMode === 'video' && c.videoUrl ? (
               /* Video Card */
-              <div className="relative aspect-video">
+              <div className="relative h-full">
                 <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/30">
                   <video
                     src={c.videoUrl}
