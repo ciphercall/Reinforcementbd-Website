@@ -27,6 +27,7 @@ interface TeamPreviewContent {
   members: TeamMemberPreview[]
   bottomButtonText: string
   bottomButtonLink: string
+  showBottomButton?: boolean
 }
 
 const defaultContent: TeamPreviewContent = {
@@ -76,7 +77,8 @@ const defaultContent: TeamPreviewContent = {
     }
   ],
   bottomButtonText: 'View Full Team',
-  bottomButtonLink: '/about#team'
+  bottomButtonLink: '/about#team',
+  showBottomButton: true
 }
 
 export function TeamSection({ content }: { content?: unknown }) {
@@ -166,13 +168,15 @@ export function TeamSection({ content }: { content?: unknown }) {
         ))}
       </div>
 
-      <div className="text-center mt-12">
-        <Link href={c.bottomButtonLink || '/about#team'}>
-          <Button variant="outline" size="lg">
-            {c.bottomButtonText}
-          </Button>
-        </Link>
-      </div>
+      {(c.showBottomButton ?? defaultContent.showBottomButton) && (
+        <div className="text-center mt-12">
+          <Link href={c.bottomButtonLink || '/about#team'}>
+            <Button variant="outline" size="lg">
+              {c.bottomButtonText}
+            </Button>
+          </Link>
+        </div>
+      )}
     </Section>
   )
 }

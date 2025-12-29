@@ -31,6 +31,7 @@ interface TeamPreviewContent {
   members: TeamMemberPreview[]
   bottomButtonText: string
   bottomButtonLink: string
+  showBottomButton?: boolean
 }
 
 const defaultContent: TeamPreviewContent = {
@@ -80,7 +81,8 @@ const defaultContent: TeamPreviewContent = {
     }
   ],
   bottomButtonText: 'View Full Team',
-  bottomButtonLink: '/about#team'
+  bottomButtonLink: '/about#team',
+  showBottomButton: true
 }
 
 export default function TeamPreviewEditor() {
@@ -350,6 +352,24 @@ export default function TeamPreviewEditor() {
           <Card>
             <CardContent className="p-6 space-y-4">
               <h2 className="text-lg font-semibold text-gray-900 border-b pb-3">Bottom Button</h2>
+              <div>
+                <label className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
+                  <span className="text-sm font-medium text-gray-700">Show Bottom Button</span>
+                  <div className="relative">
+                    <input
+                      type="checkbox"
+                      checked={content.showBottomButton ?? true}
+                      onChange={(e) => {
+                        setContent((prev) => ({ ...prev, showBottomButton: e.target.checked }))
+                        setSuccess('')
+                      }}
+                      className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 peer-focus:ring-4 peer-focus:ring-blue-300 transition-colors"></div>
+                    <div className="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform peer-checked:translate-x-5"></div>
+                  </div>
+                </label>
+              </div>
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Button Text</label>
