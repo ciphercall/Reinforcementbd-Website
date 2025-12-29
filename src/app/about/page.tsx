@@ -8,6 +8,7 @@ import { TeamSection } from '@/components/sections/TeamSection'
 import { getPageContents } from '@/lib/pageContent'
 import { coercePageContent } from '@/lib/utils/pageContent'
 import { resolveLucideIcon } from '@/lib/utils/lucideIcon'
+import { prisma } from '@/lib/db/prisma'
 
 /* eslint-disable react-hooks/static-components */
 
