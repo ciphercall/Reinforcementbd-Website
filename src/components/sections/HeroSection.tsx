@@ -159,25 +159,16 @@ export function HeroSection({ content }: { content?: unknown }) {
           >
             {c.displayMode === 'video' && c.videoUrl ? (
               /* Video Card */
-              <div className="relative aspect-square">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-700 rounded-3xl transform rotate-3" />
+              <div className="relative aspect-video">
                 <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/30">
                   <video
                     src={c.videoUrl}
-                    className="w-full h-full object-cover rounded-3xl"
+                    className="w-full h-full object-cover"
                     autoPlay
                     loop
                     muted
                     playsInline
                   />
-                  {/* Play button overlay for visual indication */}
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-                      <svg className="w-10 h-10 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
-                    </div>
-                  </div>
                 </div>
               </div>
             ) : (
@@ -207,7 +198,6 @@ export function HeroSection({ content }: { content?: unknown }) {
                   }, 350)
                 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-700 rounded-3xl transform rotate-3" />
 
                 {/* 3-card wheel */}
                 <div className="absolute inset-0 overflow-visible">

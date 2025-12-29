@@ -308,10 +308,10 @@ export default function HeroSectionEditor() {
                     </div>
                     <div>
                       <div className={`font-semibold ${content.displayMode === 'video' ? 'text-blue-700' : 'text-gray-700'}`}>
-                        Video Card
+                        Video (Rectangular)
                       </div>
                       <div className="text-sm text-gray-500">
-                        Display a video from URL (Cloudinary, etc.)
+                        Display a rectangular hero video from a URL (MP4 recommended)
                       </div>
                     </div>
                   </div>
