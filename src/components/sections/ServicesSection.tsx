@@ -156,12 +156,6 @@ export function ServicesSection({ content }: { content?: unknown }) {
                     className="object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                 ) : null}
-                <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-60`} />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
-                    <Icon className="w-8 h-8 text-white" />
-                  </div>
-                </div>
               </div>
               
               <CardContent className="p-6">
