@@ -20,6 +20,50 @@ export const dynamic = 'force-dynamic'
 
 const ABOUT_SECTIONS = ['header', 'story', 'journey', 'mission', 'values', 'divisions'] as const
 
+async function getVisibilitySettings() {
+  try {
+    const setting = await prisma.siteSetting.findUnique({
+      where: { key: 'about_visibility' }
+    })
+    
+    if (!setting) {
+      return {
+        header: true,
+        story: true,
+        journey: true,
+        mission: true,
+        values: true,
+        team: true,
+        divisions: true
+      }
+    }
+    
+    const visibility = typeof setting.value === 'string' 
+      ? JSON.parse(setting.value) 
+      : setting.value
+    
+    return {
+      header: visibility.header ?? true,
+      story: visibility.story ?? true,
+      journey: visibility.journey ?? true,
+      mission: visibility.mission ?? true,
+      values: visibility.values ?? true,
+      team: visibility.team ?? true,
+      divisions: visibility.divisions ?? true
+    }
+  } catch {
+    return {
+      header: true,
+      story: true,
+      journey: true,
+      mission: true,
+      values: true,
+      team: true,
+      divisions: true
+    }
+  }
+}
+
 interface HeaderContent {
   title: string
   subtitle: string
@@ -156,6 +200,7 @@ const defaultDivisions: DivisionsContent = {
 export default async function AboutPage() {
   const cms = await getPageContents('about', [...ABOUT_SECTIONS])
   const homeCms = await getPageContents('home', ['team-preview'])
+  const visibility = await getVisibilitySettings()
   const header = coercePageContent<HeaderContent>(cms['header'], defaultHeader)
   const story = coercePageContent<StoryContent>(cms['story'], defaultStory)
   const journey = coercePageContent<JourneyContent>(cms['journey'], defaultJourney)
@@ -171,6 +216,7 @@ export default async function AboutPage() {
   return (
     <>
       {/* Hero Section */}
+      {visibility.header && (
       <section className="relative pt-32 pb-20 bg-gradient-to-br from-gray-50 to-blue-50">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -207,8 +253,10 @@ export default async function AboutPage() {
           </div>
         </div>
       </section>
+      )}
 
       {/* Stats Section */}
+      {visibility.story && (
       <section className="py-16 bg-white border-y border-gray-100">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -223,8 +271,10 @@ export default async function AboutPage() {
           </div>
         </div>
       </section>
+      )}
 
       {/* Our Journey */}
+      {visibility.journey && (
       <Section background="white">
         <SectionHeader
           title={journey.sectionTitle}
@@ -254,8 +304,10 @@ export default async function AboutPage() {
           </div>
         </div>
       </Section>
+      )}
 
       {/* Mission & Vision */}
+      {visibility.mission && (
       <Section background="gray">
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           <Card>
@@ -295,8 +347,10 @@ export default async function AboutPage() {
           </div>
         )}
       </Section>
+      )}
 
       {/* Our Values */}
+      {visibility.values && (
       <Section background="white">
         <SectionHeader title={values.sectionTitle} subtitle={values.sectionSubtitle} />
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -316,11 +370,15 @@ export default async function AboutPage() {
           })}
         </div>
       </Section>
+      )}
 
       {/* Team Section (shared with Home) */}
+      {visibility.team && (
       <TeamSection content={homeCms['team-preview']} />
+      )}
 
       {/* Our Divisions */}
+      {visibility.divisions && (
       <Section background="white">
         <SectionHeader
           title={divisions.sectionTitle}
@@ -368,6 +426,7 @@ export default async function AboutPage() {
           </Card>
         </div>
       </Section>
+      )}
 
       <CTASection />
     </>
