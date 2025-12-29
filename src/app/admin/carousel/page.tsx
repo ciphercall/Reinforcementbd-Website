@@ -8,6 +8,7 @@ import { AdminSidebar } from '@/components/admin/AdminSidebar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
+import { ImagePicker } from '@/components/admin/ImagePicker'
 import { 
   ArrowLeft, 
   Save, 
@@ -17,7 +18,8 @@ import {
   GripVertical,
   Image as ImageIcon,
   Eye,
-  EyeOff
+  EyeOff,
+  Copy
 } from 'lucide-react'
 
 interface CarouselLogo {
@@ -116,6 +118,7 @@ export default function CarouselManagement() {
   const [activePage, setActivePage] = useState<PageKey>('home')
   const [success, setSuccess] = useState('')
   const [error, setError] = useState('')
+  const [showAllLogos, setShowAllLogos] = useState(false)
 
   useEffect(() => {
     if (status === 'authenticated') {
@@ -208,6 +211,30 @@ export default function CarouselManagement() {
         logos: prev[activePage].logos.filter(logo => logo.id !== logoId)
       }
     }))
+  }
+
+  const updateLogoSrc = (logoId: string, src: string) => {
+    setConfig(prev => ({
+      ...prev,
+      [activePage]: {
+        ...prev[activePage],
+        logos: prev[activePage].logos.map(logo =>
+          logo.id === logoId ? { ...logo, src } : logo
+        )
+      }
+    }))
+  }
+
+  const copyToAllPages = () => {
+    const currentLogos = config[activePage].logos
+    setConfig(prev => ({
+      home: { ...prev.home, logos: currentLogos },
+      automation: { ...prev.automation, logos: currentLogos },
+      itZone: { ...prev.itZone, logos: currentLogos },
+      architectView: { ...prev.architectView, logos: currentLogos }
+    }))
+    setSuccess('Logos copied to all pages!')
+    setTimeout(() => setSuccess(''), 3000)
   }
 
   const addLogo = () => {
@@ -371,6 +398,24 @@ export default function CarouselManagement() {
                   <strong>{currentSettings.logos.length}</strong> logos enabled
                 </p>
               </div>
+
+              <div className="pt-4 border-t space-y-3">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Bulk Actions
+                </label>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={copyToAllPages}
+                  className="w-full"
+                >
+                  <Copy className="w-4 h-4 mr-2" />
+                  Copy Logos to All Pages
+                </Button>
+                <p className="text-xs text-gray-500">
+                  This will replace logos on all other pages with the current page's logos
+                </p>
+              </div>
             </CardContent>
           </Card>
 
@@ -378,14 +423,25 @@ export default function CarouselManagement() {
           <Card className="lg:col-span-2">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Partner Logos</CardTitle>
-              <Button size="sm" onClick={addLogo}>
-                <Plus className="w-4 h-4 mr-1" />
-                Add Logo
-              </Button>
+              <div className="flex gap-2">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={showAllLogos}
+                    onChange={(e) => setShowAllLogos(e.target.checked)}
+                    className="w-4 h-4"
+                  />
+                  <span className="text-sm">Show All</span>
+                </label>
+                <Button size="sm" onClick={addLogo}>
+                  <Plus className="w-4 h-4 mr-1" />
+                  Add Logo
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {currentSettings.logos.map((logo) => (
+                {(showAllLogos ? currentSettings.logos : currentSettings.logos.filter(l => l.enabled)).map((logo) => (
                   <div
                     key={logo.id}
                     className={`relative group rounded-lg border-2 p-3 transition-all ${
@@ -409,6 +465,14 @@ export default function CarouselManagement() {
                         }}
                       />
                     </div>
+
+                    <ImagePicker
+                      value={logo.src}
+                      onChange={(path) => updateLogoSrc(logo.id, path)}
+                      placeholder="Select logo image"
+                      className="mb-2"
+                      enableCrop={false}
+                    />
 
                     <Input
                       value={logo.alt}
