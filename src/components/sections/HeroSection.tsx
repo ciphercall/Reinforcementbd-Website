@@ -155,12 +155,12 @@ export function HeroSection({ content }: { content?: unknown }) {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="relative hidden lg:block h-full"
+            className="relative hidden lg:flex h-full items-center"
           >
             {c.displayMode === 'video' && c.videoUrl ? (
               /* Video Card */
-              <div className="relative h-full">
-                <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/30">
+              <div className="relative w-full">
+                <div className="relative w-full aspect-video rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/30">
                   <video
                     src={c.videoUrl}
                     className="w-full h-full object-cover"
