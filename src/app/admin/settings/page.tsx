@@ -27,10 +27,20 @@ export default function AdminSettingsPage() {
   
   const [settings, setSettings] = useState<Setting[]>([])
   const [formData, setFormData] = useState<Record<string, string>>({})
+  const [menuVisibility, setMenuVisibility] = useState({
+    home: true,
+    about: true,
+    services: true,
+    industries: true,
+    partners: true,
+    contact: true
+  })
+  const [savingMenu, setSavingMenu] = useState(false)
 
   useEffect(() => {
     if (status === 'authenticated') {
       fetchSettings()
+      fetchMenuVisibility()
     }
   }, [status])
 
@@ -51,6 +61,18 @@ export default function AdminSettingsPage() {
       setError('Failed to load settings')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const fetchMenuVisibility = async () => {
+    try {
+      const response = await fetch('/api/settings/menu-visibility')
+      if (response.ok) {
+        const data = await response.json()
+        setMenuVisibility(data.visibility)
+      }
+    } catch {
+      console.error('Failed to load menu visibility settings')
     }
   }
 
@@ -97,6 +119,35 @@ export default function AdminSettingsPage() {
     }
   }
 
+  const handleMenuVisibilityToggle = (key: string) => {
+    setMenuVisibility(prev => ({ ...prev, [key]: !prev[key] }))
+    setSuccess('')
+  }
+
+  const handleSaveMenuVisibility = async () => {
+    setSavingMenu(true)
+    setError('')
+    setSuccess('')
+
+    try {
+      const response = await fetch('/api/settings/menu-visibility', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ visibility: menuVisibility })
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to save menu visibility')
+      }
+
+      setSuccess('Menu visibility settings saved successfully!')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred')
+    } finally {
+      setSavingMenu(false)
+    }
+  }
+
   const settingsGroups = [
     {
       title: 'Company Information',
@@ -130,6 +181,54 @@ export default function AdminSettingsPage() {
               {success}
             </div>
           )}
+
+          {/* Menu Visibility Section */}
+          <Card>
+            <CardContent className="p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">Menu Visibility</h2>
+              <p className="text-sm text-gray-600 mb-4">
+                Control which pages appear in the navigation menu
+              </p>
+              <div className="space-y-3">
+                {Object.entries(menuVisibility).map(([key, value]) => (
+                  <label key={key} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
+                    <span className="text-sm font-medium text-gray-700 capitalize">
+                      {key}
+                    </span>
+                    <div className="relative">
+                      <input
+                        type="checkbox"
+                        checked={value}
+                        onChange={() => handleMenuVisibilityToggle(key)}
+                        className="sr-only peer"
+                      />
+                      <div className="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 peer-focus:ring-4 peer-focus:ring-blue-300 transition-colors"></div>
+                      <div className="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform peer-checked:translate-x-5"></div>
+                    </div>
+                  </label>
+                ))}
+              </div>
+              <div className="mt-4">
+                <Button
+                  type="button"
+                  onClick={handleSaveMenuVisibility}
+                  disabled={savingMenu}
+                >
+                  {savingMenu ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-4 h-4 mr-2" />
+                      Save Menu Visibility
+                    </>
+                  )}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
 
           {settingsGroups.map((group) => (
             <Card key={group.title}>

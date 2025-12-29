@@ -29,6 +29,14 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
+  const [menuVisibility, setMenuVisibility] = useState<Record<string, boolean>>({
+    home: true,
+    about: true,
+    services: true,
+    industries: true,
+    partners: true,
+    contact: true
+  })
   const pathname = usePathname()
 
   // Helper function to check if a menu item is active
@@ -48,6 +56,22 @@ export function Navbar() {
     }
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  useEffect(() => {
+    // Fetch menu visibility settings
+    const fetchMenuVisibility = async () => {
+      try {
+        const response = await fetch('/api/settings/menu-visibility')
+        if (response.ok) {
+          const data = await response.json()
+          setMenuVisibility(data.visibility)
+        }
+      } catch (error) {
+        console.error('Failed to fetch menu visibility:', error)
+      }
+    }
+    fetchMenuVisibility()
   }, [])
 
   return (
@@ -75,7 +99,12 @@ export function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-8">
-            {navigation.map((item) => (
+            {navigation
+              .filter(item => {
+                const key = item.name.toLowerCase()
+                return menuVisibility[key] !== false
+              })
+              .map((item) => (
               <div
                 key={item.name}
                 className="relative"
@@ -149,7 +178,12 @@ export function Navbar() {
         {isOpen && (
           <div className="lg:hidden absolute top-20 left-0 right-0 bg-white border-t shadow-xl">
             <div className="py-4 px-4 space-y-2">
-              {navigation.map((item) => (
+              {navigation
+                .filter(item => {
+                  const key = item.name.toLowerCase()
+                  return menuVisibility[key] !== false
+                })
+                .map((item) => (
                 <div key={item.name}>
                   <Link
                     href={item.href}
