@@ -43,7 +43,8 @@ import {
   Images,
   Wrench,
   AlertTriangle,
-  Eye
+  Eye,
+  Clock
 } from 'lucide-react'
 
 // Comprehensive menu structure with page sections
@@ -77,8 +78,10 @@ const navigation = [
     href: '/admin/pages/about', 
     icon: FileText,
     children: [
+      { name: 'Section Visibility', href: '/admin/pages/about', icon: Eye },
       { name: 'Page Header', href: '/admin/pages/about/header', icon: Layout },
       { name: 'Company Story', href: '/admin/pages/about/story', icon: Newspaper },
+      { name: 'Journey Timeline', href: '/admin/pages/about/journey', icon: Clock },
       { name: 'Mission & Vision', href: '/admin/pages/about/mission', icon: Target },
       { name: 'Core Values', href: '/admin/pages/about/values', icon: Award },
     ]
