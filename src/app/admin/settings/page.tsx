@@ -27,7 +27,7 @@ export default function AdminSettingsPage() {
   
   const [settings, setSettings] = useState<Setting[]>([])
   const [formData, setFormData] = useState<Record<string, string>>({})
-  const [menuVisibility, setMenuVisibility] = useState({
+  const [menuVisibility, setMenuVisibility] = useState<Record<string, boolean>>({
     home: true,
     about: true,
     services: true,
