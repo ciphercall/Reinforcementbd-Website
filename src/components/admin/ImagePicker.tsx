@@ -122,7 +122,8 @@ export function ImagePicker({
 
     setSelectedPath(imageToCrop) // Store the original image path
     setDisplayImageUrl(croppedImageUrl) // Display the cropped version
-    onChange(imageToCrop, croppedData) // Pass both to parent
+    // Pass the cropped image data URL as the primary value so it gets saved
+    onChange(croppedImageUrl, croppedData) // Use cropped URL as main value
     setShowCropModal(false)
     setImageToCrop(null)
   }
