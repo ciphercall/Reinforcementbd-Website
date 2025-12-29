@@ -42,7 +42,8 @@ import {
   Newspaper,
   Images,
   Wrench,
-  AlertTriangle
+  AlertTriangle,
+  Eye
 } from 'lucide-react'
 
 // Comprehensive menu structure with page sections
@@ -57,6 +58,7 @@ const navigation = [
     href: '/admin/pages/home', 
     icon: Home,
     children: [
+      { name: 'Section Visibility', href: '/admin/pages/home/visibility', icon: Eye },
       { name: 'Hero Section', href: '/admin/pages/home/hero', icon: Layout },
       { name: 'Services Preview', href: '/admin/pages/home/services-preview', icon: Briefcase },
       { name: 'About Preview', href: '/admin/pages/home/about-preview', icon: FileText },

@@ -16,7 +16,8 @@ import {
   Users,
   Award,
   Megaphone,
-  ChevronRight
+  ChevronRight,
+  Eye
 } from 'lucide-react'
 
 const sections = [
@@ -99,9 +100,30 @@ export default async function HomePageAdmin() {
     <AdminSidebar>
       <div className="space-y-6">
         {/* Header */}
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Homepage Sections</h1>
-          <p className="text-gray-600">Manage all sections of your homepage</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Homepage Sections</h1>
+            <p className="text-gray-600">Manage all sections of your homepage</p>
+          </div>
+          <Link href="/admin/pages/home/visibility">
+            <Card className="hover:shadow-md hover:border-blue-300 transition-all cursor-pointer group">
+              <CardContent className="p-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-600 transition-colors">
+                    <Eye className="w-5 h-5 text-blue-600 group-hover:text-white transition-colors" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors text-sm">
+                      Section Visibility
+                    </h3>
+                    <p className="text-xs text-gray-500">
+                      Show/Hide sections
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
         </div>
 
         {/* Sections Grid */}
