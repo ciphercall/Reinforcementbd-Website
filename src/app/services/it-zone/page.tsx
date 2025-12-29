@@ -190,33 +190,33 @@ export default async function ITZonePage() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 bg-gradient-to-br from-blue-600 to-blue-800 text-white overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 right-20 w-72 h-72 bg-white rounded-full blur-3xl" />
-          <div className="absolute bottom-20 left-20 w-96 h-96 bg-white rounded-full blur-3xl" />
+      <section className="relative pt-32 pb-20 bg-gradient-to-br from-gray-50 to-blue-50 overflow-hidden">
+        <div className="absolute inset-0 opacity-50">
+          <div className="absolute top-20 right-20 w-72 h-72 bg-blue-100 rounded-full blur-3xl" />
+          <div className="absolute bottom-20 left-20 w-96 h-96 bg-blue-100 rounded-full blur-3xl" />
         </div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
-              <div className="inline-flex items-center px-4 py-2 bg-white/20 text-white rounded-full text-sm font-medium">
+              <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
                 <Monitor className="w-4 h-4 mr-2" />
                 {c.hero?.badgeText || defaultContent.hero.badgeText}
               </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-gray-900">
                 {c.hero?.title || defaultContent.hero.title}
               </h1>
-              <p className="text-xl text-blue-100 leading-relaxed">
+              <p className="text-xl text-gray-600 leading-relaxed">
                 {c.hero?.description || defaultContent.hero.description}
               </p>
               <div className="flex flex-wrap gap-4">
                 <Link href={c.hero?.primaryCtaLink || defaultContent.hero.primaryCtaLink}>
-                  <Button size="lg" className="!bg-white !text-blue-600 hover:!bg-blue-50 flex items-center">
+                  <Button size="lg" className="!bg-blue-600 !text-white hover:!bg-blue-700 flex items-center">
                     {c.hero?.primaryCtaText || defaultContent.hero.primaryCtaText}
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
                 <Link href={c.hero?.secondaryCtaLink || defaultContent.hero.secondaryCtaLink}>
-                  <Button size="lg" className="!border-2 !border-white !text-white !bg-transparent hover:!bg-white/10">
+                  <Button size="lg" className="!border-2 !border-blue-600 !text-blue-600 !bg-transparent hover:!bg-blue-50">
                     {c.hero?.secondaryCtaText || defaultContent.hero.secondaryCtaText}
                   </Button>
                 </Link>
@@ -225,7 +225,7 @@ export default async function ITZonePage() {
             <div className="relative">
               <div className="grid grid-cols-2 gap-4">
                 {heroImages.slice(0, 4).map((img, i) => (
-                  <div key={i} className="bg-white/10 backdrop-blur-sm rounded-xl p-4 shadow-xl">
+                  <div key={i} className="bg-white backdrop-blur-sm rounded-xl p-4 shadow-xl">
                     <Image
                       src={img.src}
                       alt={img.alt}
