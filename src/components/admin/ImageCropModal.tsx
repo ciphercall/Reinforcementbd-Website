@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import Cropper from 'react-easy-crop'
 import type { Area, Point } from 'react-easy-crop'
 import { Button } from '@/components/ui/Button'
@@ -125,6 +126,12 @@ export function ImageCropModal({
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null)
   const [croppedArea, setCroppedArea] = useState<Area | null>(null)
   const [processing, setProcessing] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+    return () => setMounted(false)
+  }, [])
 
   const onCropComplete = useCallback(
     (croppedArea: Area, croppedAreaPixels: Area) => {
@@ -177,8 +184,9 @@ export function ImageCropModal({
   }
 
   if (!isOpen) return null
+  if (!mounted) return null
 
-  return (
+  const modalContent = (
     <div 
       className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 p-4"
       style={{ pointerEvents: 'auto' }}
@@ -319,4 +327,6 @@ export function ImageCropModal({
       </div>
     </div>
   )
+
+  return createPortal(modalContent, document.body)
 }
