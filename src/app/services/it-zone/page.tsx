@@ -287,7 +287,7 @@ export default async function ITZonePage() {
                 </div>
                 <p className="text-sm text-gray-600">{service.description}</p>
                 <ul className="space-y-1">
-                  {(Array.isArray(service.features) ? service.features : []).slice(0, 3).map((feature, i) => (
+                  {(Array.isArray(service.features) ? service.features : []).map((feature, i) => (
                     <li key={i} className="flex items-center text-xs text-gray-600">
                       <CheckCircle className="w-3 h-3 text-blue-500 mr-1.5 flex-shrink-0" />
                       {feature}
