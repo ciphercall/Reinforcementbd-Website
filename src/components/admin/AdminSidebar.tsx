@@ -278,7 +278,7 @@ export function AdminSidebar({ children }: AdminSidebarProps) {
             />
           ))}
         </nav>
-
+ 
         {/* Footer */}
         <div className="p-4 border-t border-slate-800 space-y-1">
           <Link
