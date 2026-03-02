@@ -40,10 +40,16 @@ const sections = [
     description: 'Edit the /services/it-zone visitor page content'
   },
   {
-    name: 'Trusted Clients Gallery',
+    name: 'Trusted Clients Carousel',
     href: '/admin/pages/services/clients-carousel',
     icon: Users,
-    description: 'Shared logo gallery shown on home and service pages'
+    description: 'Shared logo carousel shown on home and 3 service detail pages'
+  },
+  {
+    name: 'Services Work Gallery',
+    href: '/admin/pages/services/clients-carousel#services-work-gallery',
+    icon: Grid3X3,
+    description: 'Gallery shown only on the main /services page'
   },
   { 
     name: 'Services List', 

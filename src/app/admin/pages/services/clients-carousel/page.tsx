@@ -15,18 +15,27 @@ import {
   normalizeSharedClientsCarouselContent,
   SharedClientsCarouselContent,
 } from '@/lib/defaults/sharedClientsCarousel'
+import {
+  defaultServicesWorkGalleryContent,
+  normalizeServicesWorkGalleryContent,
+  ServicesWorkGalleryContent,
+} from '@/lib/defaults/servicesWorkGallery'
 import { ArrowLeft, Loader2, Plus, Save, Trash2 } from 'lucide-react'
 
 const PAGE_KEY = 'shared-clients-carousel'
 const SECTION_KEY = 'carousel'
+const SERVICES_GALLERY_PAGE_KEY = 'services-work-gallery'
+const SERVICES_GALLERY_SECTION_KEY = 'gallery'
 
-export default function SharedClientsGalleryEditor() {
+export default function SharedClientsCarouselEditor() {
   const router = useRouter()
   const { data: session, status } = useSession()
 
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [savingGallery, setSavingGallery] = useState(false)
   const [content, setContent] = useState<SharedClientsCarouselContent>(defaultSharedClientsCarouselContent)
+  const [galleryContent, setGalleryContent] = useState<ServicesWorkGalleryContent>(defaultServicesWorkGalleryContent)
 
   useEffect(() => {
     if (status === 'authenticated') void fetchContent()
@@ -36,14 +45,25 @@ export default function SharedClientsGalleryEditor() {
 
   const fetchContent = async () => {
     try {
-      const res = await fetch(`/api/page-content?page=${encodeURIComponent(PAGE_KEY)}&section=${encodeURIComponent(SECTION_KEY)}`)
-      if (res.ok) {
-        const data = await res.json()
+      const [carouselRes, galleryRes] = await Promise.all([
+        fetch(`/api/page-content?page=${encodeURIComponent(PAGE_KEY)}&section=${encodeURIComponent(SECTION_KEY)}`),
+        fetch(`/api/page-content?page=${encodeURIComponent(SERVICES_GALLERY_PAGE_KEY)}&section=${encodeURIComponent(SERVICES_GALLERY_SECTION_KEY)}`),
+      ])
+
+      if (carouselRes.ok) {
+        const data = await carouselRes.json()
         const coerced = coercePageContent<SharedClientsCarouselContent>(data.content, defaultSharedClientsCarouselContent)
         setContent(normalizeSharedClientsCarouselContent(coerced))
       }
+
+      if (galleryRes.ok) {
+        const data = await galleryRes.json()
+        const coerced = coercePageContent<ServicesWorkGalleryContent>(data.content, defaultServicesWorkGalleryContent)
+        setGalleryContent(normalizeServicesWorkGalleryContent(coerced))
+      }
     } catch {
       setContent(defaultSharedClientsCarouselContent)
+      setGalleryContent(defaultServicesWorkGalleryContent)
     } finally {
       setLoading(false)
     }
@@ -59,16 +79,40 @@ export default function SharedClientsGalleryEditor() {
         body: JSON.stringify({ page: PAGE_KEY, section: SECTION_KEY, content: normalized }),
       })
 
-      if (res.ok) alert('Trusted clients gallery saved successfully!')
-      else alert('Failed to save gallery content')
+      if (res.ok) alert('Trusted clients carousel saved successfully!')
+      else alert('Failed to save carousel content')
     } catch {
-      alert('Error saving gallery content')
+      alert('Error saving carousel content')
     } finally {
       setSaving(false)
     }
   }
 
+  const handleSaveServicesGallery = async () => {
+    setSavingGallery(true)
+    try {
+      const normalized = normalizeServicesWorkGalleryContent(galleryContent)
+      const res = await fetch('/api/page-content', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          page: SERVICES_GALLERY_PAGE_KEY,
+          section: SERVICES_GALLERY_SECTION_KEY,
+          content: normalized,
+        }),
+      })
+
+      if (res.ok) alert('Services work gallery saved successfully!')
+      else alert('Failed to save services work gallery')
+    } catch {
+      alert('Error saving services work gallery')
+    } finally {
+      setSavingGallery(false)
+    }
+  }
+
   const logos = useMemo(() => content.logos ?? [], [content.logos])
+  const galleryImages = useMemo(() => galleryContent.images ?? [], [galleryContent.images])
 
   if (status === 'loading' || loading) {
     return (
@@ -92,8 +136,8 @@ export default function SharedClientsGalleryEditor() {
               Back
             </Button>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Trusted Clients Gallery</h1>
-              <p className="text-gray-600">Shared section for home and all service pages</p>
+              <h1 className="text-2xl font-bold text-gray-900">Trusted Clients Carousel</h1>
+              <p className="text-gray-600">Shared section for home and 3 service detail pages</p>
             </div>
           </div>
           <Button onClick={handleSave} disabled={saving}>
@@ -102,17 +146,27 @@ export default function SharedClientsGalleryEditor() {
           </Button>
         </div>
 
-        <Card>
+        <Card id="services-work-gallery">
           <CardHeader>
             <CardTitle>Section Content</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div>
+            <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>
                 <Input
                   value={content.title}
                   onChange={(e) => setContent((prev) => ({ ...prev, title: e.target.value }))}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Speed (10-80)</label>
+                <Input
+                  type="number"
+                  min={10}
+                  max={80}
+                  value={content.speed}
+                  onChange={(e) => setContent((prev) => ({ ...prev, speed: Number(e.target.value) || 30 }))}
                 />
               </div>
             </div>
@@ -187,6 +241,96 @@ export default function SharedClientsGalleryEditor() {
                   />
                 </div>
               ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle>Services Work Gallery (/services)</CardTitle>
+              <Button onClick={handleSaveServicesGallery} disabled={savingGallery}>
+                {savingGallery ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+                Save Gallery
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>
+              <Input
+                value={galleryContent.title}
+                onChange={(e) => setGalleryContent((prev) => ({ ...prev, title: e.target.value }))}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Subtitle</label>
+              <Textarea
+                rows={2}
+                value={galleryContent.subtitle}
+                onChange={(e) => setGalleryContent((prev) => ({ ...prev, subtitle: e.target.value }))}
+              />
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-medium text-gray-700">Gallery Images</label>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setGalleryContent((prev) => ({
+                    ...prev,
+                    images: [...(prev.images ?? []), { src: '', alt: '' }],
+                  }))}
+                >
+                  <Plus className="w-4 h-4 mr-1" /> Add
+                </Button>
+              </div>
+
+              <div className="space-y-3">
+                {galleryImages.map((image, index) => (
+                  <div key={`${image.src}-${index}`} className="border rounded-lg p-4 bg-gray-50 space-y-3">
+                    <div className="flex items-end gap-2">
+                      <div className="flex-1">
+                        <ImagePicker
+                          label="Image"
+                          value={image.src}
+                          onChange={(path) => setGalleryContent((prev) => {
+                            const next = [...(prev.images ?? [])]
+                            next[index] = { ...next[index], src: path }
+                            return { ...prev, images: next }
+                          })}
+                          placeholder="/images/... or /uploads/..."
+                        />
+                      </div>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="text-red-600 hover:bg-red-50"
+                        onClick={() => setGalleryContent((prev) => ({
+                          ...prev,
+                          images: (prev.images ?? []).filter((_, i) => i !== index),
+                        }))}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+
+                    <Input
+                      value={image.alt}
+                      onChange={(e) => setGalleryContent((prev) => {
+                        const next = [...(prev.images ?? [])]
+                        next[index] = { ...next[index], alt: e.target.value }
+                        return { ...prev, images: next }
+                      })}
+                      placeholder="Alt text"
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           </CardContent>
         </Card>

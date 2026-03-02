@@ -1,10 +1,17 @@
 import { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { Section, SectionHeader } from '@/components/ui/Section'
 import { Card, CardContent } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
-import { SharedClientsCarouselSection } from '@/components/sections/SharedClientsCarouselSection'
 import { CTASection } from '@/components/sections/CTASection'
+import { getPageContent } from '@/lib/pageContent'
+import { coercePageContent } from '@/lib/utils/pageContent'
+import {
+  defaultServicesWorkGalleryContent,
+  normalizeServicesWorkGalleryContent,
+  ServicesWorkGalleryContent,
+} from '@/lib/defaults/servicesWorkGallery'
 import { 
   Zap,
   Settings,
@@ -158,7 +165,10 @@ const itServices = [
   },
 ]
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const galleryCms = await getPageContent('services-work-gallery', 'gallery')
+  const galleryCoerced = coercePageContent<ServicesWorkGalleryContent>(galleryCms, defaultServicesWorkGalleryContent)
+  const gallery = normalizeServicesWorkGalleryContent(galleryCoerced)
   return (
     <>
       {/* Hero Section */}
@@ -284,7 +294,22 @@ export default function ServicesPage() {
         </div>
       </Section>
 
-      <SharedClientsCarouselSection />
+      <Section background="gray">
+        <SectionHeader title={gallery.title} subtitle={gallery.subtitle} />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {gallery.images.map((image, index) => (
+            <div key={`${image.src}-${index}`} className="relative aspect-square rounded-xl overflow-hidden group">
+              <Image
+                src={image.src}
+                alt={image.alt}
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-colors duration-300" />
+            </div>
+          ))}
+        </div>
+      </Section>
 
       <CTASection />
     </>
