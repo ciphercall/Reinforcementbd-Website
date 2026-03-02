@@ -96,7 +96,6 @@ const navigation = [
       { name: 'Automation Division', href: '/admin/pages/services/automation', icon: Cpu },
       { name: 'Architect View Division', href: '/admin/pages/services/architect-view', icon: Building2 },
       { name: 'IT Zone Division', href: '/admin/pages/services/it-zone', icon: Monitor },
-      { name: 'Trusted Clients Carousel', href: '/admin/pages/services/clients-carousel', icon: Images },
       { name: 'Services Work Gallery', href: '/admin/pages/services/clients-carousel#services-work-gallery', icon: Grid3X3 },
       { name: 'All Services', href: '/admin/services', icon: Briefcase },
     ]

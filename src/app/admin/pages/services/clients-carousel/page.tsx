@@ -34,8 +34,20 @@ export default function SharedClientsCarouselEditor() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [savingGallery, setSavingGallery] = useState(false)
+  const [mode, setMode] = useState<'carousel' | 'gallery'>('carousel')
   const [content, setContent] = useState<SharedClientsCarouselContent>(defaultSharedClientsCarouselContent)
   const [galleryContent, setGalleryContent] = useState<ServicesWorkGalleryContent>(defaultServicesWorkGalleryContent)
+
+  useEffect(() => {
+    const updateMode = () => {
+      if (typeof window === 'undefined') return
+      setMode(window.location.hash === '#services-work-gallery' ? 'gallery' : 'carousel')
+    }
+
+    updateMode()
+    window.addEventListener('hashchange', updateMode)
+    return () => window.removeEventListener('hashchange', updateMode)
+  }, [])
 
   useEffect(() => {
     if (status === 'authenticated') void fetchContent()
@@ -136,17 +148,32 @@ export default function SharedClientsCarouselEditor() {
               Back
             </Button>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Trusted Clients Carousel</h1>
-              <p className="text-gray-600">Shared section for home and 3 service detail pages</p>
+              <h1 className="text-2xl font-bold text-gray-900">
+                {mode === 'gallery' ? 'Services Work Gallery' : 'Trusted Clients Carousel'}
+              </h1>
+              <p className="text-gray-600">
+                {mode === 'gallery'
+                  ? 'Gallery section shown only on /services page'
+                  : 'Shared section for home and 3 service detail pages'}
+              </p>
             </div>
           </div>
-          <Button onClick={handleSave} disabled={saving}>
-            {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
-            Save Changes
-          </Button>
+          {mode === 'carousel' ? (
+            <Button onClick={handleSave} disabled={saving}>
+              {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+              Save Changes
+            </Button>
+          ) : (
+            <Button onClick={handleSaveServicesGallery} disabled={savingGallery}>
+              {savingGallery ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+              Save Gallery
+            </Button>
+          )}
         </div>
 
-        <Card id="services-work-gallery">
+        {mode === 'carousel' ? (
+          <>
+            <Card>
           <CardHeader>
             <CardTitle>Section Content</CardTitle>
           </CardHeader>
@@ -244,15 +271,19 @@ export default function SharedClientsCarouselEditor() {
             </div>
           </CardContent>
         </Card>
+          </>
+        ) : null}
 
-        <Card>
+        <Card id="services-work-gallery">
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>Services Work Gallery (/services)</CardTitle>
-              <Button onClick={handleSaveServicesGallery} disabled={savingGallery}>
-                {savingGallery ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
-                Save Gallery
-              </Button>
+              {mode === 'carousel' ? (
+                <Button onClick={handleSaveServicesGallery} disabled={savingGallery}>
+                  {savingGallery ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+                  Save Gallery
+                </Button>
+              ) : null}
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
