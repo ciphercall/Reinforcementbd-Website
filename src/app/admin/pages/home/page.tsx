@@ -16,6 +16,7 @@ import {
   Users,
   Award,
   Megaphone,
+  Handshake,
   ChevronRight,
   Eye
 } from 'lucide-react'
@@ -80,6 +81,12 @@ const sections = [
     href: '/admin/pages/home/clients', 
     icon: Award,
     description: 'Client logos and partnerships'
+  },
+  {
+    name: 'Trusted Clients Carousel',
+    href: '/admin/pages/services/clients-carousel',
+    icon: Handshake,
+    description: 'Shared logo carousel for home and all services pages'
   },
   { 
     name: 'CTA Section', 

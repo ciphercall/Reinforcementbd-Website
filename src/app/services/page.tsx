@@ -1,9 +1,9 @@
 import { Metadata } from 'next'
-import Image from 'next/image'
 import Link from 'next/link'
 import { Section, SectionHeader } from '@/components/ui/Section'
 import { Card, CardContent } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
+import { SharedClientsCarouselSection } from '@/components/sections/SharedClientsCarouselSection'
 import { CTASection } from '@/components/sections/CTASection'
 import { 
   Zap,
@@ -282,26 +282,7 @@ export default function ServicesPage() {
         </div>
       </Section>
 
-      {/* Image Gallery */}
-      <Section background="gray">
-        <SectionHeader
-          title="Our Work"
-          subtitle="A glimpse of our projects and installations"
-        />
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
-            <div key={num} className="relative aspect-square rounded-xl overflow-hidden group">
-              <Image
-                src={`/images/automation/${num}.png`}
-                alt={`Project ${num}`}
-                fill
-                className="object-cover group-hover:scale-110 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors" />
-            </div>
-          ))}
-        </div>
-      </Section>
+      <SharedClientsCarouselSection />
 
       <CTASection />
     </>

@@ -10,6 +10,7 @@ import {
   Building2,
   Monitor,
   Cpu,
+  Users,
   ChevronRight
 } from 'lucide-react'
 
@@ -37,6 +38,12 @@ const sections = [
     href: '/admin/pages/services/it-zone',
     icon: Monitor,
     description: 'Edit the /services/it-zone visitor page content'
+  },
+  {
+    name: 'Trusted Clients Carousel',
+    href: '/admin/pages/services/clients-carousel',
+    icon: Users,
+    description: 'Shared logo carousel shown on home and service pages'
   },
   { 
     name: 'Services List', 

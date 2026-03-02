@@ -8,7 +8,7 @@ import { IndustriesSection } from '@/components/sections/IndustriesSection'
 import { TestimonialsSection } from '@/components/sections/TestimonialsSection'
 import { TeamSection } from '@/components/sections/TeamSection'
 import { ClientsSection } from '@/components/sections/ClientsSection'
-import { AllPartnersCarousel } from '@/components/sections/PartnerLogosCarousel'
+import { SharedClientsCarouselSection } from '@/components/sections/SharedClientsCarouselSection'
 import { CTASection } from '@/components/sections/CTASection'
 import { getPageContents } from '@/lib/pageContent'
 import { prisma } from '@/lib/db/prisma'
@@ -101,7 +101,7 @@ export default async function HomePage() {
       {visibility['testimonials-preview'] && <TestimonialsSection content={cms['testimonials-preview']} />}
       {visibility['team-preview'] && <TeamSection content={cms['team-preview']} />}
       {visibility.clients && <ClientsSection content={cms['clients']} />}
-      <AllPartnersCarousel />
+      <SharedClientsCarouselSection />
       {visibility.cta && <CTASection content={cms['cta']} />}
     </>
   )

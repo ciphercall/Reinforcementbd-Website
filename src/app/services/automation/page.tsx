@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { Section, SectionHeader } from '@/components/ui/Section'
 import { Card, CardContent } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
-import { AutomationPartnersCarousel } from '@/components/sections/PartnerLogosCarousel'
+import { SharedClientsCarouselSection } from '@/components/sections/SharedClientsCarouselSection'
 import { CTASection } from '@/components/sections/CTASection'
 import { getPageContents } from '@/lib/pageContent'
 import { coercePageContent } from '@/lib/utils/pageContent'
@@ -334,7 +334,7 @@ export default async function AutomationPage() {
       </Section>
 
       {/* Partners Carousel */}
-      <AutomationPartnersCarousel />
+          <SharedClientsCarouselSection />
 
       {/* CTA Section */}
       <CTASection />
