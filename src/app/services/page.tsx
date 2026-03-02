@@ -33,6 +33,8 @@ export const metadata: Metadata = {
   description: 'Explore our comprehensive range of services in Electrical & Automation, Architectural Design, and IT Solutions.',
 }
 
+export const dynamic = 'force-dynamic'
+
 const automationServices = [
   {
     title: 'Electrical & Automation Equipment Supply',

@@ -1,4 +1,5 @@
 import { getPageContent } from '@/lib/pageContent'
+import { unstable_noStore as noStore } from 'next/cache'
 import { coercePageContent } from '@/lib/utils/pageContent'
 import {
   defaultSharedClientsCarouselContent,
@@ -11,6 +12,7 @@ const PAGE_KEY = 'shared-clients-carousel'
 const SECTION_KEY = 'carousel'
 
 export async function SharedClientsCarouselSection({ className = '' }: { className?: string }) {
+  noStore()
   const cms = await getPageContent(PAGE_KEY, SECTION_KEY)
   const coerced = coercePageContent<SharedClientsCarouselContent>(cms, defaultSharedClientsCarouselContent)
   const content = normalizeSharedClientsCarouselContent(coerced)
