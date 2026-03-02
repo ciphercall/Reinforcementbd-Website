@@ -27,7 +27,7 @@ type ServiceCard = {
 type Benefit = { title: string; desc: string }
 
 type HeroContent = {
-  badgeText: string
+  logo: string
   title: string
   description: string
   primaryCtaText: string
@@ -57,7 +57,7 @@ const SECTION_KEY = 'page'
 
 const defaultContent: ITZonePageContent = {
   hero: {
-    badgeText: 'IT Zone Division',
+    logo: '/images/logos/rein-it.jpg',
     title: 'Complete IT Solutions',
     description:
       'From network infrastructure to custom software development, we provide end-to-end IT solutions that empower your business with technology. Our expert team ensures your IT systems run efficiently and securely.',
@@ -272,8 +272,12 @@ export default function ITZoneDivisionEditor() {
           <CardContent className="space-y-4">
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Badge Text</label>
-                <Input value={content.hero.badgeText} onChange={(e) => setContent((p) => ({ ...p, hero: { ...p.hero, badgeText: e.target.value } }))} />
+                <ImagePicker
+                  label="Division Logo"
+                  value={content.hero.logo}
+                  onChange={(path) => setContent((p) => ({ ...p, hero: { ...p.hero, logo: path } }))}
+                  placeholder="/images/logos/rein-it.jpg"
+                />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>

@@ -11,18 +11,14 @@ import {
 
 const footerLinks = {
   services: [
-    { name: 'Automation Solutions', href: '/services#automation' },
-    { name: 'Electrical Equipment', href: '/services/electrical-automation-supply' },
-    { name: 'Architectural Design', href: '/services/architectural-design' },
-    { name: 'Web Development', href: '/services/web-development' },
-    { name: 'Mobile Apps', href: '/services/mobile-app-development' },
-    { name: 'AI & ML', href: '/services/ai-ml' },
+    { name: 'Automation', href: '/services/automation' },
+    { name: 'Architect View', href: '/services/architect-view' },
+    { name: 'IT Zone', href: '/services/it-zone' },
   ],
   company: [
     { name: 'About Us', href: '/about' },
     { name: 'Our Team', href: '/about#team' },
     { name: 'Industries', href: '/industries' },
-    { name: 'Partners', href: '/partners' },
     { name: 'Contact', href: '/contact' },
   ],
   legal: [

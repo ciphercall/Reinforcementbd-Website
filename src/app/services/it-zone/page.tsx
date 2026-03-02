@@ -47,7 +47,7 @@ interface Benefit {
 }
 
 interface HeroContent {
-  badgeText: string
+  logo: string
   title: string
   description: string
   primaryCtaText: string
@@ -73,7 +73,7 @@ interface ITZonePageContent {
 }
 const defaultContent: ITZonePageContent = {
   hero: {
-    badgeText: 'IT Zone Division',
+    logo: '/images/logos/rein-it.jpg',
     title: 'Complete IT Solutions',
     description:
       'From network infrastructure to custom software development, we provide end-to-end IT solutions that empower your business with technology. Our expert team ensures your IT systems run efficiently and securely.',
@@ -198,10 +198,6 @@ export default async function ITZonePage() {
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
-              <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
-                <Monitor className="w-4 h-4 mr-2" />
-                {c.hero?.badgeText || defaultContent.hero.badgeText}
-              </div>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-gray-900">
                 {c.hero?.title || defaultContent.hero.title}
               </h1>
@@ -223,6 +219,15 @@ export default async function ITZonePage() {
               </div>
             </div>
             <div className="relative">
+              <div className="mb-6 flex justify-start lg:justify-end">
+                <Image
+                  src={c.hero?.logo || defaultContent.hero.logo}
+                  alt="IT Zone Division"
+                  width={260}
+                  height={80}
+                  className="h-16 w-auto object-contain"
+                />
+              </div>
               <div className="grid grid-cols-2 gap-4">
                 {heroImages.slice(0, 4).map((img, i) => (
                   <div key={i} className="bg-white backdrop-blur-sm rounded-xl p-4 shadow-xl">
@@ -264,14 +269,13 @@ export default async function ITZonePage() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {services.map((service, index) => (
             <Card key={index} className="group hover:shadow-xl transition-all duration-300 overflow-hidden">
-              <div className="relative h-40 bg-gradient-to-br from-blue-100 to-blue-50 flex items-center justify-center">
+              <div className="relative h-40 bg-gradient-to-br from-blue-100 to-blue-50 overflow-hidden">
                 {service.image && (
                   <Image
                     src={service.image}
                     alt={service.title}
-                    width={120}
-                    height={120}
-                    className="object-contain group-hover:scale-110 transition-transform duration-300"
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                 )}
               </div>

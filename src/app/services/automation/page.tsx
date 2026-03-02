@@ -42,7 +42,7 @@ interface AutomationBenefit {
 }
 
 interface AutomationHero {
-  badgeText: string
+  logo: string
   title: string
   description: string
   primaryCtaText: string
@@ -69,7 +69,7 @@ interface AutomationPageContent {
 
 const defaultContent: AutomationPageContent = {
   hero: {
-    badgeText: 'Automation Division',
+    logo: '/images/logos/rein-auto.jpg',
     title: 'Industrial Automation Solutions',
     description:
       'From PLC programming to complete SCADA systems, we deliver cutting-edge automation solutions that increase efficiency, reduce costs, and enhance productivity for industries across Bangladesh.',
@@ -189,10 +189,6 @@ export default async function AutomationPage() {
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
-              <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
-                <Cpu className="w-4 h-4 mr-2" />
-                {c.hero?.badgeText || defaultContent.hero.badgeText}
-              </div>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-gray-900">
                 {c.hero?.title || defaultContent.hero.title}
               </h1>
@@ -214,6 +210,15 @@ export default async function AutomationPage() {
               </div>
             </div>
             <div className="relative">
+              <div className="mb-6 flex justify-start lg:justify-end">
+                <Image
+                  src={c.hero?.logo || defaultContent.hero.logo}
+                  alt="Automation Division"
+                  width={260}
+                  height={80}
+                  className="h-16 w-auto object-contain"
+                />
+              </div>
               <div className="grid grid-cols-2 gap-4">
                 {heroImages.slice(0, 4).map((src, index) => (
                   <div key={`${src}-${index}`} className="bg-white backdrop-blur-sm rounded-xl p-2 shadow-xl">

@@ -26,7 +26,7 @@ type ServiceCard = {
 type Benefit = { title: string; desc: string }
 
 type HeroContent = {
-  badgeText: string
+  logo: string
   title: string
   description: string
   primaryCtaText: string
@@ -63,7 +63,7 @@ const SECTION_KEY = 'page'
 
 const defaultContent: ArchitectViewPageContent = {
   hero: {
-    badgeText: 'Architect View Division',
+    logo: '/images/logos/rein-archi.jpg',
     title: 'Architectural Excellence',
     description:
       'Transform your vision into stunning architectural reality. Our team of experienced architects and designers creates spaces that inspire, combining aesthetics with functionality for exceptional results.',
@@ -288,8 +288,12 @@ export default function ArchitectViewDivisionEditor() {
           <CardContent className="space-y-4">
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Badge Text</label>
-                <Input value={content.hero.badgeText} onChange={(e) => setContent((p) => ({ ...p, hero: { ...p.hero, badgeText: e.target.value } }))} />
+                <ImagePicker
+                  label="Division Logo"
+                  value={content.hero.logo}
+                  onChange={(path) => setContent((p) => ({ ...p, hero: { ...p.hero, logo: path } }))}
+                  placeholder="/images/logos/rein-archi.jpg"
+                />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>

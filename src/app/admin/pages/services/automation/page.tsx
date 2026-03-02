@@ -25,7 +25,7 @@ type ServiceCard = {
 type Benefit = { title: string; desc: string }
 
 type HeroContent = {
-  badgeText: string
+  logo: string
   title: string
   description: string
   primaryCtaText: string
@@ -55,7 +55,7 @@ const SECTION_KEY = 'page'
 
 const defaultContent: AutomationPageContent = {
   hero: {
-    badgeText: 'Automation Division',
+    logo: '/images/logos/rein-auto.jpg',
     title: 'Industrial Automation Solutions',
     description:
       'From PLC programming to complete SCADA systems, we deliver cutting-edge ' +
@@ -219,10 +219,11 @@ export default function AutomationDivisionEditor() {
           <CardContent className="space-y-4">
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Badge Text</label>
-                <Input
-                  value={content.hero.badgeText}
-                  onChange={(e) => setContent((p) => ({ ...p, hero: { ...p.hero, badgeText: e.target.value } }))}
+                <ImagePicker
+                  label="Division Logo"
+                  value={content.hero.logo}
+                  onChange={(path) => setContent((p) => ({ ...p, hero: { ...p.hero, logo: path } }))}
+                  placeholder="/images/logos/rein-auto.jpg"
                 />
               </div>
               <div>
