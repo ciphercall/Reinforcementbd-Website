@@ -305,7 +305,7 @@ export default function ContactInfoEditor() {
                 placeholder="https://www.google.com/maps/embed?pb=..."
               />
               <p className="text-xs text-gray-500 mt-1">
-                Get embed URL from Google Maps: Share → Embed a map → Copy HTML → Extract src URL
+                Paste a Google Maps embed URL if available. If a non-embed link is provided, the site auto-falls back to coordinate-based map rendering.
               </p>
             </div>
             <div className="grid md:grid-cols-2 gap-4">

@@ -179,18 +179,39 @@ function resolveMapEmbedUrl(map: ContactInfoContent['map']): string | null {
   if (rawUrl && !hasPlaceholder) {
     try {
       const parsed = new URL(rawUrl)
-      if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
-        return rawUrl
+      const protocolValid = parsed.protocol === 'http:' || parsed.protocol === 'https:'
+
+      if (protocolValid) {
+        const host = parsed.hostname.toLowerCase()
+        const path = parsed.pathname.toLowerCase()
+
+        const isGoogleMapsHost = host === 'www.google.com' || host === 'google.com' || host === 'maps.google.com'
+        const isEmbedPath = path.includes('/maps/embed') || parsed.searchParams.get('output') === 'embed'
+
+        if (isGoogleMapsHost && isEmbedPath) {
+          return rawUrl
+        }
+
+        const query = parsed.searchParams.get('q')
+        if (isGoogleMapsHost && query) {
+          return `https://maps.google.com/maps?q=${encodeURIComponent(query)}&z=15&output=embed`
+        }
       }
     } catch {
       // Fallback below
     }
   }
 
-  if (map?.latitude && map?.longitude) {
-    const lat = encodeURIComponent(map.latitude)
-    const lng = encodeURIComponent(map.longitude)
-    return `https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed`
+  const latNum = Number(map?.latitude)
+  const lngNum = Number(map?.longitude)
+  if (Number.isFinite(latNum) && Number.isFinite(lngNum)) {
+    const delta = 0.01
+    const left = lngNum - delta
+    const right = lngNum + delta
+    const top = latNum + delta
+    const bottom = latNum - delta
+
+    return `https://www.openstreetmap.org/export/embed.html?bbox=${left}%2C${bottom}%2C${right}%2C${top}&layer=mapnik&marker=${latNum}%2C${lngNum}`
   }
 
   return null
