@@ -33,7 +33,7 @@ const sections = [
     name: 'Company Story', 
     href: '/admin/pages/about/story', 
     icon: Newspaper,
-    description: 'About Reinforcement Group - company history and overview'
+    description: 'About Reinforcement Group - company history, overview, and intro image'
   },
   {
     name: 'Journey Timeline',

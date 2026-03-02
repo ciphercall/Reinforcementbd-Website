@@ -239,8 +239,8 @@ export default async function AboutPage() {
             <div className="relative">
               <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl">
                 <Image
-                  src={header.backgroundImage || defaultHeader.backgroundImage}
-                  alt="About Reinforcement Group"
+                  src={story.image || defaultStory.image}
+                  alt={story.imageAlt || defaultStory.imageAlt}
                   fill
                   className="object-cover"
                   priority
