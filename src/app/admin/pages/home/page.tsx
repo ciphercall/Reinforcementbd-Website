@@ -83,10 +83,10 @@ const sections = [
     description: 'Client logos and partnerships'
   },
   {
-    name: 'Trusted Clients Carousel',
+    name: 'Trusted Clients Gallery',
     href: '/admin/pages/services/clients-carousel',
     icon: Handshake,
-    description: 'Shared logo carousel for home and all services pages'
+    description: 'Shared logo gallery for home and all services pages'
   },
   { 
     name: 'CTA Section', 

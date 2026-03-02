@@ -95,7 +95,7 @@ const navigation = [
       { name: 'Automation Division', href: '/admin/pages/services/automation', icon: Cpu },
       { name: 'Architect View Division', href: '/admin/pages/services/architect-view', icon: Building2 },
       { name: 'IT Zone Division', href: '/admin/pages/services/it-zone', icon: Monitor },
-      { name: 'Trusted Clients Carousel', href: '/admin/pages/services/clients-carousel', icon: Images },
+      { name: 'Trusted Clients Gallery', href: '/admin/pages/services/clients-carousel', icon: Images },
       { name: 'All Services', href: '/admin/services', icon: Briefcase },
     ]
   },
@@ -151,7 +151,7 @@ const navigation = [
   },
   { name: 'Contact Messages', href: '/admin/messages', icon: Mail },
   { name: 'Media Library', href: '/admin/media', icon: ImageIcon },
-  { name: 'Trusted Clients Carousel', href: '/admin/pages/services/clients-carousel', icon: Images },
+  { name: 'Trusted Clients Gallery', href: '/admin/pages/services/clients-carousel', icon: Images },
   { name: 'Maintenance Mode', href: '/admin/maintenance', icon: Wrench },
   { name: 'Site Settings', href: '/admin/settings', icon: Settings },
 ]

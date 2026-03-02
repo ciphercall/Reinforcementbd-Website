@@ -20,7 +20,7 @@ import { ArrowLeft, Loader2, Plus, Save, Trash2 } from 'lucide-react'
 const PAGE_KEY = 'shared-clients-carousel'
 const SECTION_KEY = 'carousel'
 
-export default function SharedClientsCarouselEditor() {
+export default function SharedClientsGalleryEditor() {
   const router = useRouter()
   const { data: session, status } = useSession()
 
@@ -59,10 +59,10 @@ export default function SharedClientsCarouselEditor() {
         body: JSON.stringify({ page: PAGE_KEY, section: SECTION_KEY, content: normalized }),
       })
 
-      if (res.ok) alert('Trusted clients carousel saved successfully!')
-      else alert('Failed to save carousel content')
+      if (res.ok) alert('Trusted clients gallery saved successfully!')
+      else alert('Failed to save gallery content')
     } catch {
-      alert('Error saving carousel content')
+      alert('Error saving gallery content')
     } finally {
       setSaving(false)
     }
@@ -92,7 +92,7 @@ export default function SharedClientsCarouselEditor() {
               Back
             </Button>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Trusted Clients Carousel</h1>
+              <h1 className="text-2xl font-bold text-gray-900">Trusted Clients Gallery</h1>
               <p className="text-gray-600">Shared section for home and all service pages</p>
             </div>
           </div>
@@ -107,22 +107,12 @@ export default function SharedClientsCarouselEditor() {
             <CardTitle>Section Content</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid md:grid-cols-2 gap-4">
+            <div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>
                 <Input
                   value={content.title}
                   onChange={(e) => setContent((prev) => ({ ...prev, title: e.target.value }))}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Speed (10-80)</label>
-                <Input
-                  type="number"
-                  min={10}
-                  max={80}
-                  value={content.speed}
-                  onChange={(e) => setContent((prev) => ({ ...prev, speed: Number(e.target.value) || 30 }))}
                 />
               </div>
             </div>
