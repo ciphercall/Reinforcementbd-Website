@@ -21,8 +21,6 @@ interface FormContent {
   phonePlaceholder: string
   companyPlaceholder: string
   messagePlaceholder: string
-  callToActionText: string
-  callToActionDescription: string
 }
 
 const defaultContent: FormContent = {
@@ -36,8 +34,6 @@ const defaultContent: FormContent = {
   phonePlaceholder: '+880 1XXX-XXX-XXX',
   companyPlaceholder: 'Your Company',
   messagePlaceholder: 'Tell us about your requirements...',
-  callToActionText: 'Schedule a Discovery Call',
-  callToActionDescription: 'Prefer to talk? Schedule a 30-minute discovery call with our team to discuss your requirements and how we can help.'
 }
 
 export default function ContactFormEditor() {
@@ -245,10 +241,10 @@ export default function ContactFormEditor() {
           </CardContent>
         </Card>
 
-        {/* Button & CTA */}
+        {/* Button */}
         <Card>
           <CardHeader>
-            <CardTitle>Buttons & Call-to-Action</CardTitle>
+            <CardTitle>Button</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
@@ -259,27 +255,6 @@ export default function ContactFormEditor() {
                 value={content.submitButtonText}
                 onChange={(e) => setContent({ ...content, submitButtonText: e.target.value })}
                 placeholder="Send Message"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Call-to-Action Title
-              </label>
-              <Input
-                value={content.callToActionText}
-                onChange={(e) => setContent({ ...content, callToActionText: e.target.value })}
-                placeholder="Schedule a Discovery Call"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Call-to-Action Description
-              </label>
-              <Textarea
-                value={content.callToActionDescription}
-                onChange={(e) => setContent({ ...content, callToActionDescription: e.target.value })}
-                rows={3}
-                placeholder="Prefer to talk? Schedule a call..."
               />
             </div>
           </CardContent>

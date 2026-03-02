@@ -54,7 +54,7 @@ export default function ContactInfoEditor() {
       support: 'support@ragrpbd.com'
     },
     map: {
-      embedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3...',
+      embedUrl: 'https://maps.google.com/maps?q=23.8321,90.4199&z=15&output=embed',
       latitude: '23.8321',
       longitude: '90.4199'
     },

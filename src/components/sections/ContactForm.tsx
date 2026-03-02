@@ -18,8 +18,6 @@ interface FormContent {
   phonePlaceholder: string
   companyPlaceholder: string
   messagePlaceholder: string
-  callToActionText: string
-  callToActionDescription: string
 }
 
 interface ContactFormProps {

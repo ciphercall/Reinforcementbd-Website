@@ -2,11 +2,10 @@ import { Metadata } from 'next'
 import Image from 'next/image'
 import { Section } from '@/components/ui/Section'
 import { Card, CardContent } from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
 import { ContactForm } from '@/components/sections/ContactForm'
 import { getPageContents } from '@/lib/pageContent'
 import { coercePageContent } from '@/lib/utils/pageContent'
-import { MapPin, Phone, Mail, Clock, Calendar } from 'lucide-react'
+import { MapPin, Phone, Mail, Clock } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Contact Us',
@@ -129,8 +128,6 @@ interface FormContent {
   phonePlaceholder: string
   companyPlaceholder: string
   messagePlaceholder: string
-  callToActionText: string
-  callToActionDescription: string
 }
 
 const defaultForm: FormContent = {
@@ -144,8 +141,6 @@ const defaultForm: FormContent = {
   phonePlaceholder: '+880 1XXX-XXX-XXX',
   companyPlaceholder: 'Your Company',
   messagePlaceholder: 'Tell us about your requirements...',
-  callToActionText: 'Schedule a Discovery Call',
-  callToActionDescription: 'Prefer to talk? Schedule a 30-minute discovery call with our team to discuss your requirements and how we can help.'
 }
 
 function normalizeContactInfo(input: unknown): ContactInfoContent {
@@ -177,6 +172,30 @@ function normalizeContactInfo(input: unknown): ContactInfoContent {
   }
 }
 
+function resolveMapEmbedUrl(map: ContactInfoContent['map']): string | null {
+  const rawUrl = (map?.embedUrl || '').trim()
+  const hasPlaceholder = rawUrl.includes('...')
+
+  if (rawUrl && !hasPlaceholder) {
+    try {
+      const parsed = new URL(rawUrl)
+      if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+        return rawUrl
+      }
+    } catch {
+      // Fallback below
+    }
+  }
+
+  if (map?.latitude && map?.longitude) {
+    const lat = encodeURIComponent(map.latitude)
+    const lng = encodeURIComponent(map.longitude)
+    return `https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed`
+  }
+
+  return null
+}
+
 export default async function ContactPage() {
   const cms = await getPageContents('contact', ['header', 'info', 'hours', 'services', 'form'])
   const header = coercePageContent<ContactHeaderContent>(cms['header'], defaultHeader)
@@ -184,6 +203,7 @@ export default async function ContactPage() {
   const hours = coercePageContent<HoursContent>(cms['hours'], defaultHours)
   const servicesContent = coercePageContent<ServicesContent>(cms['services'], defaultServices)
   const formContent = coercePageContent<FormContent>(cms['form'], defaultForm)
+  const mapEmbedUrl = resolveMapEmbedUrl(info.map)
 
   const contactInfo = [
     {
@@ -274,41 +294,13 @@ export default async function ContactPage() {
             <ContactForm services={servicesContent.services} formContent={formContent} />
           </div>
 
-          {/* Schedule Call Card */}
-          <div className="space-y-8">
-            <Card className="overflow-hidden">
-              <div className="relative h-48">
-                <Image
-                  src="/images/profile/5.jpg"
-                  alt="Schedule a call"
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                <div className="absolute bottom-4 left-6 text-white">
-                  <h3 className="text-xl font-semibold">{formContent.callToActionText}</h3>
-                  <p className="text-sm text-white/80">Let&apos;s discuss your needs</p>
-                </div>
-              </div>
-              <CardContent className="p-6 space-y-4">
-                <p className="text-gray-600">
-                  {formContent.callToActionDescription}
-                </p>
-                <a href={`tel:${info.phone.primary?.replace(/\s/g, '') || ''}`}>
-                  <Button variant="primary" size="lg" className="w-full">
-                    <Calendar className="w-5 h-5 mr-2" />
-                    Book a Call
-                  </Button>
-                </a>
-              </CardContent>
-            </Card>
-
-            {/* Map */}
-            {info.map?.embedUrl ? (
-              <Card className="overflow-hidden">
-                <div className="relative h-64 bg-gray-200">
+          {/* Map */}
+          <div>
+            {mapEmbedUrl ? (
+              <Card className="overflow-hidden h-full min-h-[720px] flex flex-col">
+                <div className="relative flex-1 min-h-[640px] bg-gray-200">
                   <iframe
-                    src={info.map.embedUrl}
+                    src={mapEmbedUrl}
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
