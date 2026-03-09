@@ -108,7 +108,7 @@ export function HeroSection({ content }: { content?: unknown }) {
         <div
           className={`grid items-center lg:items-stretch ${
             isVideoMode
-              ? 'gap-8 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] xl:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]'
+              ? 'gap-8 lg:min-h-[40rem] lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] xl:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]'
               : 'gap-12 lg:grid-cols-2'
           }`}
         >
@@ -117,47 +117,49 @@ export function HeroSection({ content }: { content?: unknown }) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className={`space-y-8 ${isVideoMode ? 'lg:max-w-[34rem]' : ''}`}
+            className={`flex flex-col ${isVideoMode ? 'h-full justify-between lg:max-w-[34rem]' : 'space-y-8'}`}
           >
-            <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
-              <span className="w-2 h-2 bg-blue-600 rounded-full mr-2 animate-pulse" />
-              {c.subheadline}
-            </div>
-            
-            <h1
-              className={`font-bold text-gray-900 ${
-                isVideoMode
-                  ? 'text-4xl md:text-5xl lg:text-5xl xl:text-[3.5rem] leading-[1.02]'
-                  : 'text-4xl md:text-5xl lg:text-6xl leading-tight'
-              }`}
-            >
-              {c.headline}
-            </h1>
+            <div className={isVideoMode ? 'space-y-8' : ''}>
+              <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                <span className="w-2 h-2 bg-blue-600 rounded-full mr-2 animate-pulse" />
+                {c.subheadline}
+              </div>
 
-            <p
-              className={`text-gray-600 leading-relaxed ${
-                isVideoMode ? 'max-w-lg text-lg xl:text-xl' : 'max-w-xl text-xl'
-              }`}
-            >
-              {c.tagline}
-            </p>
+              <h1
+                className={`font-bold text-gray-900 ${
+                  isVideoMode
+                    ? 'text-4xl md:text-5xl lg:text-5xl xl:text-[3.5rem] leading-[1.02]'
+                    : 'text-4xl md:text-5xl lg:text-6xl leading-tight'
+                }`}
+              >
+                {c.headline}
+              </h1>
 
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link href={c.primaryButtonLink || '/contact'}>
-                <Button variant="primary" size="xl" className="group">
-                  {c.primaryButtonText}
-                  <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                </Button>
-              </Link>
-              <Link href={c.secondaryButtonLink || '/services'}>
-                <Button variant="outline" size="xl">
-                  {c.secondaryButtonText}
-                </Button>
-              </Link>
+              <p
+                className={`text-gray-600 leading-relaxed ${
+                  isVideoMode ? 'max-w-lg text-lg xl:text-xl' : 'max-w-xl text-xl'
+                }`}
+              >
+                {c.tagline}
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link href={c.primaryButtonLink || '/contact'}>
+                  <Button variant="primary" size="xl" className="group">
+                    {c.primaryButtonText}
+                    <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                  </Button>
+                </Link>
+                <Link href={c.secondaryButtonLink || '/services'}>
+                  <Button variant="outline" size="xl">
+                    {c.secondaryButtonText}
+                  </Button>
+                </Link>
+              </div>
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-8 border-t border-gray-200">
+            <div className={`grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-gray-200 ${isVideoMode ? 'mt-8 pt-8' : 'pt-8'}`}>
               {c.stats.slice(0, 4).map((stat) => (
                 <div key={stat.label}>
                   <div className="text-3xl font-bold text-blue-600">{stat.value}</div>
@@ -172,16 +174,16 @@ export function HeroSection({ content }: { content?: unknown }) {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className={`relative hidden lg:flex h-full items-center ${isVideoMode ? 'justify-end' : ''}`}
+            className={`relative hidden lg:flex h-full ${isVideoMode ? 'items-stretch justify-end' : 'items-center'}`}
           >
             {isVideoMode ? (
               /* Video Card */
-              <div className="relative w-full max-w-[52rem] lg:-mr-8 xl:-mr-14">
-                <div className="relative w-full rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/30 bg-slate-950/5">
+              <div className="relative ml-auto flex h-full w-full max-w-[52rem] lg:-mr-8 xl:-mr-14">
+                <div className="relative h-full w-full rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/30 bg-slate-950/5">
                   <video
                     src={c.videoUrl}
                     poster={heroImage}
-                    className="block w-full h-auto"
+                    className="block h-full w-full object-cover"
                     autoPlay
                     loop
                     muted
