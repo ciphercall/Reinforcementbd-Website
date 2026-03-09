@@ -106,9 +106,9 @@ export function HeroSection({ content }: { content?: unknown }) {
 
       <div className="container mx-auto px-4 pt-24 relative z-10">
         <div
-          className={`grid items-center lg:items-stretch ${
+          className={`grid items-center ${
             isVideoMode
-              ? 'gap-8 lg:items-end lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] xl:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]'
+              ? 'gap-8 lg:items-stretch lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] xl:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]'
               : 'gap-12 lg:grid-cols-2'
           }`}
         >
@@ -174,16 +174,16 @@ export function HeroSection({ content }: { content?: unknown }) {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className={`relative hidden lg:flex ${isVideoMode ? 'items-end justify-end self-end' : 'h-full items-center'}`}
+            className={`relative hidden lg:flex ${isVideoMode ? 'self-stretch items-stretch justify-end' : 'h-full items-center'}`}
           >
             {isVideoMode ? (
               /* Video Card */
-              <div className="relative ml-auto w-full max-w-[52rem] lg:-mr-8 xl:-mr-14">
-                <div className="relative w-full rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/30 bg-slate-950/5">
+              <div className="relative ml-auto flex h-full w-full max-w-[52rem] lg:-mr-8 xl:-mr-14">
+                <div className="relative h-full w-full rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/30 bg-slate-950/5">
                   <video
                     src={c.videoUrl}
                     poster={heroImage}
-                    className="block h-auto w-full"
+                    className="block h-full w-full object-cover"
                     autoPlay
                     loop
                     muted
