@@ -395,6 +395,7 @@ export default function HeroSectionEditor() {
                         }))
                         setSuccess('')
                       }}
+                      aspectRatio={1}
                       placeholder="Select hero image..."
                     />
 

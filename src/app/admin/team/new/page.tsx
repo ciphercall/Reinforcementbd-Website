@@ -121,6 +121,7 @@ export default function NewTeamMemberPage() {
                 label="Profile Image"
                 value={form.image}
                 onChange={(path) => setForm((p) => ({ ...p, image: path }))}
+                aspectRatio={1}
                 placeholder="Select profile image..."
               />
 

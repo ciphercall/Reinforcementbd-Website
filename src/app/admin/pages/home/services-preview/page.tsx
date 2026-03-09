@@ -324,6 +324,7 @@ export default function ServicesPreviewEditor() {
                               label="Image"
                               value={item.image}
                               onChange={(path) => handleItemChange(item.id, 'image', path)}
+                              aspectRatio={4 / 3}
                               placeholder="/images/... or /uploads/..."
                             />
                           </div>

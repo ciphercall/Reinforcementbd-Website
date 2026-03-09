@@ -24,6 +24,13 @@ export interface CropData {
   croppedAreaPixels: Area
 }
 
+function formatAspectRatio(aspectRatio: number) {
+  if (aspectRatio === 16 / 9) return '16:9'
+  if (aspectRatio === 4 / 3) return '4:3'
+  if (aspectRatio === 1) return '1:1'
+  return aspectRatio.toFixed(2)
+}
+
 // Create an image element from a URL
 const createImage = (url: string): Promise<HTMLImageElement> =>
   new Promise((resolve, reject) => {
@@ -188,7 +195,7 @@ export function ImageCropModal({
 
   const modalContent = (
     <div 
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 p-4"
+      className="fixed inset-0 z-[9999] flex items-start justify-center overflow-y-auto bg-black/70 p-3 sm:items-center sm:p-4"
       style={{ pointerEvents: 'auto' }}
       onClick={(e) => {
         // Only close if clicking the backdrop
@@ -198,7 +205,7 @@ export function ImageCropModal({
       }}
     >
       <div 
-        className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col"
+        className="my-auto flex max-h-[calc(100dvh-1.5rem)] w-full max-w-5xl flex-col overflow-hidden rounded-xl bg-white shadow-2xl sm:max-h-[92dvh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -213,7 +220,7 @@ export function ImageCropModal({
         </div>
 
         {/* Cropper Area */}
-        <div className="relative flex-1 min-h-[400px] bg-gray-900">
+        <div className="relative min-h-[260px] flex-1 bg-gray-900 sm:min-h-[340px] lg:min-h-[420px]">
           <Cropper
             image={imageSrc}
             crop={crop}
@@ -230,10 +237,10 @@ export function ImageCropModal({
         </div>
 
         {/* Controls */}
-        <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
+        <div className="max-h-[32dvh] overflow-y-auto border-t border-gray-200 bg-gray-50 px-4 py-4 sm:px-6">
           {/* Zoom Slider */}
-          <div className="flex items-center gap-4 mb-4">
-            <label className="text-sm font-medium text-gray-700 w-16">Zoom</label>
+          <div className="mb-4 flex flex-wrap items-center gap-3 sm:flex-nowrap sm:gap-4">
+            <label className="w-16 text-sm font-medium text-gray-700">Zoom</label>
             <button
               onClick={handleZoomOut}
               className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
@@ -248,7 +255,7 @@ export function ImageCropModal({
               step={0.01}
               value={zoom}
               onChange={(e) => setZoom(Number(e.target.value))}
-              className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+              className="h-2 min-w-[180px] flex-1 cursor-pointer appearance-none rounded-lg bg-gray-200 accent-blue-600"
             />
             <button
               onClick={handleZoomIn}
@@ -263,8 +270,8 @@ export function ImageCropModal({
           </div>
 
           {/* Rotation Slider */}
-          <div className="flex items-center gap-4 mb-4">
-            <label className="text-sm font-medium text-gray-700 w-16">Rotation</label>
+          <div className="mb-4 flex flex-wrap items-center gap-3 sm:flex-nowrap sm:gap-4">
+            <label className="w-16 text-sm font-medium text-gray-700">Rotation</label>
             <button
               onClick={handleRotate}
               className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
@@ -278,20 +285,20 @@ export function ImageCropModal({
               step={1}
               value={rotation}
               onChange={(e) => setRotation(Number(e.target.value))}
-              className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+              className="h-2 min-w-[180px] flex-1 cursor-pointer appearance-none rounded-lg bg-gray-200 accent-blue-600"
             />
             <span className="text-sm text-gray-500 w-16 text-right">{rotation}°</span>
           </div>
 
           {/* Aspect Ratio Info */}
           <p className="text-xs text-gray-500 mb-4">
-            Aspect ratio: {aspectRatio === 16 / 9 ? '16:9' : aspectRatio === 1 ? '1:1' : aspectRatio === 4 / 3 ? '4:3' : aspectRatio.toFixed(2)}
+            Aspect ratio: {formatAspectRatio(aspectRatio)}
             {' • '}Drag to reposition, scroll to zoom
           </p>
         </div>
 
         {/* Actions */}
-        <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200">
+        <div className="flex flex-col gap-3 border-t border-gray-200 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <Button
             type="button"
             variant="ghost"
@@ -300,7 +307,7 @@ export function ImageCropModal({
           >
             Reset
           </Button>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <Button type="button" variant="outline" onClick={onClose}>
               Cancel
             </Button>

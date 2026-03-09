@@ -240,6 +240,7 @@ export default function AboutStoryEditor() {
                   label="Image URL"
                   value={content.image}
                   onChange={(path) => setContent({ ...content, image: path })}
+                  aspectRatio={4 / 3}
                   placeholder="/images/about-story.jpg"
                 />
               </div>

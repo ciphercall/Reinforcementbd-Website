@@ -114,6 +114,7 @@ export default function NewPartnerPage() {
               label="Logo"
               value={form.logo}
               onChange={(path) => setForm((p) => ({ ...p, logo: path }))}
+              enableCrop={false}
               placeholder="Select partner logo..."
             />
 
@@ -122,6 +123,7 @@ export default function NewPartnerPage() {
                 label="Card Background Image"
                 value={form.backgroundImage}
                 onChange={(path) => setForm((p) => ({ ...p, backgroundImage: path }))}
+                enableCrop={false}
                 placeholder="Select background image..."
               />
               <p className="text-xs text-gray-500 mt-2">

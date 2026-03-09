@@ -270,6 +270,7 @@ export default function ClientsSectionEditor() {
                           label=""
                           value={client.logo}
                           onChange={(path) => handleClientChange(client.id, 'logo', path)}
+                          enableCrop={false}
                           placeholder="/images/clients/logo.png or /uploads/..."
                         />
                       </div>
@@ -317,6 +318,7 @@ export default function ClientsSectionEditor() {
                           label=""
                           value={client.logo}
                           onChange={(path) => handleClientChange(client.id, 'logo', path)}
+                          enableCrop={false}
                           placeholder="/images/clients/logo.png or /uploads/..."
                         />
                       </div>

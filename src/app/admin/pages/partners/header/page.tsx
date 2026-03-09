@@ -158,6 +158,7 @@ export default function PartnersHeaderEditor() {
                 label="Background Image URL"
                 value={content.backgroundImage}
                 onChange={(path) => setContent({ ...content, backgroundImage: path })}
+                enableCrop={false}
                 placeholder="/uploads/... or /images/..."
               />
               <p className="text-xs text-gray-500 mt-2">

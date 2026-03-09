@@ -276,6 +276,7 @@ export default function ITZoneDivisionEditor() {
                   label="Division Logo"
                   value={content.hero.logo}
                   onChange={(path) => setContent((p) => ({ ...p, hero: { ...p.hero, logo: path } }))}
+                  enableCrop={false}
                   placeholder="/images/logos/rein-it.jpg"
                 />
               </div>
@@ -339,6 +340,7 @@ export default function ITZoneDivisionEditor() {
                               next[index] = { ...next[index], src: path }
                               return { ...p, hero: { ...p.hero, heroImages: next } }
                             })}
+                            enableCrop={false}
                             placeholder="Select hero image..."
                           />
                         </div>
@@ -475,6 +477,7 @@ export default function ITZoneDivisionEditor() {
                               services[index] = { ...services[index], image: path }
                               return { ...p, services }
                             })}
+                            aspectRatio={16 / 9}
                             placeholder="Select service image..."
                           />
                         </div>
@@ -602,6 +605,7 @@ export default function ITZoneDivisionEditor() {
                               next[index] = { ...next[index], src: path }
                               return { ...p, why: { ...p.why, showcaseImages: next } }
                             })}
+                            enableCrop={false}
                             placeholder="Select showcase image..."
                           />
                         </div>

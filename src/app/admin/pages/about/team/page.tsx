@@ -325,6 +325,7 @@ export default function AboutTeamEditor() {
                             label="Image"
                             value={m.image}
                             onChange={(path) => updateMember(m.id, 'image', path)}
+                            aspectRatio={1}
                             placeholder="/images/team/... or /uploads/..."
                           />
                         </div>

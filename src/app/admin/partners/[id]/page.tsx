@@ -201,6 +201,7 @@ export default function EditPartnerPage() {
               label="Logo"
               value={partner.logo ?? ''}
               onChange={(path) => setPartner((p) => (p ? { ...p, logo: path } : p))}
+              enableCrop={false}
               placeholder="Select partner logo..."
             />
 
@@ -209,6 +210,7 @@ export default function EditPartnerPage() {
                 label="Card Background Image"
                 value={partner.backgroundImage ?? ''}
                 onChange={(path) => setPartner((p) => (p ? { ...p, backgroundImage: path } : p))}
+                enableCrop={false}
                 placeholder="Select background image..."
               />
               <p className="text-xs text-gray-500 mt-2">

@@ -269,7 +269,7 @@ export default async function ITZonePage() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {services.map((service, index) => (
             <Card key={index} className="group hover:shadow-xl transition-all duration-300 overflow-hidden">
-              <div className="relative h-40 bg-gradient-to-br from-blue-100 to-blue-50 overflow-hidden">
+              <div className="relative aspect-video bg-gradient-to-br from-blue-100 to-blue-50 overflow-hidden">
                 {service.image && (
                   <Image
                     src={service.image}

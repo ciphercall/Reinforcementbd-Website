@@ -2,13 +2,11 @@
 
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import { Zap, Building2, Code, Star } from 'lucide-react'
 import { Section, SectionHeader } from '@/components/ui/Section'
 import { Card, CardContent } from '@/components/ui/Card'
 import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 import { coercePageContent } from '@/lib/utils/pageContent'
-import { resolveLucideIcon } from '@/lib/utils/lucideIcon'
 
 interface ServicePreviewItem {
   id: string
@@ -78,12 +76,6 @@ const defaultContent: ServicesPreviewContent = {
   bottomButtonLink: '/services'
 }
 
-const colorToGradient: Record<string, string> = {
-  blue: 'from-blue-500 to-blue-700',
-  emerald: 'from-emerald-500 to-emerald-700',
-  purple: 'from-purple-500 to-purple-700'
-}
-
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -139,15 +131,13 @@ export function ServicesSection({ content }: { content?: unknown }) {
         className="grid md:grid-cols-3 gap-8"
       >
         {c.items.map((division) => {
-          const Icon = resolveLucideIcon(division.icon, Star)
-          const gradient = colorToGradient[division.color ?? ''] ?? colorToGradient.blue
           const imageSrc = normalizeImageSrc((division as unknown as { image?: unknown }).image)
 
           return (
           <motion.div key={division.id} variants={itemVariants}>
             <Card className="h-full overflow-hidden hover:shadow-xl transition-all duration-300 group">
               {/* Image */}
-              <div className="relative h-48 overflow-hidden">
+              <div className="relative aspect-[4/3] overflow-hidden">
                 {imageSrc ? (
                   <Image
                     src={imageSrc}

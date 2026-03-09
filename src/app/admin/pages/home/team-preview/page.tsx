@@ -320,6 +320,7 @@ export default function TeamPreviewEditor() {
                               label="Image"
                               value={m.image}
                               onChange={(path) => handleMemberChange(m.id, 'image', path)}
+                              aspectRatio={1}
                               placeholder="/images/team/... or /uploads/..."
                             />
                           </div>

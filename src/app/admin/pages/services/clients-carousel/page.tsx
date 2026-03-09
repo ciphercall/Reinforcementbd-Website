@@ -240,6 +240,7 @@ export default function SharedClientsCarouselEditor() {
                           next[index] = { ...next[index], src: path }
                           return { ...prev, logos: next }
                         })}
+                        enableCrop={false}
                         placeholder="/images/... or /uploads/..."
                       />
                     </div>
@@ -333,6 +334,7 @@ export default function SharedClientsCarouselEditor() {
                             next[index] = { ...next[index], src: path }
                             return { ...prev, images: next }
                           })}
+                          enableCrop={false}
                           placeholder="/images/... or /uploads/..."
                         />
                       </div>

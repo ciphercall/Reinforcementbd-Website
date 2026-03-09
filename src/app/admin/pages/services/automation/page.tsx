@@ -223,6 +223,7 @@ export default function AutomationDivisionEditor() {
                   label="Division Logo"
                   value={content.hero.logo}
                   onChange={(path) => setContent((p) => ({ ...p, hero: { ...p.hero, logo: path } }))}
+                  enableCrop={false}
                   placeholder="/images/logos/rein-auto.jpg"
                 />
               </div>
@@ -317,6 +318,7 @@ export default function AutomationDivisionEditor() {
                             return { ...p, hero: { ...p.hero, heroImages: next } }
                           })
                         }}
+                        enableCrop={false}
                         placeholder="/images/... or /uploads/..."
                       />
                       <Button
@@ -523,6 +525,7 @@ export default function AutomationDivisionEditor() {
                                 return { ...p, services }
                               })
                             }}
+                            enableCrop={false}
                             placeholder="/images/... or /uploads/..."
                           />
                         </div>
@@ -725,6 +728,7 @@ export default function AutomationDivisionEditor() {
                             return { ...p, why: { ...p.why, showcaseImages: next } }
                           })
                         }}
+                        enableCrop={false}
                         placeholder="/images/... or /uploads/..."
                       />
                       <Button

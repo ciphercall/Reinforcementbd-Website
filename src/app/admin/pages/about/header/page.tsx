@@ -166,6 +166,7 @@ export default function AboutHeaderEditor() {
                 label="Background Image URL"
                 value={content.backgroundImage}
                 onChange={(path) => setContent({ ...content, backgroundImage: path })}
+                enableCrop={false}
                 placeholder="/images/about-hero.jpg"
               />
               <p className="text-sm text-gray-500 mt-1">

@@ -292,6 +292,7 @@ export default function ArchitectViewDivisionEditor() {
                   label="Division Logo"
                   value={content.hero.logo}
                   onChange={(path) => setContent((p) => ({ ...p, hero: { ...p.hero, logo: path } }))}
+                  enableCrop={false}
                   placeholder="/images/logos/rein-archi.jpg"
                 />
               </div>
@@ -356,6 +357,7 @@ export default function ArchitectViewDivisionEditor() {
                               return { ...p, hero: { ...p.hero, heroImages: next } }
                             })
                           }}
+                          aspectRatio={4 / 3}
                           placeholder="/images/... or /uploads/..."
                         />
                         <Button type="button" variant="outline" size="sm" className="text-red-600 hover:bg-red-50" onClick={() => setContent((p) => ({ ...p, hero: { ...p.hero, heroImages: p.hero.heroImages.filter((_, i) => i !== index) } }))}>
@@ -572,6 +574,7 @@ export default function ArchitectViewDivisionEditor() {
                             next[index] = { ...next[index], src: path }
                             return { ...p, portfolio: { ...p.portfolio, images: next } }
                           })}
+                          aspectRatio={4 / 3}
                           placeholder="/images/... or /uploads/..."
                         />
                         <Button type="button" variant="outline" size="sm" className="text-red-600 hover:bg-red-50" onClick={() => setContent((p) => ({ ...p, portfolio: { ...p.portfolio, images: p.portfolio.images.filter((_, i) => i !== index) } }))}>
@@ -666,6 +669,7 @@ export default function ArchitectViewDivisionEditor() {
                             next[index] = { ...next[index], src: path }
                             return { ...p, why: { ...p.why, showcaseImages: next } }
                           })}
+                          aspectRatio={4 / 3}
                           placeholder="/images/... or /uploads/..."
                         />
                         <Button type="button" variant="outline" size="sm" className="text-red-600 hover:bg-red-50" onClick={() => setContent((p) => ({ ...p, why: { ...p.why, showcaseImages: p.why.showcaseImages.filter((_, i) => i !== index) } }))}>

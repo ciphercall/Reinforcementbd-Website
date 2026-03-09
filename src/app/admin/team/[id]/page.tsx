@@ -208,6 +208,7 @@ export default function EditTeamMemberPage() {
               label="Profile Image"
               value={member.image ?? ''}
               onChange={(path) => setMember((p) => (p ? { ...p, image: path } : p))}
+              aspectRatio={1}
               placeholder="Select profile image..."
             />
 

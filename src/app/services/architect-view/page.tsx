@@ -243,13 +243,14 @@ export default async function ArchitectViewPage() {
               <div className="grid grid-cols-2 gap-4">
                 {heroImages.slice(0, 4).map((img, i) => (
                   <div key={i} className="bg-white backdrop-blur-sm rounded-xl p-2 shadow-xl overflow-hidden">
-                    <Image
-                      src={img.src}
-                      alt={img.alt}
-                      width={250}
-                      height={200}
-                      className="rounded-lg object-cover w-full h-36"
-                    />
+                    <div className="relative aspect-[4/3] overflow-hidden rounded-lg">
+                      <Image
+                        src={img.src}
+                        alt={img.alt}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
                   </div>
                 ))}
               </div>
@@ -353,13 +354,12 @@ export default async function ArchitectViewPage() {
           </div>
           <div className="grid grid-cols-2 gap-4">
             {showcaseImages.slice(0, 4).map((img, i) => (
-              <div key={`${img.src}-${i}`} className="rounded-xl overflow-hidden shadow-md">
+              <div key={`${img.src}-${i}`} className="relative aspect-[4/3] rounded-xl overflow-hidden shadow-md">
                 <Image
                   src={img.src}
                   alt={img.alt}
-                  width={300}
-                  height={250}
-                  className="object-cover w-full h-48"
+                  fill
+                  className="object-cover"
                 />
               </div>
             ))}

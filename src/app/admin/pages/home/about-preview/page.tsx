@@ -183,6 +183,7 @@ export default function AboutPreviewEditor() {
                     label="Image"
                     value={content.image}
                     onChange={(path) => handleChange('image', path)}
+                    aspectRatio={4 / 3}
                     placeholder="/images/... or /uploads/..."
                   />
                 </div>
