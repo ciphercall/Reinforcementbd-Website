@@ -105,6 +105,21 @@ export function HeroSection({ content }: { content?: unknown }) {
       </div>
 
       <div className="container mx-auto px-4 pt-24 relative z-10">
+        {/* In video mode the pill sits above the grid so both columns top-align at the headline */}
+        {isVideoMode && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="mb-8"
+          >
+            <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+              <span className="w-2 h-2 bg-blue-600 rounded-full mr-2 animate-pulse" />
+              {c.subheadline}
+            </div>
+          </motion.div>
+        )}
+
         <div
           className={`grid items-center ${
             isVideoMode
@@ -119,10 +134,13 @@ export function HeroSection({ content }: { content?: unknown }) {
             transition={{ duration: 0.6 }}
             className={`space-y-8 ${isVideoMode ? 'lg:max-w-[34rem]' : ''}`}
           >
-            <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
-              <span className="w-2 h-2 bg-blue-600 rounded-full mr-2 animate-pulse" />
-              {c.subheadline}
-            </div>
+            {/* Pill shown inline with text column in carousel mode; in video mode it's rendered above the grid */}
+            {!isVideoMode && (
+              <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                <span className="w-2 h-2 bg-blue-600 rounded-full mr-2 animate-pulse" />
+                {c.subheadline}
+              </div>
+            )}
 
             <h1
               className={`font-bold text-gray-900 ${
