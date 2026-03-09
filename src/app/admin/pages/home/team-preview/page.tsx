@@ -217,7 +217,7 @@ export default function TeamPreviewEditor() {
             </Link>
             <div>
               <h1 className="text-2xl font-bold text-gray-900">Team Preview</h1>
-              <p className="text-gray-600">Edit the team showcase on homepage</p>
+              <p className="text-gray-600">Edit the shared team showcase used on the homepage and About page</p>
             </div>
           </div>
           <Link href="/#team" target="_blank">

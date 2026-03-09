@@ -46,6 +46,7 @@ const defaultContent: HeroContent = {
 export function HeroSection({ content }: { content?: unknown }) {
   const c = coercePageContent<HeroContent>(content, defaultContent)
   const heroImage = c.backgroundImage || defaultContent.backgroundImage
+  const isVideoMode = c.displayMode === 'video' && Boolean(c.videoUrl)
 
   const images = useMemo(() => {
     const raw = Array.isArray(c.images) ? c.images.filter(Boolean) : []
@@ -104,24 +105,40 @@ export function HeroSection({ content }: { content?: unknown }) {
       </div>
 
       <div className="container mx-auto px-4 pt-24 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-center lg:items-stretch">
+        <div
+          className={`grid items-center lg:items-stretch ${
+            isVideoMode
+              ? 'gap-8 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] xl:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]'
+              : 'gap-12 lg:grid-cols-2'
+          }`}
+        >
           {/* Content */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="space-y-8"
+            className={`space-y-8 ${isVideoMode ? 'lg:max-w-[34rem]' : ''}`}
           >
             <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
               <span className="w-2 h-2 bg-blue-600 rounded-full mr-2 animate-pulse" />
               {c.subheadline}
             </div>
             
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
+            <h1
+              className={`font-bold text-gray-900 ${
+                isVideoMode
+                  ? 'text-4xl md:text-5xl lg:text-5xl xl:text-[3.5rem] leading-[1.02]'
+                  : 'text-4xl md:text-5xl lg:text-6xl leading-tight'
+              }`}
+            >
               {c.headline}
             </h1>
 
-            <p className="text-xl text-gray-600 max-w-xl leading-relaxed">
+            <p
+              className={`text-gray-600 leading-relaxed ${
+                isVideoMode ? 'max-w-lg text-lg xl:text-xl' : 'max-w-xl text-xl'
+              }`}
+            >
               {c.tagline}
             </p>
 
@@ -155,15 +172,16 @@ export function HeroSection({ content }: { content?: unknown }) {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="relative hidden lg:flex h-full items-center"
+            className={`relative hidden lg:flex h-full items-center ${isVideoMode ? 'justify-end' : ''}`}
           >
-            {c.displayMode === 'video' && c.videoUrl ? (
+            {isVideoMode ? (
               /* Video Card */
-              <div className="relative w-full">
-                <div className="relative w-full aspect-video rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/30">
+              <div className="relative w-full max-w-[52rem] lg:-mr-8 xl:-mr-14">
+                <div className="relative w-full rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/30 bg-slate-950/5">
                   <video
                     src={c.videoUrl}
-                    className="w-full h-full object-cover"
+                    poster={heroImage}
+                    className="block w-full h-auto"
                     autoPlay
                     loop
                     muted

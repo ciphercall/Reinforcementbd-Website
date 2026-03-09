@@ -308,10 +308,10 @@ export default function HeroSectionEditor() {
                     </div>
                     <div>
                       <div className={`font-semibold ${content.displayMode === 'video' ? 'text-blue-700' : 'text-gray-700'}`}>
-                        Video (Rectangular)
+                        Video (Natural Ratio)
                       </div>
                       <div className="text-sm text-gray-500">
-                        Display a rectangular hero video from a URL (MP4 recommended)
+                        Use a wider hero frame while preserving the video's original aspect ratio
                       </div>
                     </div>
                   </div>
@@ -336,7 +336,7 @@ export default function HeroSectionEditor() {
                     placeholder="https://res.cloudinary.com/.../video.mp4"
                   />
                   <p className="text-sm text-gray-500 mt-2">
-                    Enter a direct video URL (MP4 format recommended). Supports Cloudinary, AWS S3, or any direct video link.
+                    Enter a direct video URL (MP4 format recommended). The live homepage keeps the video's natural aspect ratio and gives it extra desktop width.
                   </p>
                 </div>
 
@@ -345,10 +345,10 @@ export default function HeroSectionEditor() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Video Preview
                     </label>
-                    <div className="aspect-video rounded-xl overflow-hidden bg-gray-900 border border-gray-200">
+                    <div className="rounded-xl overflow-hidden bg-gray-900 border border-gray-200">
                       <video
                         src={content.videoUrl}
-                        className="w-full h-full object-cover"
+                        className="block w-full h-auto"
                         controls
                         muted
                       >

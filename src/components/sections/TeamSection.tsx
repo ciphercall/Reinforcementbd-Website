@@ -159,7 +159,7 @@ export function TeamSection({ content }: { content?: unknown }) {
               </div>
               
               <div className="p-4">
-                <p className="text-sm text-gray-600 leading-relaxed">
+                <p className="text-sm text-gray-600 leading-relaxed [text-align:justify]">
                   {member.bio}
                 </p>
               </div>

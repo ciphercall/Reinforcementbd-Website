@@ -57,7 +57,7 @@ const sections = [
     name: 'Team',
     href: '/admin/pages/about/team',
     icon: Users,
-    description: 'Team members shown on the About page'
+    description: 'Shared team members and bios used on the About page and homepage preview'
   },
   {
     name: 'Divisions',
