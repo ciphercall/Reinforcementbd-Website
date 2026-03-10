@@ -196,8 +196,8 @@ export default async function ITZonePage() {
           <div className="absolute bottom-20 left-20 w-96 h-96 bg-blue-100 rounded-full blur-3xl" />
         </div>
         <div className="container mx-auto px-4 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            <div className="space-y-6 lg:space-y-8">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-gray-900">
                 {c.hero?.title || defaultContent.hero.title}
               </h1>
@@ -306,8 +306,8 @@ export default async function ITZonePage() {
 
       {/* Why Choose Us */}
       <Section background="white">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div className="order-2 lg:order-1 grid grid-cols-3 gap-3">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          <div className="order-2 lg:order-1 grid grid-cols-2 sm:grid-cols-3 gap-3">
             {showcaseImages.slice(0, 6).map((img, i) => (
               <div key={i} className="bg-gray-100 rounded-xl p-3 shadow-sm">
                 <Image

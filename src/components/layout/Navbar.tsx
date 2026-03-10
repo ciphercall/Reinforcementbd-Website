@@ -166,7 +166,7 @@ export function Navbar() {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="lg:hidden absolute top-20 left-0 right-0 bg-white border-t shadow-xl">
+          <div className="lg:hidden fixed inset-x-0 top-20 bg-white border-t shadow-xl z-50 max-h-[calc(100vh-5rem)] overflow-y-auto">
             <div className="py-4 px-4 space-y-2">
               {navigation
                 .filter(item => {

@@ -304,7 +304,7 @@ export default async function ContactPage() {
 
       {/* Contact Form Section */}
       <Section background="gray">
-        <div className="grid lg:grid-cols-2 gap-16">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16">
           {/* Form */}
           <div>
             <h2 className="text-3xl font-bold text-gray-900 mb-2">{formContent.formTitle}</h2>
