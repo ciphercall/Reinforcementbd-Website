@@ -89,7 +89,7 @@ export default function IndustriesPage() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 bg-gradient-to-br from-blue-600 to-blue-800 text-white">
+      <section className="relative pt-32 pb-20 bg-gradient-to-br from-blue-600 to-blue-800 text-white overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-20 right-20 w-72 h-72 bg-white rounded-full blur-3xl" />
           <div className="absolute bottom-20 left-20 w-96 h-96 bg-white rounded-full blur-3xl" />
