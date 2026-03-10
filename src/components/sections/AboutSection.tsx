@@ -51,7 +51,7 @@ export function AboutSection({ content }: { content?: unknown }) {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="relative"
+          className="relative pb-6 pr-6 sm:pb-0 sm:pr-0"
         >
           <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
             <Image
@@ -68,10 +68,10 @@ export function AboutSection({ content }: { content?: unknown }) {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="absolute -bottom-6 -right-6 bg-blue-600 text-white p-8 rounded-2xl shadow-xl"
+            className="absolute -bottom-4 -right-4 sm:-bottom-6 sm:-right-6 bg-blue-600 text-white p-5 sm:p-8 rounded-2xl shadow-xl"
           >
-            <div className="text-4xl font-bold">{c.yearsExperience}</div>
-            <div className="text-blue-100">Years of Experience</div>
+            <div className="text-3xl sm:text-4xl font-bold">{c.yearsExperience}</div>
+            <div className="text-blue-100 text-sm sm:text-base">Years of Experience</div>
           </motion.div>
         </motion.div>
 

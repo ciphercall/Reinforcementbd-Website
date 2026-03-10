@@ -123,8 +123,8 @@ export function HeroSection({ content }: { content?: unknown }) {
         <div
           className={`grid items-center ${
             isVideoMode
-              ? 'gap-8 lg:items-stretch lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] xl:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]'
-              : 'gap-12 lg:grid-cols-2'
+              ? 'gap-4 lg:gap-8 lg:items-stretch lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] xl:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]'
+              : 'gap-6 lg:gap-12 lg:grid-cols-2'
           }`}
         >
           {/* Content */}
@@ -132,7 +132,7 @@ export function HeroSection({ content }: { content?: unknown }) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className={`space-y-8 ${isVideoMode ? 'lg:max-w-[34rem]' : ''}`}
+            className={`space-y-6 lg:space-y-8 ${isVideoMode ? 'lg:max-w-[34rem]' : ''}`}
           >
             {/* Pill shown inline with text column in carousel mode; in video mode it's rendered above the grid */}
             {!isVideoMode && (
@@ -176,7 +176,7 @@ export function HeroSection({ content }: { content?: unknown }) {
 
             {/* Stats */}
             {!isVideoMode && (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-8 border-t border-gray-200">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 pt-6 md:pt-8 border-t border-gray-200">
                 {c.stats.slice(0, 4).map((stat) => (
                   <div key={stat.label}>
                     <div className="text-3xl font-bold text-blue-600">{stat.value}</div>
@@ -186,6 +186,86 @@ export function HeroSection({ content }: { content?: unknown }) {
               </div>
             )}
           </motion.div>
+
+          {/* Mobile Hero Image — shown only on small screens in carousel mode */}
+          {!isVideoMode && (
+            <div className="block lg:hidden relative aspect-[4/3] rounded-2xl overflow-hidden shadow-lg">
+              <Image
+                src={images[activeIndex]}
+                alt="Hero showcase"
+                fill
+                className="object-cover"
+                priority
+              />
+            </div>
+          )}
+
+          {/* Mobile Video — shown only on small screens in video mode */}
+          {isVideoMode && (
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.3 }}
+              className="lg:hidden relative mt-2"
+            >
+              {/* Ambient glow ring */}
+              <div className="absolute -inset-[3px] rounded-[1.75rem] bg-gradient-to-br from-blue-400 via-blue-300 to-purple-400 opacity-50 blur-md pointer-events-none" />
+
+              {/* Video card */}
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-slate-950">
+                <video
+                  src={c.videoUrl}
+                  poster={heroImage}
+                  className="block w-full h-60 sm:h-80 object-cover"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                />
+
+                {/* Bottom gradient scrim */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent pointer-events-none" />
+
+                {/* Live indicator — top right */}
+                <div className="absolute top-4 right-4 flex items-center gap-1.5 px-3 py-1.5 bg-white/15 backdrop-blur-md rounded-full border border-white/25">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
+                  </span>
+                  <span className="text-white text-[11px] font-semibold tracking-wide">LIVE</span>
+                </div>
+
+                {/* Subheadline pill — top left */}
+                <div className="absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1.5 bg-white/15 backdrop-blur-md rounded-full border border-white/25">
+                  <span className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse" />
+                  <span className="text-white text-[11px] font-medium">{c.subheadline}</span>
+                </div>
+
+                {/* Trusted Partner badge — bottom left */}
+                <div className="absolute bottom-4 left-4 flex items-center gap-3 bg-white/90 backdrop-blur-sm px-3.5 py-2.5 rounded-xl shadow-lg">
+                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-gray-900 leading-tight">Trusted Partner</div>
+                    <div className="text-[10px] text-gray-500 leading-tight">For Leading Brands</div>
+                  </div>
+                </div>
+
+                {/* Stats strip — bottom right */}
+                <div className="absolute bottom-4 right-4 flex items-center gap-3">
+                  {c.stats.slice(0, 2).map((stat) => (
+                    <div key={stat.label} className="text-center bg-white/15 backdrop-blur-md rounded-lg px-2.5 py-1.5 border border-white/20">
+                      <div className="text-white text-sm font-bold leading-none">{stat.value}</div>
+                      <div className="text-white/70 text-[9px] leading-tight mt-0.5">{stat.label}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          )}
 
           {/* Image Carousel or Video Card */}
           <motion.div

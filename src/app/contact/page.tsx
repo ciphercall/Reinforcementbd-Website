@@ -318,8 +318,8 @@ export default async function ContactPage() {
           {/* Map */}
           <div>
             {mapEmbedUrl ? (
-              <Card className="overflow-hidden h-full min-h-[720px] flex flex-col">
-                <div className="relative flex-1 min-h-[640px] bg-gray-200">
+              <Card className="overflow-hidden h-full min-h-[400px] sm:min-h-[560px] lg:min-h-[720px] flex flex-col">
+                <div className="relative flex-1 min-h-[350px] sm:min-h-[500px] lg:min-h-[640px] bg-gray-200">
                   <iframe
                     src={mapEmbedUrl}
                     width="100%"

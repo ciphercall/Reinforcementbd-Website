@@ -6,7 +6,6 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { Menu, X, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
-import { Button } from '@/components/ui/Button'
 
 const navigation = [
   { name: 'Home', href: '/' },
@@ -151,15 +150,6 @@ export function Navbar() {
             ))}
           </div>
 
-          {/* CTA Button */}
-          <div className="hidden lg:block">
-            <Link href="/contact">
-              <Button variant="primary" size="md">
-                Schedule a Call
-              </Button>
-            </Link>
-          </div>
-
           {/* Mobile Menu Button */}
           <button
             className="lg:hidden p-2"
@@ -218,13 +208,7 @@ export function Navbar() {
                   )}
                 </div>
               ))}
-              <div className="pt-4">
-                <Link href="/contact" onClick={() => setIsOpen(false)}>
-                  <Button variant="primary" size="lg" className="w-full">
-                    Schedule a Call
-                  </Button>
-                </Link>
-              </div>
+
             </div>
           </div>
         )}

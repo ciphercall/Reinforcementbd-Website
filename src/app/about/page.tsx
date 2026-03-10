@@ -220,7 +220,7 @@ export default async function AboutPage() {
       {visibility.header && (
       <section className="relative pt-32 pb-20 bg-gradient-to-br from-gray-50 to-blue-50">
         <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
             <div className="space-y-8">
               <span className="text-blue-600 font-semibold text-sm uppercase tracking-wider">
                 {header.breadcrumbLabel || 'About Us'}
@@ -236,7 +236,7 @@ export default async function AboutPage() {
               </p>
             </div>
             
-            <div className="relative">
+            <div className="relative pb-6 pl-6 sm:pb-0 sm:pl-0">
               <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl">
                 <Image
                   src={story.image || defaultStory.image}
@@ -246,9 +246,9 @@ export default async function AboutPage() {
                   priority
                 />
               </div>
-              <div className="absolute -bottom-6 -left-6 bg-blue-600 text-white p-8 rounded-2xl shadow-xl">
-                <div className="text-4xl font-bold">{heroBadge.value}</div>
-                <div className="text-blue-100">{heroBadge.label}</div>
+              <div className="absolute -bottom-4 -left-4 sm:-bottom-6 sm:-left-6 bg-blue-600 text-white p-5 sm:p-8 rounded-2xl shadow-xl">
+                <div className="text-3xl sm:text-4xl font-bold">{heroBadge.value}</div>
+                <div className="text-blue-100 text-sm sm:text-base">{heroBadge.label}</div>
               </div>
             </div>
           </div>
@@ -282,7 +282,24 @@ export default async function AboutPage() {
           subtitle={journey.sectionSubtitle}
         />
         <div className="max-w-4xl mx-auto">
-          <div className="relative">
+          {/* Mobile timeline — simple vertical list */}
+          <div className="block md:hidden space-y-4">
+            {(journey.milestones ?? defaultJourney.milestones).map((milestone) => (
+              <div key={milestone.year} className="flex items-start gap-4">
+                <div className="flex flex-col items-center pt-1">
+                  <div className="w-3 h-3 bg-blue-600 rounded-full border-2 border-white shadow flex-shrink-0" />
+                  <div className="w-0.5 flex-1 bg-blue-200 mt-1" />
+                </div>
+                <div className="bg-white p-4 rounded-lg shadow-md flex-1 mb-2">
+                  <div className="text-blue-600 font-bold text-lg">{milestone.year}</div>
+                  <div className="text-gray-600 text-sm">{milestone.event}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop alternating timeline */}
+          <div className="hidden md:block relative">
             {/* Timeline line */}
             <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-blue-200" />
             

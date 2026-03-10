@@ -140,7 +140,7 @@ export default function IndustriesPage() {
             the solutions we deliver are not just effective, but precisely aligned 
             with your industry&apos;s specific needs.
           </p>
-          <div className="grid sm:grid-cols-3 gap-8 pt-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-8">
             <div className="p-6 bg-gray-50 rounded-xl">
               <div className="text-3xl font-bold text-blue-600 mb-2">12+</div>
               <p className="text-gray-600">Industries Served</p>

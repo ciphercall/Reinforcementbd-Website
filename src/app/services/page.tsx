@@ -196,7 +196,7 @@ export default async function ServicesPage() {
             <Zap className="w-8 h-8 text-white" />
           </div>
           <div>
-            <h2 className="text-3xl font-bold text-gray-900">Reinforcement Automation</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Reinforcement Automation</h2>
             <p className="text-gray-600">Electrical & Automation Solutions</p>
           </div>
         </div>
@@ -231,7 +231,7 @@ export default async function ServicesPage() {
             <Building2 className="w-8 h-8 text-white" />
           </div>
           <div>
-            <h2 className="text-3xl font-bold text-gray-900">Reinforcement Architect View</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Reinforcement Architect View</h2>
             <p className="text-gray-600">Architectural Design & Engineering</p>
           </div>
         </div>
@@ -266,7 +266,7 @@ export default async function ServicesPage() {
             <Code className="w-8 h-8 text-white" />
           </div>
           <div>
-            <h2 className="text-3xl font-bold text-gray-900">Reinforcement IT Zone</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Reinforcement IT Zone</h2>
             <p className="text-gray-600">Technology & Digital Solutions</p>
           </div>
         </div>

@@ -83,7 +83,7 @@ export function IndustriesSection({ content }: { content?: unknown }) {
             variants={itemVariants}
             className="group"
           >
-            <div className="bg-gray-50 rounded-xl p-6 text-center hover:bg-blue-50 hover:shadow-md transition-all cursor-pointer">
+              <div className="bg-gray-50 rounded-xl p-4 sm:p-6 text-center hover:bg-blue-50 hover:shadow-md transition-all cursor-pointer">
               <div className="w-14 h-14 rounded-full bg-white shadow-sm flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-600 transition-colors">
                 <Icon className="w-7 h-7 text-blue-600 group-hover:text-white transition-colors" />
               </div>

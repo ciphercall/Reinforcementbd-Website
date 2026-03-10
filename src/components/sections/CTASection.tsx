@@ -103,7 +103,7 @@ export function CTASection({ content }: { content?: unknown }) {
           </div>
 
           {/* Contact Info */}
-          <div className="grid sm:grid-cols-3 gap-6 pt-12 border-t border-white/20">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 pt-12 border-t border-white/20">
             <div className="flex items-center justify-center space-x-3 text-white">
               <MapPin className="h-5 w-5 text-blue-200" />
               <span className="text-sm">Khilkhet, Dhaka-1229</span>

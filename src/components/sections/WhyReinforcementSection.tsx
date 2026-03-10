@@ -73,7 +73,7 @@ export function WhyReinforcementSection({ content }: { content?: unknown }) {
 
   return (
     <Section background="white" id="why-us">
-      <div className="grid lg:grid-cols-2 gap-16 items-start">
+      <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-start">
         {/* Left Side - Header */}
         <motion.div
           initial={{ opacity: 0, x: -30 }}

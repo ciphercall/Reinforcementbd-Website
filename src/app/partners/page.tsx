@@ -77,7 +77,7 @@ export default async function PartnersPage() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative pt-40 pb-32 bg-gradient-to-br from-blue-950 via-gray-900 to-gray-800 text-white overflow-hidden">
+      <section className="relative pt-28 md:pt-40 pb-20 md:pb-32 bg-gradient-to-br from-blue-950 via-gray-900 to-gray-800 text-white overflow-hidden">
         {header.backgroundImage ? (
           <div className="absolute inset-0 opacity-20">
             <Image
@@ -109,7 +109,7 @@ export default async function PartnersPage() {
             </div>
             
             {/* Title */}
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-blue-200">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-blue-200">
               {header.title || defaultHeader.title}
             </h1>
             
@@ -173,7 +173,7 @@ export default async function PartnersPage() {
                 <Card className="overflow-hidden hover:shadow-2xl transition-all duration-500 border-0 shadow-lg">
                   <div className={`grid lg:grid-cols-5 ${index % 2 === 1 ? 'lg:grid-flow-dense' : ''}`}>
                     {/* Image/Logo Side - Enhanced */}
-                    <div className={`relative lg:col-span-2 bg-gradient-to-br from-blue-600 via-blue-700 to-purple-700 p-12 lg:p-16 flex items-center justify-center overflow-hidden ${index % 2 === 1 ? 'lg:col-start-4' : ''}`}>
+                    <div className={`relative lg:col-span-2 bg-gradient-to-br from-blue-600 via-blue-700 to-purple-700 p-8 sm:p-12 lg:p-16 flex items-center justify-center overflow-hidden ${index % 2 === 1 ? 'lg:col-start-4' : ''}`}>
                       {/* Background Image with parallax effect */}
                       {partner.backgroundImage ? (
                         <div className="absolute inset-0 group-hover:scale-110 transition-transform duration-700">
