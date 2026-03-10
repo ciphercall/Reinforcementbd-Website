@@ -74,9 +74,10 @@ export function Navbar() {
   }, [])
 
   return (
+    <>
     <header
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
+        'fixed top-0 left-0 right-0 z-[9999] transition-all duration-300',
         scrolled
           ? 'bg-white/95 backdrop-blur-md shadow-md'
           : 'bg-white/80 backdrop-blur-lg shadow-sm'
@@ -163,56 +164,65 @@ export function Navbar() {
             )}
           </button>
         </div>
-
-        {/* Mobile Navigation */}
-        {isOpen && (
-          <div className="lg:hidden fixed inset-x-0 top-20 bg-white border-t shadow-xl z-50 max-h-[calc(100vh-5rem)] overflow-y-auto">
-            <div className="py-4 px-4 space-y-2">
-              {navigation
-                .filter(item => {
-                  const key = item.name.toLowerCase()
-                  return menuVisibility[key] !== false
-                })
-                .map((item) => (
-                <div key={item.name}>
-                  <Link
-                    href={item.href}
-                    className={cn(
-                      'block py-2 font-medium transition-colors',
-                      isActive(item.href, item.children)
-                        ? 'text-blue-600 font-semibold'
-                        : 'text-gray-700 hover:text-blue-600'
-                    )}
-                    onClick={() => setIsOpen(false)}
-                  >
-                    {item.name}
-                  </Link>
-                  {item.children && (
-                    <div className="pl-4 space-y-1">
-                      {item.children.map((child) => (
-                        <Link
-                          key={child.name}
-                          href={child.href}
-                          className={cn(
-                            'block py-1.5 text-sm transition-colors',
-                            pathname === child.href || pathname.startsWith(child.href + '/')
-                              ? 'text-blue-600 font-semibold'
-                              : 'text-gray-500 hover:text-blue-600'
-                          )}
-                          onClick={() => setIsOpen(false)}
-                        >
-                          {child.name}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-
-            </div>
-          </div>
-        )}
       </nav>
     </header>
+
+    {/* Mobile Navigation — rendered OUTSIDE the header to avoid backdrop-filter stacking context on iOS Safari */}
+    {isOpen && (
+      <>
+        {/* Backdrop */}
+        <div
+          className="lg:hidden fixed inset-0 z-[9998] bg-black/20"
+          onClick={() => setIsOpen(false)}
+          aria-hidden="true"
+        />
+        {/* Drawer */}
+        <div className="lg:hidden fixed inset-x-0 top-20 z-[9999] bg-white border-t shadow-2xl max-h-[calc(100svh-5rem)] overflow-y-auto">
+          <div className="py-4 px-4 space-y-2">
+            {navigation
+              .filter(item => {
+                const key = item.name.toLowerCase()
+                return menuVisibility[key] !== false
+              })
+              .map((item) => (
+              <div key={item.name}>
+                <Link
+                  href={item.href}
+                  className={cn(
+                    'block py-2 font-medium transition-colors',
+                    isActive(item.href, item.children)
+                      ? 'text-blue-600 font-semibold'
+                      : 'text-gray-700 hover:text-blue-600'
+                  )}
+                  onClick={() => setIsOpen(false)}
+                >
+                  {item.name}
+                </Link>
+                {item.children && (
+                  <div className="pl-4 space-y-1">
+                    {item.children.map((child) => (
+                      <Link
+                        key={child.name}
+                        href={child.href}
+                        className={cn(
+                          'block py-1.5 text-sm transition-colors',
+                          pathname === child.href || pathname.startsWith(child.href + '/')
+                            ? 'text-blue-600 font-semibold'
+                            : 'text-gray-500 hover:text-blue-600'
+                        )}
+                        onClick={() => setIsOpen(false)}
+                      >
+                        {child.name}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </>
+    )}
+    </>
   )
 }
